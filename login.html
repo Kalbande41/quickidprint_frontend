@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>लॉगिन - QuickIDPrint</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #123a8f;
+            --primary-hover: #0d2a6b;
+            --secondary: #2563eb;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --light-bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body {
+            background: radial-gradient(circle at top right, #e0e7ff 0%, #f8fafc 50%, #fff7ed 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Minimal Bar */
+        .top-nav {
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-box {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); font-size: 20px; border: 1px solid #bfdbfe;
+        }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+        .logo-text h1 .brand-quick { color: var(--primary); }
+        .logo-text h1 .brand-id { color: var(--accent); }
+        .logo-text h1 .brand-print { color: var(--primary); }
+
+        .back-home {
+            font-size: 15px; font-weight: 700; color: var(--slate-600); text-decoration: none;
+            display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .back-home:hover { color: var(--primary); }
+
+        /* Login Center Container */
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            padding: 40px 35px;
+            box-shadow: 0 20px 40px -10px rgba(18, 58, 143, 0.12);
+            border: 1px solid var(--card-border);
+            position: relative;
+        }
+
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-icon-circle {
+            width: 65px; height: 65px; border-radius: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: var(--primary); font-size: 28px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; border: 1px solid #bfdbfe;
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.1);
+        }
+        .login-header h2 { font-size: 26px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .login-header p { font-size: 15px; color: var(--slate-600); font-weight: 600; }
+
+        /* Notification / Alert Banner */
+        .alert-box {
+            padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 700;
+            margin-bottom: 20px; display: none; align-items: center; gap: 10px;
+        }
+        .alert-box.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; display: flex; }
+        .alert-box.success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; display: flex; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block; font-size: 14px; font-weight: 800; color: var(--slate-800);
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-icon-left {
+            position: absolute; left: 16px; color: var(--slate-400); font-size: 16px;
+        }
+        .phone-prefix {
+            position: absolute; left: 42px; font-weight: 800; color: var(--slate-800);
+            font-size: 15px; user-select: none;
+        }
+        .form-input {
+            width: 100%;
+            padding: 13px 16px 13px 44px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            outline: none;
+            transition: all 0.2s;
+            background: #ffffff;
+        }
+        .form-input.phone-input {
+            padding-left: 80px;
+            letter-spacing: 1px;
+        }
+        .form-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        /* Toggle Password Eye */
+        .toggle-password {
+            position: absolute; right: 16px; cursor: pointer; color: var(--slate-400);
+            font-size: 16px; transition: color 0.2s;
+        }
+        .toggle-password:hover { color: var(--primary); }
+
+        .forgot-link-row {
+            display: flex; justify-content: flex-end; margin-top: -10px; margin-bottom: 22px;
+        }
+        .forgot-link {
+            font-size: 14px; font-weight: 700; color: var(--secondary);
+            text-decoration: none; transition: 0.2s;
+        }
+        .forgot-link:hover { color: var(--primary); text-decoration: underline; }
+
+        /* Login Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-size: 17px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 18px rgba(18, 58, 143, 0.25);
+            transition: all 0.25s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(18, 58, 143, 0.35);
+        }
+        .btn-submit:disabled {
+            opacity: 0.7; cursor: not-allowed; transform: none;
+        }
+
+        /* Register Callout Card */
+        .register-redirect {
+            margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--card-border);
+            text-align: center; font-size: 15px; color: var(--slate-600); font-weight: 600;
+        }
+        .register-redirect a {
+            color: var(--accent); font-weight: 800; text-decoration: none; margin-left: 5px;
+        }
+        .register-redirect a:hover { text-decoration: underline; }
+
+        /* Bottom Footer */
+        .login-footer {
+            text-align: center; padding: 20px; color: var(--slate-400); font-size: 13px; font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <a href="index.html" class="logo-section">
+            <div class="logo-box"><i class="fas fa-id-card"></i></div>
+            <div class="logo-text">
+                <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
+            </div>
+        </a>
+
+        <a href="index.html" class="back-home">
+            <i class="fas fa-arrow-left"></i> होमपेजवर जा
+        </a>
+    </div>
+
+    <!-- Login Box -->
+    <div class="login-wrapper">
+        <div class="login-card">
+            
+            <div class="login-header">
+                <div class="login-icon-circle">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h2>सुरक्षित लॉगिन</h2>
+                <p>तुमच्या खात्यात प्रवेश करण्यासाठी तपशील भरा</p>
+            </div>
+
+            <!-- Dynamic Alert Message -->
+            <div id="alertBox" class="alert-box">
+                <i class="fas fa-circle-exclamation" id="alertIcon"></i>
+                <span id="alertMsg">मेसेज</span>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                
+                <!-- Mobile Number (Username) -->
+                <div class="form-group">
+                    <label class="form-label" for="loginMobile">
+                        <i class="fas fa-mobile-screen-button" style="color: var(--secondary); margin-right: 5px;"></i> 
+                        नोंदणीकृत मोबाईल नंबर
+                    </label>
+                    <div class="input-box">
+                        <i class="fas fa-phone input-icon-left"></i>
+                        <span class="phone-prefix">+91</span>
+                        <input type="tel" id="loginMobile" class="form-input phone-input" 
+                               placeholder="98XXXXXXXX" maxlength="10" pattern="[0-9]{10}" 
+                               required autofocus autocomplete="tel">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">
+                        <i class="fas fa-key" style="color: var(--accent); margin-right: 5px;"></i> 
+                        पासवर्ड
+                    </label>
+                    <div class="input-box">
+                        <i class="fas fa-lock input-icon-left"></i>
+                        <input type="password" id="loginPassword" class="form-input" 
+                               placeholder="तुमचा पासवर्ड टाका" required autocomplete="current-password">
+                        <i class="fas fa-eye toggle-password" id="togglePassBtn" onclick="togglePasswordVisibility()"></i>
+                    </div>
+                </div>
+
+                <!-- Forgot Password Link -->
+                <div class="forgot-link-row">
+                    <a href="forgot-password.html" class="forgot-link">पासवर्ड विसरलात का?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-arrow-right-to-bracket"></i>
+                    <span id="btnText">लॉगिन करा</span>
+                </button>
+            </form>
+
+            <!-- Register Prompt -->
+            <div class="register-redirect">
+                नवीन युजर आहात? 
+                <a href="register.html">येथे मोफत नोंदणी करा <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Minimal Footer -->
+    <div class="login-footer">
+        &copy; 2026 QuickIDPrint. सर्व हक्क सुरक्षित. | सुरक्षित आणि एन्क्रिप्टेड कनेक्शन
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC CONNECTED TO RENDER       -->
+    <!-- ========================================== -->
+    <script>
+        // 🔗 तुमच्या Render बॅकएंडची लिंक
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        // Password Show / Hide Toggle
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('loginPassword');
+            const eyeIcon = document.getElementById('togglePassBtn');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Alert Helper
+        function showAlert(message, type = 'error') {
+            const alertBox = document.getElementById('alertBox');
+            const alertMsg = document.getElementById('alertMsg');
+            const alertIcon = document.getElementById('alertIcon');
+
+            alertBox.className = `alert-box ${type}`;
+            alertMsg.textContent = message;
+
+            if (type === 'success') {
+                alertIcon.className = 'fas fa-circle-check';
+            } else {
+                alertIcon.className = 'fas fa-circle-exclamation';
+            }
+            alertBox.style.display = 'flex';
+        }
+
+        // Login Handler
+        async function handleLoginSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const mobileInput = document.getElementById('loginMobile');
+            const passwordInput = document.getElementById('loginPassword');
+
+            const mobile = mobileInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (mobile.length !== 10) {
+                showAlert('कृपया वैध १० अंकी मोबाईल नंबर टाका.');
+                return;
+            }
+
+            // Button Loading State
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> तपासत आहे...';
+            document.getElementById('alertBox').style.display = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('username', mobile);
+                formData.append('password', password);
+
+                const response = await fetch(`${BACKEND_URL}/api/login`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Session Save
+                    localStorage.setItem('quickid_user', JSON.stringify(data));
+                    showAlert(`स्वागत आहे, ${data.name}! डॅशबोर्ड उघडत आहे...`, 'success');
+
+                    // 1 सेकंदात डॅशबोर्डवर रिडायरेक्ट
+                    setTimeout(() => {
+                        window.location.href = 'portal.html';
+                    }, 1000);
+                } else {
+                    showAlert(data.message || 'लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.');
+                    submitBtn.disabled = false;
+                    btnText.innerHTML = 'लॉगिन करा';
+                }
+            } catch (error) {
+                console.error('Login Error:', error);
+                showAlert('सर्व्हरशी संपर्क होऊ शकला नाही. इंटरनेट कनेक्शन तपासा किंवा १ मिनिटाने पुन्हा प्रयत्न करा.');
+                submitBtn.disabled = false;
+                btnText.innerHTML = 'लॉगिन करा';
+            }
+        }
+
+        // जर युजर आधीच लॉगिन असेल, तर थेट पोर्टलवर नेणे
+        window.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('quickid_user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    if (user && user.mobile) {
+                        // User already logged in -> redirect to portal
+                        window.location.href = 'portal.html';
+                    }
+                } catch(e) {}
+            }
+        });
+    </script>
+</body>
+</html>
