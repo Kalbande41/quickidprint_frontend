@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सबस्क्रिप्शन प्लॅन्स व रिचार्ज - QuickIDPrint</title>
+    <title>प्लॅन रिन्यूअल व रिचार्ज - QuickIDPrint</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         :root {
             --primary: #123a8f;
-            --primary-hover: #0d2a6b;
+            --primary-hover: #0c2a68;
             --secondary: #2563eb;
             --accent: #f97316;
             --accent-hover: #ea580c;
@@ -24,121 +24,164 @@
             --light-bg: #f8fafc;
             --card-border: #e2e8f0;
             --white: #ffffff;
+            --danger: #ef4444;
             --success: #16a34a;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.03);
+            --shadow-md: 0 10px 25px -5px rgba(18, 58, 143, 0.08);
+            --shadow-lg: 0 20px 35px -8px rgba(18, 58, 143, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background: radial-gradient(circle at top center, #e0e7ff 0%, #f8fafc 40%, #ffffff 100%); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
-
-        header {
-            background: white; padding: 14px 6%; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;
+        body {
+            background: radial-gradient(circle at top center, #e0e7ff 0%, #f8fafc 40%, #ffffff 100%);
+            color: var(--dark); min-height: 100vh; display: flex; flex-direction: column;
+            -webkit-font-smoothing: antialiased;
         }
-        .logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .logo-img { height: 42px; width: auto; object-fit: contain; }
+
+        /* Modern Navbar */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 12px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .site-logo { height: 42px; width: auto; object-fit: contain; }
         .logo-fallback {
-            width: 40px; height: 40px; border-radius: 10px; background: #eff6ff;
+            width: 42px; height: 42px; border-radius: 12px; background: #eff6ff;
             color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px;
         }
-        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
-        .logo-text h1 .brand-quick { color: var(--primary); }
-        .logo-text h1 .brand-id { color: var(--accent); }
-        .logo-text h1 .brand-print { color: var(--primary); }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+        .brand-quick { color: var(--primary); }
+        .brand-id { color: var(--accent); }
+        .brand-print { color: var(--primary); }
 
         .btn-back-home {
-            color: var(--primary); font-weight: 800; font-size: 15px; text-decoration: none;
-            display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px;
+            color: var(--primary); font-weight: 800; font-size: 14.5px; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px;
             background: #eff6ff; border: 1px solid #bfdbfe; transition: 0.2s;
         }
-        .btn-back-home:hover { background: #dbeafe; }
+        .btn-back-home:hover { background: #dbeafe; transform: translateY(-2px); }
 
-        .pricing-hero { text-align: center; padding: 45px 5% 20px; }
-        .pricing-hero span.badge {
-            background: #ffedd5; color: #c2410c; padding: 6px 16px; border-radius: 20px;
-            font-weight: 800; font-size: 13px; display: inline-block; margin-bottom: 12px;
-        }
-        .pricing-hero h1 { font-size: 38px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
-        .pricing-hero p { font-size: 17px; color: var(--slate-600); max-width: 600px; margin: 0 auto; }
+        /* Container */
+        .container { max-width: 950px; margin: 30px auto 60px; padding: 0 5%; width: 100%; flex: 1; }
 
-        /* Pricing Cards Grid */
-        .plans-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-            gap: 25px; max-width: 1050px; margin: 35px auto; padding: 0 5%; width: 100%;
+        .heading { text-align: center; margin-bottom: 25px; }
+        .heading .tag {
+            display: inline-flex; align-items: center; gap: 6px; background: #fff0e5;
+            color: var(--accent); padding: 5px 15px; border-radius: 30px; font-size: 12px; font-weight: 800;
         }
-        .plan-card {
-            background: white; border-radius: 24px; padding: 35px 28px; border: 1.5px solid var(--card-border);
-            position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: all 0.3s ease;
-            display: flex; flex-direction: column; justify-content: space-between;
+        .heading h2 { font-size: 32px; font-weight: 800; color: var(--dark); margin-top: 6px; letter-spacing: -0.5px; }
+        .heading p { color: var(--slate-600); font-size: 15px; margin-top: 2px; }
+
+        /* Modern 3-Col Status Cards */
+        .status-box {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+            background: white; border: 1px solid var(--card-border); border-radius: 20px;
+            padding: 20px 25px; margin-bottom: 30px; box-shadow: var(--shadow-sm);
         }
-        .plan-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(18, 58, 143, 0.15); }
+        .status-item { text-align: center; }
+        .status-item:not(:last-child) { border-right: 1px solid #f1f5f9; }
+        .status-title { font-size: 13px; color: var(--slate-600); font-weight: 700; margin-bottom: 4px; }
+        .status-val { font-size: 22px; font-weight: 800; color: var(--primary); line-height: 1.2; }
+        .status-val.highlight { color: var(--accent); }
+
+        /* Main Recharge 2-Col Card */
+        .recharge-card {
+            background: white; border: 1.5px solid var(--card-border); border-radius: 24px;
+            padding: 32px; box-shadow: var(--shadow-md);
+        }
+        .payment-grid { display: grid; grid-template-columns: 310px 1fr; gap: 35px; align-items: start; }
+
+        /* Left QR Code Section */
+        .qr-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            border: 1px solid #dbeafe; border-radius: 20px; padding: 22px; text-align: center;
+        }
+        .qr-title { color: var(--primary); font-size: 17px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .qr-box {
+            width: 220px; height: 220px; background: white; margin: 0 auto; padding: 10px;
+            border-radius: 16px; border: 1.5px solid #cbd5e1; box-shadow: var(--shadow-sm);
+        }
+        .qr-box img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* Popular Plan Card Highlight */
-        .plan-card.popular {
-            border: 2px solid var(--accent);
-            box-shadow: 0 15px 35px -5px rgba(249, 115, 22, 0.2);
-            transform: scale(1.03);
-        }
-        .plan-card.popular:hover { transform: scale(1.03) translateY(-8px); }
-        .popular-pill {
-            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
-            color: white; font-size: 12px; font-weight: 800; padding: 5px 14px;
-            border-radius: 20px; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
-        }
-
-        .plan-header h3 { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
-        .plan-price { font-size: 44px; font-weight: 800; color: var(--primary); display: flex; align-items: baseline; gap: 4px; }
-        .plan-price span.duration { font-size: 15px; color: var(--slate-600); font-weight: 600; }
-        .plan-savings { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 6px; }
-
-        .plan-features { list-style: none; margin: 25px 0; display: flex; flex-direction: column; gap: 12px; }
-        .plan-features li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; font-weight: 700; color: #334155; }
-        .plan-features li i { color: #16a34a; font-size: 16px; }
-
-        .btn-select-plan {
-            width: 100%; padding: 13px; border-radius: 12px; border: 2px solid var(--primary);
-            background: transparent; color: var(--primary); font-size: 16px; font-weight: 800;
-            cursor: pointer; transition: 0.2s;
-        }
-        .btn-select-plan:hover, .plan-card.popular .btn-select-plan {
-            background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
-            color: white; border-color: transparent; box-shadow: 0 6px 15px rgba(249, 115, 22, 0.3);
-        }
-
-        /* Payment Section */
-        .payment-section {
-            max-width: 900px; margin: 30px auto 60px; padding: 0 5%; width: 100%;
-        }
-        .payment-card-wrapper {
-            background: white; border-radius: 24px; padding: 35px; border: 1px solid var(--card-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: grid; grid-template-columns: 1fr 1fr; gap: 35px;
-            align-items: center;
-        }
-        .qr-box { text-align: center; border-right: 1px dashed var(--card-border); padding-right: 25px; }
-        .qr-image {
-            width: 220px; height: 220px; border: 1.5px solid #cbd5e1; border-radius: 16px;
-            padding: 10px; background: white; margin: 15px auto;
-        }
         .upi-badge-box {
-            display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9;
-            padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 14px;
+            margin-top: 14px; background: white; border: 1px solid #cbd5e1; border-radius: 12px;
+            padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 800;
         }
-        .btn-copy { background: none; border: none; color: var(--secondary); cursor: pointer; font-size: 14px; }
+        .btn-copy-upi { background: none; border: none; color: var(--secondary); cursor: pointer; font-size: 14px; }
+        .qr-note { color: var(--slate-600); font-size: 12px; font-weight: 600; margin-top: 12px; }
 
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 800; color: var(--slate-800); margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; }
-        .form-control:focus { border-color: var(--secondary); }
-        .btn-submit-pay {
-            width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white; font-size: 17px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 6px 18px rgba(18, 58, 143, 0.25); margin-top: 10px;
+        /* Right Form Section */
+        .form-section { padding: 5px 0; }
+        .form-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 18px; }
+
+        /* Quick Plan Selection Chips */
+        .plan-chips-title { font-size: 13.5px; font-weight: 800; color: var(--slate-800); margin-bottom: 8px; }
+        .plan-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+        .plan-chip {
+            background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 10px 8px;
+            text-align: center; cursor: pointer; transition: all 0.2s ease;
+        }
+        .plan-chip:hover, .plan-chip.active {
+            border-color: var(--accent); background: #fff7ed; color: #c2410c; transform: translateY(-2px);
+        }
+        .plan-chip strong { display: block; font-size: 14px; font-weight: 800; }
+        .plan-chip span { font-size: 12px; color: var(--slate-600); }
+
+        .field { margin-bottom: 15px; }
+        .field label { display: block; font-size: 13.5px; font-weight: 800; color: var(--slate-800); margin-bottom: 6px; }
+        .field input {
+            width: 100%; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 12px;
+            padding: 10px 14px; outline: none; font-size: 15px; color: var(--dark); font-weight: 600;
+            background: #ffffff; transition: 0.2s;
+        }
+        .field input:focus { border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .field input[readonly] { background: #f1f5f9; color: var(--slate-600); cursor: not-allowed; }
+
+        /* Steps */
+        .process {
+            margin: 20px 0; background: #f8fafc; border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 16px 20px;
+        }
+        .process h3 { color: var(--primary); font-size: 15px; font-weight: 800; margin-bottom: 10px; }
+        .step { display: flex; gap: 10px; margin: 8px 0; align-items: center; }
+        .step-number {
+            width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: var(--secondary);
+            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex: none;
+            border: 1px solid #bfdbfe;
+        }
+        .step-text { font-size: 13.5px; color: var(--slate-600); font-weight: 600; }
+
+        /* Submit Button */
+        .whatsapp-btn {
+            width: 100%; height: 50px; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); color: #ffffff;
+            font-size: 16.5px; font-weight: 800; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25); transition: all 0.25s ease;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35); }
+
+        .info {
+            margin-top: 25px; padding: 14px 18px; background: #fff9e6; border: 1px solid #fde047;
+            border-radius: 14px; color: #854d0e; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px;
         }
 
-        @media (max-width: 800px) {
-            .payment-card-wrapper { grid-template-columns: 1fr; }
-            .qr-box { border-right: none; border-bottom: 1px dashed var(--card-border); padding-bottom: 25px; padding-right: 0; }
-            .plan-card.popular { transform: none; }
+        .footer { text-align: center; color: var(--slate-400); font-size: 13px; font-weight: 600; margin-top: 30px; }
+
+        @media (max-width: 750px) {
+            .payment-grid { grid-template-columns: 1fr; }
+            .status-box { grid-template-columns: 1fr; gap: 12px; }
+            .status-item:not(:last-child) { border-right: none; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+            .plan-chips { grid-template-columns: 1fr; }
+            .recharge-card { padding: 22px 18px; }
         }
     </style>
 </head>
@@ -147,7 +190,7 @@
     <!-- Header -->
     <header>
         <a href="homepage.html" class="logo-area">
-            <img src="logo.png" alt="QuickIDPrint" class="logo-img" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+            <img src="logo.png" alt="QuickIDPrint" class="site-logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
             <div class="logo-fallback" id="logoFallback" style="display: none;"><i class="fas fa-id-card"></i></div>
             <div class="logo-text">
                 <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
@@ -155,210 +198,282 @@
         </a>
 
         <a href="homepage.html" class="btn-back-home">
-            <i class="fas fa-arrow-left"></i> होमपेजवर परत जा
+            <i class="fas fa-arrow-left"></i> डॅशबोर्डवर परत जा
         </a>
     </header>
 
-    <!-- Pricing Hero -->
-    <section class="pricing-hero">
-        <span class="badge"><i class="fas fa-crown"></i> परवडणारे व अमर्यादित प्लॅन्स</span>
-        <h1>योग्य सबस्क्रिप्शन प्लॅन निवडा</h1>
-        <p>कोणत्याही लपलेल्या शुल्काशिवाय अमर्यादित स्मार्ट आयडी कार्ड्स आणि मराठी घोषणापत्रे वापरा.</p>
-    </section>
-
-    <!-- Pricing Cards Grid -->
-    <div class="plans-grid">
+    <main class="container">
         
-        <!-- 1 Month -->
-        <div class="plan-card">
-            <div>
-                <div class="plan-header">
-                    <h3>१ महिना प्लॅन</h3>
-                    <div class="plan-price">₹१९९ <span class="duration">/ ३० दिवस</span></div>
-                </div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check-circle"></i> सर्व ६ स्मार्ट आयडी कार्ड्स प्रिंट</li>
-                    <li><i class="fas fa-check-circle"></i> सर्व ७ शासकीय घोषणापत्रे</li>
-                    <li><i class="fas fa-check-circle"></i> HD फॉरमॅट व जलद डाऊनलोड</li>
-                    <li><i class="fas fa-check-circle"></i> बेसिक सपोर्ट</li>
-                </ul>
-            </div>
-            <button class="btn-select-plan" onclick="selectPlan('Monthly Plan (30 Days)', 199)">
-                हा प्लॅन निवडा
-            </button>
+        <div class="heading">
+            <span class="tag"><i class="fas fa-sync-alt"></i> RENEW PLAN</span>
+            <h2>सबस्क्रिप्शन रिचार्ज व रिन्यूअल</h2>
+            <p>तुमच्या QuickIDPrint खात्याची मुदत वाढवा आणि सर्व सेवा अमर्यादित सुरू ठेवा.</p>
         </div>
 
-        <!-- 3 Months (Popular) -->
-        <div class="plan-card popular">
-            <div class="popular-pill"><i class="fas fa-fire"></i> सर्वात लोकप्रिय</div>
-            <div>
-                <div class="plan-header">
-                    <h3>३ महिने प्लॅन</h3>
-                    <div class="plan-price">₹४९९ <span class="duration">/ ९० दिवस</span></div>
-                    <span class="plan-savings">₹१०० ची थेट बचत</span>
-                </div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check-circle"></i> सर्व स्मार्ट आयडी व घोषणापत्रे</li>
-                    <li><i class="fas fa-check-circle"></i> अमर्यादित वापर (No Limits)</li>
-                    <li><i class="fas fa-check-circle"></i> PDF Compressor & Resizer मोफत</li>
-                    <li><i class="fas fa-check-circle"></i> प्राधान्य WhatsApp सपोर्ट</li>
-                </ul>
+        <!-- 1. Live Plan Status Box -->
+        <div class="status-box">
+            <div class="status-item">
+                <div class="status-title">सध्याचे उरलेले दिवस</div>
+                <div class="status-val highlight" id="dispDays">- दिवस</div>
             </div>
-            <button class="btn-select-plan" onclick="selectPlan('3 Months Plan (90 Days)', 499)">
-                हा प्लॅन निवडा
-            </button>
+            <div class="status-item">
+                <div class="status-title">प्लॅन एक्सपायरी डेट</div>
+                <div class="status-val" id="dispExpiry">-</div>
+            </div>
+            <div class="status-item">
+                <div class="status-title">अकाउंट स्टेटस</div>
+                <div class="status-val" id="dispStatus" style="color: #16a34a; font-size: 18px;">
+                    <i class="fas fa-circle-check"></i> तपासत आहे...
+                </div>
+            </div>
         </div>
 
-        <!-- 1 Year -->
-        <div class="plan-card">
-            <div>
-                <div class="plan-header">
-                    <h3>१ वर्ष प्लॅन</h3>
-                    <div class="plan-price">₹१४९९ <span class="duration">/ ३६५ दिवस</span></div>
-                    <span class="plan-savings">वर्षभर चिंतामुक्त (₹९०० महाबचत)</span>
-                </div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check-circle"></i> ३६५ दिवस सर्व सेवा अमर्यादित</li>
-                    <li><i class="fas fa-check-circle"></i> भविष्यातील सर्व नवीन सेवा मोफत</li>
-                    <li><i class="fas fa-check-circle"></i> व्हीआयपी सपोर्ट (VIP Helpdesk)</li>
-                    <li><i class="fas fa-check-circle"></i> बिझनेससाठी सर्वोत्तम पर्याय</li>
-                </ul>
-            </div>
-            <button class="btn-select-plan" onclick="selectPlan('1 Year Plan (365 Days)', 1499)">
-                हा प्लॅन निवडा
-            </button>
-        </div>
+        <!-- 2. Recharge Card -->
+        <section class="recharge-card">
+            <div class="payment-grid">
 
-    </div>
-
-    <!-- Payment Section -->
-    <div class="payment-section" id="paymentSection">
-        <div class="payment-card-wrapper">
-            
-            <!-- QR Code -->
-            <div class="qr-box">
-                <h3 style="font-weight: 800; color: var(--dark);">QR कोड स्कॅन करा</h3>
-                <p style="color: var(--slate-600); font-size: 14px; margin-top: 4px;">कोणत्याही UPI ॲपवरून पेमेंट करा</p>
-                
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=upi://pay?pa=sandeshkalbande1234@oksbi&pn=QuickIDPrint" 
-                     alt="UPI QR Code" class="qr-image">
-                
-                <div>
-                    <span class="upi-badge-box">
-                        <span id="upiText">sandeshkalbande1234@oksbi</span>
-                        <button class="btn-copy" onclick="copyUpi()" title="कॉपी करा"><i class="fas fa-copy"></i></button>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Form -->
-            <div>
-                <h3 style="font-weight: 800; color: var(--dark); margin-bottom: 16px;">पेमेंट माहिती सबमिट करा</h3>
-                
-                <form id="rechargeSubmitForm" onsubmit="handleRechargeSubmit(event)">
-                    <div class="form-group">
-                        <label>निवडलेला प्लॅन</label>
-                        <input type="text" id="selectedPlan" class="form-control" value="3 Months Plan (90 Days)" readonly style="background: #f1f5f9; font-weight: 700;">
+                <!-- Left: Scan & Pay -->
+                <div class="qr-section">
+                    <div class="qr-title"><i class="fas fa-qrcode"></i> QR कोड स्कॅन करा</div>
+                    
+                    <div class="qr-box">
+                        <!-- UPI QR Code Generator with payment_qr.png fallback -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=sandeshkalbande1234@oksbi&pn=QuickIDPrint" 
+                             alt="Payment QR" onerror="this.src='payment_qr.png'">
                     </div>
 
-                    <div class="form-group">
-                        <label>रक्कम (₹)</label>
-                        <input type="number" id="selectedAmount" class="form-control" value="499" readonly style="background: #f1f5f9; font-weight: 800; font-size: 18px; color: var(--primary);">
+                    <div>
+                        <span class="upi-badge-box">
+                            <span id="upiIdText">sandeshkalbande1234@oksbi</span>
+                            <button class="btn-copy-upi" onclick="copyUpiId()" title="UPI ID कॉपी करा">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="qr-note">Google Pay • PhonePe • Paytm • BHIM UPI</div>
+                </div>
+
+                <!-- Right: Form -->
+                <div class="form-section">
+                    <div class="form-title">पेमेंट व रिचार्ज तपशील</div>
+
+                    <!-- Quick Plan Chips (Easy to select and edit) -->
+                    <div class="plan-chips-title">प्लॅन निवडा (किंवा खाली थेट रक्कम भरा):</div>
+                    <div class="plan-chips">
+                        <div class="plan-chip" onclick="setPlan(199, '१ महिना (३० दिवस)')">
+                            <strong>₹१९९</strong>
+                            <span>१ महिना (३० दिवस)</span>
+                        </div>
+                        <div class="plan-chip active" onclick="setPlan(499, '३ महिने (९० दिवस)')">
+                            <strong>₹४९९ ⭐</strong>
+                            <span>३ महिने (९० दिवस)</span>
+                        </div>
+                        <div class="plan-chip" onclick="setPlan(1499, '१ वर्ष (३६५ दिवस)')">
+                            <strong>₹१४९९ 👑</strong>
+                            <span>१ वर्ष (३६५ दिवस)</span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>पेमेंट रक्कम (Amount in ₹) *</label>
+                        <input type="number" id="amount" value="499" placeholder="उदा. 499" required>
+                    </div>
+
+                    <div class="field">
                         <label>UTR / UPI Transaction ID (१२ अंकी) *</label>
-                        <input type="text" id="utrNoInput" class="form-control" placeholder="उदा. 4235XXXXXXXX" required maxlength="25">
+                        <input type="text" id="utrNo" placeholder="उदा. 4235XXXXXXXX" required maxlength="25">
                     </div>
 
-                    <button type="submit" class="btn-submit-pay" id="paySubmitBtn">
-                        <i class="fas fa-paper-plane"></i> विनंती पाठवा व दिवस ॲड करा
+                    <div class="field">
+                        <label>युजर आयडी (मोबाईल नंबर)</label>
+                        <input type="text" id="userId" placeholder="User ID" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>युजरचे नाव</label>
+                        <input type="text" id="userName" placeholder="Name" readonly>
+                    </div>
+
+                    <!-- Renewal Steps -->
+                    <div class="process">
+                        <h3>रिन्यूअल प्रक्रिया (Steps):</h3>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">QR कोड स्कॅन करून वरील रकमेचे पेमेंट करा.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">पेमेंटचा १२ अंकी UTR क्रमांक वरील बॉक्समध्ये टाका.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">खालील हिरव्या बटणावर क्लिक करा (डेटा सेव्ह होईल व WhatsApp उघडेल).</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-text">तिथे स्क्रीनशॉट पाठवून द्या, तुमचा प्लॅन लगेच ॲक्टिव्हेट केला जाईल!</div>
+                        </div>
+                    </div>
+
+                    <button class="whatsapp-btn" id="submitRechargeBtn" onclick="handleRechargeAction()">
+                        <i class="fab fa-whatsapp"></i> WhatsApp वर रिक्वेस्ट व स्क्रीनशॉट पाठवा
                     </button>
-                </form>
+
+                </div>
+
             </div>
 
-        </div>
-    </div>
+            <div class="info">
+                <i class="fas fa-circle-info" style="font-size: 16px;"></i>
+                <span><strong>महत्त्वाचे:</strong> पेमेंट झाल्यानंतर ट्रान्झॅक्शनचा स्क्रीनशॉट जतन करून ठेवा. WhatsApp वर स्क्रीनशॉट पाठवल्यास पडताळणी जलद होते.</span>
+            </div>
+        </section>
 
+        <div class="footer">
+            &copy; 2026 QuickIDPrint • जलद • सोपे • विश्वासनीय
+        </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT CONNECTED TO RENDER & BACKEND   -->
+    <!-- ========================================== -->
     <script>
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
         let currentUser = null;
+        let selectedPlanName = "३ महिने (९० दिवस)";
 
-        // Login Check
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load user info from localStorage (or fallback to sessionStorage)
             const userStr = localStorage.getItem('quickid_user');
-            if(!userStr) {
-                alert('⚠️ कृपया रिचार्ज करण्यासाठी आधी लॉगिन करा.');
-                window.location.replace('login.html');
+            
+            if (userStr) {
+                currentUser = JSON.parse(userStr);
+            } else {
+                // Check sessionStorage
+                const sName = sessionStorage.getItem('userFullName');
+                const sMob = sessionStorage.getItem('username');
+                const sDays = sessionStorage.getItem('remainingDays');
+                const sExp = sessionStorage.getItem('expireDate');
+
+                if (sMob) {
+                    currentUser = {
+                        name: sName || "User",
+                        mobile: sMob,
+                        remainingDays: parseInt(sDays) || 0,
+                        expireDate: sExp || "N/A"
+                    };
+                }
+            }
+
+            if (!currentUser) {
+                alert("⚠️ कृपया आधी लॉगिन करा.");
+                window.location.replace("login.html");
                 return;
             }
-            currentUser = JSON.parse(userStr);
+
+            // Fill User details in Readonly inputs
+            document.getElementById("userId").value = currentUser.mobile || "";
+            document.getElementById("userName").value = currentUser.name || "";
+
+            // Populate Status Box
+            const days = parseInt(currentUser.remainingDays) || 0;
+            const dispDays = document.getElementById("dispDays");
+            const dispExpiry = document.getElementById("dispExpiry");
+            const dispStatus = document.getElementById("dispStatus");
+
+            dispDays.innerText = `${days} दिवस`;
+            dispExpiry.innerText = currentUser.expireDate || "N/A";
+
+            if (days > 0 || currentUser.role === 'admin') {
+                dispStatus.innerHTML = `<i class="fas fa-circle-check"></i> Active`;
+                dispStatus.style.color = "#16a34a";
+            } else {
+                dispStatus.innerHTML = `<i class="fas fa-triangle-exclamation"></i> मुदत संपली`;
+                dispStatus.style.color = "#ef4444";
+                dispDays.style.color = "#ef4444";
+            }
         });
 
-        // Plan Selection with smooth scroll to QR
-        function selectPlan(planName, amount) {
-            document.getElementById('selectedPlan').value = planName;
-            document.getElementById('selectedAmount').value = amount;
-            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+        // Quick Plan Select Helper
+        function setPlan(amt, planName) {
+            document.getElementById("amount").value = amt;
+            selectedPlanName = planName;
+
+            // Highlight selected chip
+            document.querySelectorAll(".plan-chip").forEach(chip => chip.classList.remove("active"));
+            event.currentTarget.classList.add("active");
         }
 
-        function copyUpi() {
-            navigator.clipboard.writeText('sandeshkalbande1234@oksbi');
-            alert('✅ UPI ID कॉपी झाला!');
+        // Copy UPI ID
+        function copyUpiId() {
+            navigator.clipboard.writeText("sandeshkalbande1234@oksbi");
+            alert("✅ UPI ID कॉपी झाला: sandeshkalbande1234@oksbi");
         }
 
-        // Handle Recharge Request Submit
-        async function handleRechargeSubmit(e) {
-            e.preventDefault();
-            const btn = document.getElementById('paySubmitBtn');
-            const plan = document.getElementById('selectedPlan').value;
-            const amt = document.getElementById('selectedAmount').value;
-            const utr = document.getElementById('utrNoInput').value.trim();
+        // Handle Recharge: 1. Save to Supabase Backend + 2. Open WhatsApp
+        async function handleRechargeAction() {
+            const amount = document.getElementById("amount").value.trim();
+            const utr = document.getElementById("utrNo").value.trim();
+            const userId = document.getElementById("userId").value.trim();
+            const name = document.getElementById("userName").value.trim();
+            const btn = document.getElementById("submitRechargeBtn");
 
-            if(!utr) {
-                alert('कृपया UTR नंबर टाका.');
+            if (!amount) {
+                alert("कृपया Payment Amount भरा.");
+                document.getElementById("amount").focus();
+                return;
+            }
+
+            if (!utr) {
+                alert("कृपया १२ अंकी UTR / Transaction ID नंबर भरा.");
+                document.getElementById("utrNo").focus();
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> सबमिट होत आहे...';
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> सबमिट करत आहे...`;
 
+            // १. Supabase बॅकएंडला रिक्वेस्ट सेव्ह करणे
             try {
                 const formData = new FormData();
-                formData.append('mobile', currentUser.mobile);
-                formData.append('amount', amt);
+                formData.append('mobile', userId);
+                formData.append('amount', amount);
                 formData.append('utrNo', utr);
-                formData.append('planName', plan);
+                formData.append('planName', selectedPlanName);
+                formData.append('remark', 'User Payment Request via Recharge Page');
 
-                const res = await fetch(`${BACKEND_URL}/api/recharge-request`, {
+                await fetch(`${BACKEND_URL}/api/recharge-request`, {
                     method: 'POST',
                     body: formData
                 });
-                const data = await res.json();
-
-                if(data.status === 'success') {
-                    alert('🎉 ' + data.message);
-                    document.getElementById('utrNoInput').value = '';
-                    
-                    // WhatsApp अलर्ट उघडणे
-                    if(data.whatsappUrl) {
-                        window.open(data.whatsappUrl, '_blank');
-                    }
-
-                    // होमपेजवर परत पाठवणे
-                    setTimeout(() => {
-                        window.location.href = 'homepage.html';
-                    }, 1000);
-                } else {
-                    alert('❌ ' + data.message);
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> विनंती पाठवा व दिवस ॲड करा';
-                }
-            } catch(err) {
-                alert('सर्व्हरशी संपर्क होऊ शकला नाही. पुन्हा प्रयत्न करा.');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> विनंती पाठवा व दिवस ॲड करा';
+            } catch(e) {
+                console.log("Backend request error:", e);
             }
+
+            // २. WhatsApp मेसेज तयार करून उघडणे
+            const message = 
+`*⚡ PLAN RENEWAL REQUEST - QUICKIDPRINT*
+------------------------------------
+*👤 Name:* ${name}
+*📱 User ID (Mobile):* ${userId}
+*💰 Amount Paid:* ₹${amount}
+*📋 Selected Plan:* ${selectedPlanName}
+*🔢 UTR / Txn ID:* ${utr}
+------------------------------------
+मी पेमेंट केले आहे. कृपया माझा स्क्रीनशॉट तपासा आणि खात्याची मुदत (Validity) वाढवून द्या. धन्यवाद! 🙏`;
+
+            const whatsappNumber = "919403901395";
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
+
+            alert("✅ विनंती यशस्वीरीत्या नोंदवली गेली आहे! आता WhatsApp वर स्क्रीनशॉट पाठवा.");
+            window.open(whatsappUrl, "_blank");
+
+            // डॅशबोर्डवर परत पाठवणे
+            setTimeout(() => {
+                window.location.href = "homepage.html";
+            }, 1000);
         }
     </script>
 </body>
