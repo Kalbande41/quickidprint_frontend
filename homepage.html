@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>होमपेज - QuickIDPrint</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #123a8f;
+            --primary-hover: #0d2a6b;
+            --secondary: #2563eb;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --light-bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --success: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Modern Dashboard Header */
+        header {
+            background: white; padding: 12px 5%; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-img { height: 42px; width: auto; object-fit: contain; }
+        .logo-fallback {
+            width: 40px; height: 40px; border-radius: 10px; background: #eff6ff;
+            color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+        .logo-text h1 .brand-quick { color: var(--primary); }
+        .logo-text h1 .brand-id { color: var(--accent); }
+        .logo-text h1 .brand-print { color: var(--primary); }
+
+        .user-nav { display: flex; align-items: center; gap: 12px; }
+        .user-badge {
+            background: #ecfdf5; border: 1px solid #a7f3d0; padding: 6px 14px; border-radius: 30px;
+            font-size: 14px; font-weight: 800; color: #065f46; display: flex; align-items: center; gap: 8px;
+        }
+        .admin-badge {
+            background: #fef3c7; border: 1px solid #fde68a; color: #92400e;
+        }
+        .btn-logout {
+            background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 8px 14px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-logout:hover { background: #dc2626; color: white; }
+
+        /* Navigation Tabs Bar */
+        .tabs-nav {
+            background: white; border-bottom: 1px solid var(--card-border); padding: 0 5%;
+            display: flex; gap: 8px; overflow-x: auto;
+        }
+        .nav-tab-btn {
+            padding: 14px 18px; border: none; background: transparent; font-size: 15px; font-weight: 800;
+            color: var(--slate-600); cursor: pointer; border-bottom: 3px solid transparent; display: flex;
+            align-items: center; gap: 8px; white-space: nowrap; transition: 0.2s;
+        }
+        .nav-tab-btn:hover { color: var(--primary); }
+        .nav-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .nav-tab-btn.admin-tab { color: #d97706; }
+        .nav-tab-btn.admin-tab.active { border-bottom-color: #d97706; }
+
+        /* Main Container */
+        main { flex: 1; padding: 30px 5%; max-width: 1280px; margin: 0 auto; width: 100%; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.25s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Section Headings */
+        .section-title { margin-bottom: 25px; }
+        .section-title h2 { font-size: 24px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; }
+        .section-title p { color: var(--slate-600); font-size: 15px; margin-top: 4px; }
+
+        /* Grid Services */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .service-card {
+            background: white; border-radius: 16px; padding: 25px 20px; text-align: center;
+            border: 1px solid var(--card-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center;
+        }
+        .service-card:hover { transform: translateY(-5px); border-color: #93c5fd; box-shadow: 0 12px 25px rgba(37,99,235,0.1); }
+        .service-icon {
+            width: 65px; height: 65px; border-radius: 16px; display: flex; align-items: center;
+            justify-content: center; font-size: 28px; color: white; margin-bottom: 14px;
+        }
+        .service-card h3 { font-size: 17px; font-weight: 800; color: var(--dark); }
+        .service-btn-label { font-size: 13px; font-weight: 700; color: var(--secondary); margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+
+        /* Recharge Tab Styling */
+        .recharge-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; }
+        .qr-card {
+            background: white; border-radius: 20px; padding: 30px; border: 1px solid var(--card-border);
+            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .qr-image { width: 220px; height: 220px; object-fit: contain; margin: 15px auto; border: 1px solid #cbd5e1; border-radius: 12px; padding: 8px; background: white; }
+        .upi-badge { background: #f1f5f9; padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 15px; color: #1e293b; display: inline-block; margin-top: 10px; }
+
+        .recharge-form-card {
+            background: white; border-radius: 20px; padding: 30px; border: 1px solid var(--card-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 800; color: var(--slate-800); margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; }
+        .form-control:focus { border-color: var(--secondary); }
+        .btn-submit-recharge {
+            width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+            color: white; font-size: 16px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* Statement Tab Table */
+        .statement-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--card-border); overflow-x: auto; }
+        .custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .custom-table th { background: #f8fafc; padding: 14px 16px; font-size: 14px; font-weight: 800; color: var(--slate-800); border-bottom: 2px solid var(--card-border); }
+        .custom-table td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid #f1f5f9; color: var(--slate-600); font-weight: 600; }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; }
+        .status-active { background: #dcfce7; color: #15803d; }
+
+        @media (max-width: 850px) {
+            .recharge-container { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 12px; align-items: flex-start; }
+            .user-nav { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-area">
+            <img src="logo.png" alt="QuickIDPrint" class="logo-img" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+            <div class="logo-fallback" id="logoFallback" style="display: none;"><i class="fas fa-id-card"></i></div>
+            <div class="logo-text">
+                <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
+            </div>
+        </div>
+
+        <div class="user-nav">
+            <div class="user-badge" id="userBadge">
+                <i class="fas fa-user-check"></i> <span id="userNameDisplay">लोड होत आहे...</span>
+            </div>
+            <button onclick="handleLogout()" class="btn-logout" title="बाहेर पडा">
+                <i class="fas fa-sign-out-alt"></i> <span>लॉगआऊट</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Top Tabs Navigation -->
+    <div class="tabs-nav">
+        <button class="nav-tab-btn active" onclick="switchTab('servicesTab')">
+            <i class="fas fa-th-large"></i> सर्व सेवा (Services)
+        </button>
+        <button class="nav-tab-btn" onclick="switchTab('rechargeTab')">
+            <i class="fas fa-wallet"></i> रिचार्ज (Recharge)
+        </button>
+        <button class="nav-tab-btn" onclick="switchTab('statementTab')">
+            <i class="fas fa-receipt"></i> स्टेटमेंट (Statement)
+        </button>
+        <button class="nav-tab-btn admin-tab" id="adminNavBtn" style="display: none;" onclick="switchTab('adminTab')">
+            <i class="fas fa-crown"></i> ॲडमिन पॅनेल (Admin)
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <main>
+
+        <!-- ========================================== -->
+        <!-- 1. SERVICES TAB                            -->
+        <!-- ========================================== -->
+        <div id="servicesTab" class="tab-content active">
+            
+            <!-- Smart ID Cards -->
+            <div class="section-title">
+                <h2><i class="fas fa-id-badge" style="color: var(--accent);"></i> स्मार्ट आयडी कार्ड प्रिंटिंग</h2>
+                <p>खालीलपैकी हवे असलेले कार्ड निवडा आणि HD फॉरमॅटमध्ये प्रिंट करा.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openTool('आधार कार्ड प्रिंट')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);"><i class="fas fa-fingerprint"></i></div>
+                    <h3>आधार कार्ड प्रिंट</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('मतदान कार्ड प्रिंट')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fas fa-address-card"></i></div>
+                    <h3>मतदान कार्ड प्रिंट</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('पॅन कार्ड प्रिंट')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-id-badge"></i></div>
+                    <h3>पॅन कार्ड प्रिंट</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('शेतकरी ओळखपत्र')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);"><i class="fas fa-tractor"></i></div>
+                    <h3>शेतकरी ओळखपत्र</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('आयुष्मान कार्ड')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="fas fa-heartbeat"></i></div>
+                    <h3>आयुष्मान कार्ड</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('महा आयडी प्रिंट')">
+                    <div class="service-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);"><i class="fas fa-address-book"></i></div>
+                    <h3>महा आयडी प्रिंट</h3>
+                    <div class="service-btn-label">सुरू करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+            </div>
+
+            <!-- Declarations -->
+            <div class="section-title">
+                <h2><i class="fas fa-file-signature" style="color: var(--secondary);"></i> अधिकृत शासकीय घोषणापत्रे</h2>
+                <p>अचूक माहिती भरून शासकीय नियमांनुसार घोषणापत्र डाऊनलोड करा.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openTool('जातीचे घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #ef4444;"><i class="fas fa-users"></i></div>
+                    <h3>जातीचे घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('वंशावळ घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #6366f1;"><i class="fas fa-sitemap"></i></div>
+                    <h3>वंशावळ घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('उत्पन्न घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #3b82f6;"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <h3>उत्पन्न घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('३ वर्षांचे उत्पन्न घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #22c55e;"><i class="fas fa-file-contract"></i></div>
+                    <h3>३ वर्षांचे उत्पन्न घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('रहिवासी घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #f97316;"><i class="fas fa-home"></i></div>
+                    <h3>रहिवासी घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('राष्ट्रीयत्व घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #8b5cf6;"><i class="fas fa-flag"></i></div>
+                    <h3>राष्ट्रीयत्व घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+                <div class="service-card" onclick="openTool('नॉन-क्रीमीलेअर घोषणापत्र')">
+                    <div class="service-icon" style="background-color: #14b8a6;"><i class="fas fa-file-signature"></i></div>
+                    <h3>नॉन-क्रीमीलेअर घोषणापत्र</h3>
+                    <div class="service-btn-label">तयार करा <i class="fas fa-arrow-right"></i></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. RECHARGE TAB                            -->
+        <!-- ========================================== -->
+        <div id="rechargeTab" class="tab-content">
+            <div class="section-title">
+                <h2><i class="fas fa-wallet" style="color: var(--accent);"></i> सबस्क्रिप्शन रिचार्ज</h2>
+                <p>खालील QR कोड स्कॅन करून पेमेंट करा आणि UTR क्रमांक सबमिट करा.</p>
+            </div>
+
+            <div class="recharge-container">
+                <!-- QR Code Box -->
+                <div class="qr-card">
+                    <h3>Google Pay / PhonePe / Paytm</h3>
+                    <p style="color: var(--slate-600); font-size: 14px; margin-top: 5px;">खालील QR कोड स्कॅन करा</p>
+                    
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=sandeshkalbande1234@oksbi&pn=QuickIDPrint" 
+                         alt="UPI QR Code" class="qr-image">
+                    
+                    <div>
+                        <span class="upi-badge">UPI ID: sandeshkalbande1234@oksbi</span>
+                    </div>
+                    <p style="color: #16a34a; font-weight: 700; font-size: 14px; margin-top: 15px;">
+                        <i class="fas fa-check-circle"></i> पेमेंट झाल्यावर उजवीकडे UTR नंबर टाका.
+                    </p>
+                </div>
+
+                <!-- Recharge Form -->
+                <div class="recharge-form-card">
+                    <h3>पेमेंट माहिती सबमिट करा</h3>
+                    <form id="rechargeForm" onsubmit="handleRechargeSubmit(event)" style="margin-top: 20px;">
+                        
+                        <div class="form-group">
+                            <label>सबस्क्रिप्शन प्लॅन निवडा</label>
+                            <select id="rechPlan" class="form-control" onchange="updateRechAmount()">
+                                <option value="Monthly Plan (30 Days)" data-amt="199">१ महिना (३० दिवस) - ₹१९९</option>
+                                <option value="3 Months Plan (90 Days)" data-amt="499">३ महिने (९० दिवस) - ₹४९९</option>
+                                <option value="1 Year Plan (365 Days)" data-amt="1499">१ वर्ष (३६५ दिवस) - ₹१४९९</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>भरलेली रक्कम (₹)</label>
+                            <input type="number" id="rechAmount" class="form-control" value="199" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>UTR / UPI Transaction ID (१२ अंकी) *</label>
+                            <input type="text" id="rechUtr" class="form-control" placeholder="उदा. 4235XXXXXXXX" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit-recharge" id="rechBtn">
+                            <i class="fas fa-paper-plane"></i> विनंती पाठवा (Send Request)
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. STATEMENT TAB                           -->
+        <!-- ========================================== -->
+        <div id="statementTab" class="tab-content">
+            <div class="section-title">
+                <h2><i class="fas fa-receipt" style="color: var(--secondary);"></i> खाते तपशील व इतिहास (Statement)</h2>
+                <p>तुमच्या खात्यातील सर्व व्यवहार आणि हालचालींची नोंद.</p>
+            </div>
+
+            <div class="statement-card">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>दिनांक</th>
+                            <th>कृती (Action)</th>
+                            <th>तपशील (Remark)</th>
+                            <th>प्लॅन मुदत</th>
+                            <th>उरलेले दिवस</th>
+                            <th>स्टेटस</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statementTableBody">
+                        <tr><td colspan="6" style="text-align: center; padding: 25px;">माहिती लोड होत आहे...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. ADMIN TAB (Only Visible to Admin)       -->
+        <!-- ========================================== -->
+        <div id="adminTab" class="tab-content">
+            <div class="section-title">
+                <h2><i class="fas fa-crown" style="color: #d97706;"></i> ॲडमिन कंट्रोल पॅनेल</h2>
+                <p>पेंडिंग रिचार्ज विनंत्या तपासा आणि थेट युजर्सचे दिवस वाढवा.</p>
+            </div>
+
+            <!-- Pending Requests Table -->
+            <div class="statement-card" style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 15px;">पेंडिंग रिचार्ज विनंत्या</h3>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>नाव व मोबाईल</th>
+                            <th>प्लॅन</th>
+                            <th>रक्कम</th>
+                            <th>UTR नंबर</th>
+                            <th>कृती</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingRequestsBody">
+                        <tr><td colspan="5" style="text-align: center;">कोणतीही विनंती पेंडिंग नाही.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Direct Recharge by Admin -->
+            <div class="recharge-form-card" style="max-width: 600px;">
+                <h3>युजरला थेट दिवस (Days) देणे</h3>
+                <form id="adminRechForm" onsubmit="handleAdminDirectRecharge(event)" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label>युजरचा मोबाईल नंबर</label>
+                        <input type="tel" id="adminUserMob" class="form-control" placeholder="१० अंकी मोबाईल नंबर" required>
+                    </div>
+                    <div class="form-group">
+                        <label>प्लॅन प्रकार</label>
+                        <select id="adminRechType" class="form-control">
+                            <option value="Plan Renew">Plan Renew (दिवस जोडणे)</option>
+                            <option value="Demo Plan">Demo Plan</option>
+                            <option value="Reduce Days">Reduce Days (दिवस कमी करणे)</option>
+                            <option value="Zero Days">Zero Days (प्लॅन संपवणे)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>किती दिवस जोडायचे आहेत?</label>
+                        <input type="number" id="adminDaysCount" class="form-control" value="30" required>
+                    </div>
+                    <button type="submit" class="btn-submit-recharge" style="background: #16a34a;">
+                        <i class="fas fa-check"></i> खात्यात दिवस जोडा
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT CONNECTED TO RENDER BACKEND     -->
+    <!-- ========================================== -->
+    <script>
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+        let currentUser = null;
+
+        // Check Login Guard
+        function checkAuth() {
+            const userStr = localStorage.getItem('quickid_user');
+            if(!userStr) {
+                alert('⚠️ कृपया आधी लॉगिन करा.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            currentUser = JSON.parse(userStr);
+            const badge = document.getElementById('userBadge');
+            const nameDisplay = document.getElementById('userNameDisplay');
+
+            if(currentUser.role === 'admin' || currentUser.isAdmin) {
+                badge.className = 'user-badge admin-badge';
+                nameDisplay.innerHTML = `👑 Admin (${currentUser.name})`;
+                document.getElementById('adminNavBtn').style.display = 'flex';
+                loadAdminData();
+            } else {
+                nameDisplay.innerHTML = `👤 ${currentUser.name} (${currentUser.remainingDays} दिवस)`;
+            }
+
+            loadStatement();
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Handle Service Tool Click
+        async function openTool(serviceName) {
+            if(currentUser.remainingDays <= 0 && currentUser.role !== 'admin') {
+                alert('⚠️ तुमचा सबस्क्रिप्शन प्लॅन संपला आहे (० दिवस). कृपया पुढे चालू ठेवण्यासाठी रिचार्ज करा.');
+                switchTab('rechargeTab');
+                return;
+            }
+
+            // Log service to backend
+            try {
+                const formData = new FormData();
+                formData.append('mobile', currentUser.mobile);
+                formData.append('serviceCategory', serviceName);
+                formData.append('serviceDetails', `${serviceName} वापरले`);
+
+                await fetch(`${BACKEND_URL}/api/log-service`, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch(e) {}
+
+            alert(`🚀 '${serviceName}' साधन उघडत आहे...`);
+        }
+
+        // Recharge Form Amount Sync
+        function updateRechAmount() {
+            const sel = document.getElementById('rechPlan');
+            const amt = sel.options[sel.selectedIndex].getAttribute('data-amt');
+            document.getElementById('rechAmount').value = amt;
+        }
+
+        // Recharge Request Submit
+        async function handleRechargeSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('rechBtn');
+            const plan = document.getElementById('rechPlan').value;
+            const amt = document.getElementById('rechAmount').value;
+            const utr = document.getElementById('rechUtr').value.trim();
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> पाठवत आहे...';
+
+            try {
+                const formData = new FormData();
+                formData.append('mobile', currentUser.mobile);
+                formData.append('amount', amt);
+                formData.append('utrNo', utr);
+                formData.append('planName', plan);
+
+                const res = await fetch(`${BACKEND_URL}/api/recharge-request`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if(data.status === 'success') {
+                    alert('🎉 ' + data.message);
+                    document.getElementById('rechUtr').value = '';
+                    if(data.whatsappUrl) {
+                        window.open(data.whatsappUrl, '_blank');
+                    }
+                    loadStatement();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch(err) {
+                alert('त्रुटी आली. पुन्हा प्रयत्न करा.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> विनंती पाठवा (Send Request)';
+            }
+        }
+
+        // Load Statement
+        async function loadStatement() {
+            try {
+                const formData = new FormData();
+                formData.append('mobile', currentUser.mobile);
+
+                const res = await fetch(`${BACKEND_URL}/api/statement`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if(data.status === 'success') {
+                    const tbody = document.getElementById('statementTableBody');
+                    if(data.transactions.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">कोणताही इतिहास सापडला नाही.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = data.transactions.map(t => `
+                        <tr>
+                            <td>${t.date}</td>
+                            <td><strong>${t.actionType}</strong></td>
+                            <td>${t.remark}</td>
+                            <td>${t.planStart} ते ${t.expiry}</td>
+                            <td>${t.remaining} दिवस</td>
+                            <td><span class="status-pill status-active">${t.status}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(e) {}
+        }
+
+        // Admin: Load Pending Requests
+        async function loadAdminData() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/pending-requests`);
+                const data = await res.json();
+
+                const tbody = document.getElementById('pendingRequestsBody');
+                if(data.requests && data.requests.length > 0) {
+                    tbody.innerHTML = data.requests.map(r => `
+                        <tr>
+                            <td>${r.name} (${r.mobile})</td>
+                            <td>${r.plan_name}</td>
+                            <td>₹${r.amount}</td>
+                            <td><code>${r.utr_no}</code></td>
+                            <td>
+                                <button onclick="approveRecharge('${r.mobile}', 30, ${r.id})" style="background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                                    मंजूर करा (+30 दिवस)
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">कोणतीही विनंती पेंडिंग नाही.</td></tr>';
+                }
+            } catch(e) {}
+        }
+
+        // Admin: Approve Request
+        async function approveRecharge(mob, days, reqId) {
+            if(!confirm(`${mob} या युजरला +${days} दिवस ॲप्रूव्ह करायचे आहेत का?`)) return;
+
+            const formData = new FormData();
+            formData.append('mobile', mob);
+            formData.append('rechType', 'Plan Renew');
+            formData.append('days', days);
+            formData.append('requestId', reqId);
+
+            const res = await fetch(`${BACKEND_URL}/api/admin/recharge`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadAdminData();
+        }
+
+        // Admin: Direct Recharge
+        async function handleAdminDirectRecharge(e) {
+            e.preventDefault();
+            const mob = document.getElementById('adminUserMob').value.trim();
+            const type = document.getElementById('adminRechType').value;
+            const days = document.getElementById('adminDaysCount').value;
+
+            const formData = new FormData();
+            formData.append('mobile', mob);
+            formData.append('rechType', type);
+            formData.append('days', days);
+
+            const res = await fetch(`${BACKEND_URL}/api/admin/recharge`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            alert(data.message);
+        }
+
+        // Logout
+        function handleLogout() {
+            if(confirm('तुम्हाला लॉगआऊट करायचे आहे का?')) {
+                localStorage.removeItem('quickid_user');
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>
