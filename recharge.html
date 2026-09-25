@@ -11,14 +11,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- ==============================================================================
-    🟢 🟢 [येथे प्लॅन्स बदला - अतिशय सोपे आणि स्पष्ट] 🟢 🟢
-    👉 प्लॅन दाखवायचा असेल तर: visible: true
-    👉 प्लॅन लपवायचा (बंद करायचा) असेल तर: visible: false
-    👉 किंमत बदलायची असेल तर amount च्या पुढचा आकडा बदला.
-    👉 दिवस बदलायचे असल्यास days च्या पुढचा आकडा बदला.
-    👉 लोकप्रिय टॅग हवा असल्यास popular: true करा.
+    🟢 🟢 [येथे प्लॅन्स आणि UPI ID बदला - अतिशय सोपे आणि स्पष्ट] 🟢 🟢
+    
+    👉 १. UPI ID बदलण्यासाठी: खालील अवतरण चिन्हातील (Quotes) आयडी बदला.
+    👉 २. प्लॅन दाखवायचा असेल तर: visible: true
+    👉 ३. प्लॅन लपवायचा (बंद करायचा) असेल तर: visible: false
+    👉 ४. किंमत बदलायची असेल तर amount च्या पुढचा आकडा बदला.
+    👉 ५. दिवस बदलायचे असल्यास days च्या पुढचा आकडा बदला.
     ============================================================================== -->
     <script>
+        // --------------------------------------------------------------------------
+        // 📝 [टीप: येथे तुमचा UPI ID टाका (QR खाली हाच आयडी दिसेल व कॉपी होईल)]
+        // --------------------------------------------------------------------------
+        const MY_UPI_ID = "sandeshkalbande1234@oksbi";
+
+        // 📝 [टीप: WhatsApp सपोर्ट नंबर]
+        const MY_WHATSAPP_NUMBER = "919403901395";
+
+        // 📝 [टीप: येथे तुमचे सबस्क्रिप्शन प्लॅन्स बदला]
         const MY_RECHARGE_PLANS = [
             { 
                 visible: true,
@@ -48,7 +58,7 @@
                 popular: true
             },
             { 
-                visible: true,
+                visible: false,
                 name: "६ महिने प्लॅन", 
                 amount: 799,
                 days: 180,
@@ -57,7 +67,7 @@
                 popular: false
             },
             { 
-                visible: true,
+                visible: false,
                 name: "१ वर्ष प्लॅन", 
                 amount: 1499,
                 days: 365,
@@ -67,8 +77,7 @@
             }
         ];
 
-        // 🔗 ॲडमिन WhatsApp नंबर आणि बॅकएंड URL
-        const MY_WHATSAPP_NUMBER = "919403901395";
+        // बॅकएंड URL
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
     </script>
 
@@ -102,7 +111,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Frosted Glass Header */
+        /* Frosted Header */
         .header { 
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
             height: 72px; padding: 8px 6%; display: flex; align-items: center; justify-content: space-between; 
@@ -181,7 +190,7 @@
         .qr-box { 
             width: 220px; height: 220px; background: white; margin: 0 auto; padding: 10px; 
             border-radius: 16px; border: 1.5px solid #cbd5e1; box-shadow: var(--shadow-sm); 
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .qr-box img { width: 100%; height: 100%; object-fit: contain; }
         
@@ -222,16 +231,6 @@
         .single-action-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
         .info { margin-top: 22px; padding: 12px 16px; background: #fff9e6; border: 1px solid #fde047; border-radius: 12px; color: #854d0e; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        
-        /* History Box */
-        .history-box { background: white; border-radius: 20px; padding: 25px; border: 1px solid var(--card-border); box-shadow: var(--shadow-sm); margin-top: 35px; }
-        .history-box h3 { font-size: 18px; font-weight: 800; color: var(--dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th { background: #f8fafc; padding: 12px 16px; font-weight: 800; color: var(--slate-800); border-bottom: 2px solid var(--card-border); }
-        td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; color: var(--slate-600); font-weight: 600; }
-        .status-pending { background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
-        .status-approved { background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
 
         .footer { text-align: center; color: var(--slate-400); font-size: 13px; margin: 30px 0 10px; font-weight: 600; }
 
@@ -296,18 +295,19 @@
         <section class="recharge-card">
             <div class="payment-grid">
 
-                <!-- Left: Scan & Pay -->
+                <!-- Left: Scan & Pay with payment_qr.png -->
                 <div class="qr-section">
                     <div class="qr-title"><i class="fas fa-qrcode"></i> QR कोड स्कॅन करा</div>
                     
                     <div class="qr-box">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=sandeshkalbande1234@oksbi&pn=QuickIDPrint" 
-                             alt="Payment QR" onerror="this.src='payment_qr.png'">
+                        <!-- 🟢 थेट तुमच्या Repo मधील payment_qr.png इमेज दिसेल -->
+                        <img src="payment_qr.png" alt="Payment QR" 
+                             onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=' + MY_UPI_ID + '&pn=QuickIDPrint'">
                     </div>
 
                     <div>
                         <span class="upi-badge-box">
-                            <span id="upiIdText">sandeshkalbande1234@oksbi</span>
+                            <span id="upiIdText">लोड होत आहे...</span>
                             <button class="btn-copy-upi" onclick="copyUpiId()" title="UPI ID कॉपी करा">
                                 <i class="fas fa-copy"></i>
                             </button>
@@ -348,7 +348,7 @@
 
                     <div class="process">
                         <h3>रिन्यूअल प्रक्रिया (Steps):</h3>
-                        <div class="step"><div class="step-number">1</div><div class="step-text">QR कोड स्कॅन करून वरील रकमेचे पेमेंट करा.</div></div>
+                        <div class="step"><div class="step-number">1</div><div class="step-text">QR कोड स्कॅन करून वर दिलेली रक्कम पाठवा.</div></div>
                         <div class="step"><div class="step-number">2</div><div class="step-text">१२ अंकी UTR क्रमांक टाकून खालील बटण दाबा. सिस्टीम नोंदणी करून WhatsApp उघडेल.</div></div>
                     </div>
 
@@ -364,29 +364,6 @@
                 <span><strong>महत्त्वाचे:</strong> पेमेंट केल्यानंतर मिळालेला UTR नंबर टाकून सबमिट करा, तुमचा प्लॅन तात्काळ ॲक्टिव्हेट केला जाईल.</span>
             </div>
         </section>
-
-        <!-- 4. Recharge History Table -->
-        <div class="history-box">
-            <h3><i class="fas fa-history" style="color: var(--secondary);"></i> माझी मागील रिचार्ज हिस्ट्री</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>तारीख</th>
-                            <th>प्लॅन</th>
-                            <th>रक्कम</th>
-                            <th>UTR नंबर</th>
-                            <th>स्टेटस</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        <tr>
-                            <td colspan="5" style="text-align:center; color:#64748b;">हिस्ट्री तपासत आहे...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <div class="footer">
             &copy; 2026 QuickIDPrint • जलद • सोपे • विश्वासनीय
@@ -466,6 +443,9 @@
 
         // २. युजर सेशन लोड करणे
         document.addEventListener("DOMContentLoaded", function() {
+            // UPI ID सेट करणे
+            document.getElementById("upiIdText").innerText = MY_UPI_ID;
+
             renderPlansDirectly();
 
             const userStr = localStorage.getItem('quickid_user');
@@ -496,14 +476,12 @@
                 dispStatus.style.color = "#ef4444";
                 dispDays.style.color = "#ef4444";
             }
-
-            loadRechargeHistory();
         });
 
         // UPI ID कॉपी करणे
         function copyUpiId() {
-            navigator.clipboard.writeText("sandeshkalbande1234@oksbi");
-            alert("✅ UPI ID कॉपी झाला: sandeshkalbande1234@oksbi");
+            navigator.clipboard.writeText(MY_UPI_ID);
+            alert("✅ UPI ID कॉपी झाला: " + MY_UPI_ID);
         }
 
         // ३. UTR नोंदवून थेट WhatsApp उघडणे
@@ -561,56 +539,15 @@
                 document.getElementById('utrNumber').value = "";
                 window.open(url, "_blank");
 
-                // हिस्ट्री रीफ्रेश करणे
-                setTimeout(loadRechargeHistory, 1500);
+                // डॅशबोर्डवर परत पाठवणे
+                setTimeout(() => {
+                    window.location.href = "homepage.html";
+                }, 1000);
 
             } catch (err) {
                 alert("त्रुटी: \n" + (err.message || "कृपया पुन्हा प्रयत्न करा."));
-            } finally {
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <i class="fab fa-whatsapp"></i> UTR नोंदवा आणि WhatsApp वर पाठवा';
                 submitBtn.disabled = false;
-            }
-        }
-
-        // ४. मागील रिचार्ज हिस्ट्री लोड करणे
-        async function loadRechargeHistory() {
-            const tbody = document.getElementById('historyTableBody');
-            if (!currentUser) return;
-
-            try {
-                const formData = new FormData();
-                formData.append('mobile', currentUser.mobile);
-
-                const res = await fetch(`${BACKEND_URL}/api/statement`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-
-                if (data.status === 'success' && data.transactions) {
-                    const rechargeTx = data.transactions.filter(t => 
-                        t.actionType.includes('Recharge') || 
-                        t.actionType.includes('Renew') || 
-                        t.actionType.includes('Plan')
-                    );
-
-                    if (rechargeTx.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b;">कोणतीही मागील विनंती सापडली नाही.</td></tr>';
-                        return;
-                    }
-
-                    tbody.innerHTML = rechargeTx.map(item => `
-                        <tr>
-                            <td>${item.date}</td>
-                            <td>${item.actionType}</td>
-                            <td>${item.remark}</td>
-                            <td style="font-family:monospace; font-weight:bold;">${item.planStart} ते ${item.expiry}</td>
-                            <td><span class="status-approved">✅ नोंदीत</span></td>
-                        </tr>
-                    `).join('');
-                }
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b;">इतिहास लोड होऊ शकला नाही.</td></tr>';
             }
         }
     </script>
