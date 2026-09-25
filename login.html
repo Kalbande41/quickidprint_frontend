@@ -373,7 +373,7 @@
 
                     // 1 सेकंदात डॅशबोर्डवर रिडायरेक्ट
                     setTimeout(() => {
-                        window.location.href = 'portal.html';
+                        window.location.href = 'homepage.html';
                     }, 1000);
                 } else {
                     showAlert(data.message || 'लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.');
@@ -395,8 +395,8 @@
                 try {
                     const user = JSON.parse(userStr);
                     if (user && user.mobile) {
-                        // User already logged in -> redirect to portal
-                        window.location.href = 'portal.html';
+                        // User already logged in -> redirect to homepage
+                        window.location.href = 'homepage.html';
                     }
                 } catch(e) {}
             }
