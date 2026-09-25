@@ -297,7 +297,6 @@
     <!-- JAVASCRIPT LOGIC CONNECTED TO RENDER       -->
     <!-- ========================================== -->
     <script>
-        // 🔗 तुमच्या Render बॅकएंडची लिंक
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
         // Password Show / Hide Toggle
@@ -332,7 +331,7 @@
             alertBox.style.display = 'flex';
         }
 
-        // Login Handler
+        // Login Handler with Smart Role Checking
         async function handleLoginSubmit(event) {
             event.preventDefault();
 
@@ -369,11 +368,20 @@
                 if (data.status === 'success') {
                     // Session Save
                     localStorage.setItem('quickid_user', JSON.stringify(data));
-                    showAlert(`स्वागत आहे, ${data.name}! डॅशबोर्ड उघडत आहे...`, 'success');
+                    
+                    // 👑 ADMIN तपासणी: जर Admin असेल तर admin.html, अन्यथा homepage.html
+                    const isAdmin = (data.role === 'admin' || data.isAdmin === true);
+                    const targetPage = isAdmin ? 'admin.html' : 'homepage.html';
+                    
+                    const welcomeMsg = isAdmin 
+                        ? `👑 स्वागत आहे ॲडमिन, ${data.name}! ॲडमिन पॅनेल उघडत आहे...` 
+                        : `स्वागत आहे, ${data.name}! डॅशबोर्ड उघडत आहे...`;
 
-                    // 1 सेकंदात डॅशबोर्डवर रिडायरेक्ट
+                    showAlert(welcomeMsg, 'success');
+
+                    // १ सेकंदात योग्य पेजवर पाठवणे
                     setTimeout(() => {
-                        window.location.href = 'homepage.html';
+                        window.location.replace(targetPage);
                     }, 1000);
                 } else {
                     showAlert(data.message || 'लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.');
@@ -388,15 +396,15 @@
             }
         }
 
-        // जर युजर आधीच लॉगिन असेल, तर थेट पोर्टलवर नेणे
+        // जर युजर आधीच लॉगिन असेल, तर रोलनुसार रिडायरेक्ट करणे
         window.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('quickid_user');
             if (userStr) {
                 try {
                     const user = JSON.parse(userStr);
                     if (user && user.mobile) {
-                        // User already logged in -> redirect to homepage
-                        window.location.href = 'homepage.html';
+                        const targetPage = (user.role === 'admin' || user.isAdmin === true) ? 'admin.html' : 'homepage.html';
+                        window.location.replace(targetPage);
                     }
                 } catch(e) {}
             }
