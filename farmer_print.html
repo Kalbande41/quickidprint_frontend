@@ -131,9 +131,10 @@
             </div>
 
             <div class="form-grid">
+                <!-- 🟢 शेतकरी आयडी (४-३-४ ऑटो फॉरमॅट) -->
                 <div class="form-group full-width" style="background: #fefce8; padding: 12px; border-radius: 8px; border: 1px solid #fde047;">
-                    <label style="color: #a16207;"><i class="fas fa-id-badge"></i> शेतकरी आयडी (Farmer ID):</label>
-                    <input type="text" id="farmerId" placeholder="उदा. MH-12345678 (११ अक्षरे/अंक आवश्यक)" maxlength="11" required>
+                    <label style="color: #a16207;"><i class="fas fa-id-badge"></i> शेतकरी आयडी (Farmer ID) [४-३-४ फॉरमॅट]:</label>
+                    <input type="text" id="farmerId" placeholder="उदा. 1234 567 8901 (११ अक्षरे/अंक)" maxlength="11" required>
                 </div>
 
                 <div class="form-group">
@@ -159,9 +160,10 @@
                     <label>मोबाईल नं:</label>
                     <input type="text" id="mobile" placeholder="१० अंकी मोबाईल नंबर" maxlength="10" required>
                 </div>
+                <!-- 🟢 आधार क्रमांक (४-४-४ ऑटो फॉरमॅट) -->
                 <div class="form-group">
-                    <label>आधार नं:</label>
-                    <input type="text" id="aadhar" placeholder="१२ अंकी आधार नंबर (स्पेस देऊ नका)" maxlength="12" required>
+                    <label>आधार नं. (४-४-४ फॉरमॅट):</label>
+                    <input type="text" id="aadhar" placeholder="उदा. 1234 5678 9012" maxlength="14" required>
                 </div>
                 <div class="form-group full-width">
                     <label>शेतकऱ्याचा फोटो निवडा:</label>
@@ -184,7 +186,7 @@
                             <th>तालुका</th>
                             <th>गाव</th>
                             <th>गट नंबर</th>
-                            <!-- 🟢 नवीन जोडलेला खाता नं. कॉलम -->
+                            <!-- 🟢 खाता नं. कॉलम -->
                             <th>खाता नं.</th>
                             <th>क्षेत्र (हे.)</th>
                             <th style="width: 50px;">काढा</th>
@@ -260,6 +262,31 @@
             }
         }
 
+        // 🟢 १. आधार नंबर ४-४-४ फॉरमॅट इनपुट हँडलर
+        const aadharInput = document.getElementById('aadhar');
+        aadharInput.addEventListener('input', function(e) {
+            let digits = this.value.replace(/\D/g, '');
+            if (digits.length > 12) digits = digits.slice(0, 12);
+            let formatted = '';
+            for (let i = 0; i < digits.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += digits[i];
+            }
+            this.value = formatted;
+        });
+
+        // 🟢 २. शेतकरी आयडी ४-३-४ फॉरमॅट इनपुट हँडलर
+        const farmerIdInput = document.getElementById('farmerId');
+        farmerIdInput.addEventListener('input', function(e) {
+            let val = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            if (val.length > 11) val = val.slice(0, 11);
+            let formatted = '';
+            if (val.length > 0) formatted += val.slice(0, 4);
+            if (val.length > 4) formatted += ' ' + val.slice(4, 7);
+            if (val.length > 7) formatted += ' ' + val.slice(7, 11);
+            this.value = formatted;
+        });
+
         function updateRowIndexes() {
             const rows = document.querySelectorAll('#landTbody tr');
             rows.forEach((row, index) => {
@@ -325,8 +352,9 @@
             }
 
             const farmerId = document.getElementById('farmerId');
-            if (farmerId.value.trim().length !== 11) {
-                farmerId.setCustomValidity("शेतकरी आयडी बरोबर ११ अक्षरांचा/अंकांचा असावा.");
+            const cleanFarmerId = farmerId.value.replace(/\s+/g, '');
+            if (cleanFarmerId.length !== 11) {
+                farmerId.setCustomValidity("शेतकरी आयडी बरोबर ११ अक्षरांचा/अंकांचा (४-३-४ फॉरमॅट) असावा.");
                 farmerId.reportValidity();
                 farmerId.addEventListener('input', function() { this.setCustomValidity(''); }, {once:true});
                 return;
@@ -341,8 +369,9 @@
             }
 
             const aadhar = document.getElementById('aadhar');
-            if (aadhar.value.trim().length !== 12 || isNaN(aadhar.value.trim())) {
-                aadhar.setCustomValidity("आधार क्रमांक बरोबर १२ अंकांचा असावा (स्पेस न देता).");
+            const cleanAadhar = aadhar.value.replace(/\s+/g, '');
+            if (cleanAadhar.length !== 12 || isNaN(cleanAadhar)) {
+                aadhar.setCustomValidity("आधार क्रमांक बरोबर १२ अंकांचा (४-४-४ फॉरमॅट) असावा.");
                 aadhar.reportValidity();
                 aadhar.addEventListener('input', function() { this.setCustomValidity(''); }, {once:true});
                 return;
@@ -384,14 +413,21 @@
                 const photoFile = document.getElementById('farmerPhoto').files[0];
                 const photoUrl = await readFileAsDataURL(photoFile);
 
+                // ४-३-४ शेतकरी आयडी आणि ४-४-४ आधार फॉरमॅटिंग
+                const rawFarmerId = document.getElementById('farmerId').value.replace(/\s+/g, '').toUpperCase();
+                const displayFarmerId = rawFarmerId.slice(0, 4) + ' ' + rawFarmerId.slice(4, 7) + ' ' + rawFarmerId.slice(7, 11);
+
+                const rawAadhar = document.getElementById('aadhar').value.replace(/\s+/g, '');
+                const displayAadhar = rawAadhar.slice(0, 4) + ' ' + rawAadhar.slice(4, 8) + ' ' + rawAadhar.slice(8, 12);
+
                 const data = {
-                    farmerId: document.getElementById('farmerId').value.trim(), 
+                    farmerId: displayFarmerId, 
                     engName: document.getElementById('engName').value.trim().toUpperCase(),
                     marName: document.getElementById('marName').value.trim(),
                     dob: formatDate(document.getElementById('dob').value),
                     gender: document.getElementById('gender').value,
                     mobile: document.getElementById('mobile').value.trim(),
-                    aadhar: document.getElementById('aadhar').value.trim(),
+                    aadhar: displayAadhar,
                     address: document.getElementById('address').value.trim(),
                     landData: []
                 };
@@ -411,7 +447,7 @@
 
                 const qrContainer = document.getElementById('qrCodeContainer');
                 qrContainer.innerHTML = "";
-                const qrText = `F-ID:${data.farmerId}, Name:${data.engName}, Mob:${data.mobile}`;
+                const qrText = `Farmer ID:${data.farmerId}, Name:${data.engName}, Mob:${data.mobile}`;
                 
                 new QRCode(qrContainer, { 
                     text: qrText, 
@@ -480,10 +516,6 @@
                 ctx.drawImage(qrCodeImg, qrX, qrY, qrW, qrH); 
             } catch(e) { console.log("QR Error"); }
 
-            ctx.fillStyle = "#000000";
-            ctx.textAlign = "left";
-            ctx.font = "bold 26px Mukta, sans-serif";
-            
             const labelX = 330;   
             const colonX = 490;   
             const valueX = 510;   
@@ -491,24 +523,42 @@
             let startY = 160;     
             const gapY = 55;      
 
-            ctx.fillText("Name", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.engName, valueX, startY);
-            startY += gapY; ctx.fillText("नाव", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.marName, valueX, startY);
+            ctx.font = "bold 26px Mukta, sans-serif";
+            ctx.textAlign = "left";
+
+            // 🟢 नाव (Name) हिरव्या रंगामध्ये (Green Color)
+            ctx.fillStyle = "#000000";
+            ctx.fillText("Name", labelX, startY); ctx.fillText(":", colonX, startY);
+            ctx.fillStyle = "#15803d"; // Deep Green
+            ctx.fillText(data.engName, valueX, startY);
+
+            // 🟢 मराठी नाव हिरव्या रंगामध्ये (Green Color)
+            startY += gapY; 
+            ctx.fillStyle = "#000000";
+            ctx.fillText("नाव", labelX, startY); ctx.fillText(":", colonX, startY);
+            ctx.fillStyle = "#15803d"; // Deep Green
+            ctx.fillText(data.marName, valueX, startY);
+
+            // उर्वरित माहिती (काळ्या रंगात)
+            ctx.fillStyle = "#000000";
             startY += gapY; ctx.fillText("DOB", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.dob, valueX, startY);
             startY += gapY; ctx.fillText("Gender", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.gender, valueX, startY);
             startY += gapY; ctx.fillText("मोबाईल नं.", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.mobile, valueX, startY);
+            // आधार ४-४-४ फॉरमॅटमध्ये
             startY += gapY; ctx.fillText("आधार नं.", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.aadhar, valueX, startY);
             
+            // 🟢 कार्डवरील खालील शेतकरी आयडी: "Farmer ID : " सह हिरव्या रंगात (Green)
             ctx.textAlign = "center";
             ctx.font = "bold 38px Mukta, sans-serif";
-            ctx.fillStyle = "#075d2c"; 
-            ctx.fillText(data.farmerId, 520, 530); 
+            ctx.fillStyle = "#075d2c"; // Bold Rich Green
+            ctx.fillText("Farmer ID : " + data.farmerId, 520, 530); 
 
             cleanFrontCanvas.width = canvas.width;
             cleanFrontCanvas.height = canvas.height;
             cleanFrontCanvas.getContext('2d').drawImage(canvas, 0, 0);
             finalFrontImgData = cleanFrontCanvas.toDataURL('image/jpeg', 1.0);
 
-            // प्रिव्ह्यू वॉटरमार्क (डाऊनलोड PDF मध्ये हा नसतो)
+            // प्रिव्ह्यू वॉटरमार्क (डाऊनलोड PDF मध्ये नसतो)
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(-Math.PI / 6); 
@@ -743,7 +793,6 @@
 
             } catch (err) {
                 console.warn("Audit Log Notice:", err);
-                // नेटवर्क एरर असल्यास युजरचे नुकसान होऊ नये म्हणून थेट PDF डाऊनलोड करा
                 exportToPDF();
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
