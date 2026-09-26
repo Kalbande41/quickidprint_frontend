@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
     <style>
         :root {
             --primary: #16a34a;
@@ -92,143 +89,23 @@
         .btn-process { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: 800; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
         .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
         
-        /* 🎨 PREVIEW POPUP MODAL STYLES */
+        /* ⚡ इतर सर्व्हिसेससारखाच प्रोग्रेस मोडल */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 15px;
-            animation: fadeIn 0.25s ease-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 9999;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-card {
-            background: white;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 820px;
-            max-height: 92vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--card-border);
-            overflow: hidden;
-            animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .modal-box {
+            background: white; border-radius: 16px; padding: 30px; width: 90%; max-width: 440px;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        @keyframes scaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .modal-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--card-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8fafc;
+        .progress-bar-wrap { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 20px 0 10px; }
+        .progress-bar { width: 0%; height: 100%; background: #16a34a; transition: width 0.3s; }
+        .step-msg { font-size: 14.5px; color: #475569; font-weight: 600; margin-top: 6px; }
+        .btn-modal-done {
+            background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 8px;
+            font-weight: 700; cursor: pointer; margin-top: 15px; display: none; width: 100%;
         }
-        .modal-title { font-size: 18px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
-        .btn-close-modal { background: none; border: none; font-size: 20px; color: var(--slate); cursor: pointer; border-radius: 6px; padding: 4px 8px; transition: 0.2s; }
-        .btn-close-modal:hover { background: #e2e8f0; color: var(--dark); }
-
-        .modal-body {
-            padding: 20px 24px;
-            overflow-y: auto;
-            text-align: center;
-            background: #f1f5f9;
-        }
-        .preview-notice {
-            background: #dcfce7;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-align: left;
-        }
-
-        .cards-preview-scroll {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: center;
-        }
-        .card-preview-block {
-            width: 100%;
-            max-width: 600px;
-            background: white;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .card-preview-block label {
-            display: block;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--slate);
-            margin-bottom: 8px;
-            text-align: left;
-        }
-        .card-preview-block canvas {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-            border: 1px solid #cbd5e1;
-        }
-
-        .modal-footer {
-            padding: 14px 24px;
-            border-top: 1px solid var(--card-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            background: #f8fafc;
-        }
-        .btn-modal-back {
-            background: white;
-            border: 1.5px solid #cbd5e1;
-            color: var(--slate);
-            padding: 12px 18px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        .btn-modal-back:hover { background: #e2e8f0; color: var(--dark); border-color: #94a3b8; }
-
-        .btn-modal-download {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
-        }
-        .btn-modal-download:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
-
-        #qrCodeContainer { display: none; }
     </style>
 </head>
 <body>
@@ -242,9 +119,9 @@
         <h2><i class="fas fa-tractor"></i> स्मार्ट शेतकरी ओळखपत्र</h2>
 
         <div class="info-alert-box">
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fas fa-shield-alt"></i>
             <div>
-                <strong>महत्त्वाची सूचना:</strong> हे स्मार्ट शेतकरी ओळखपत्र शासकीय नसून शेतकऱ्यांच्या सोयीसाठी आणि माहितीकरिता तयार केले जात आहे. याची माहिती वापरकर्त्याने ग्राहकास देणे आवश्यक आहे.
+                <strong>सुरक्षित क्लाउड प्रणाली:</strong> संपूर्ण ओळखपत्र निर्मिती आणि ३०० DPI HD PDF सुरक्षित क्लाउड सर्व्हरद्वारे प्रक्रिया केली जाते.
             </div>
         </div>
         
@@ -252,7 +129,7 @@
             <div class="section-title">१. वैयक्तिक माहिती (Front Side)</div>
             
             <div class="form-group" style="text-align: left; margin-bottom: 15px;">
-                <label>पेपरची साईझ निवडा:</label>
+                <label>प्रिंट साईझ निवडा:</label>
                 <select id="printSize" style="max-width: 320px;">
                     <option value="4x6">4x6 Photo Paper (Smart HD)</option>
                     <option value="A4">A4 Full Size Paper</option>
@@ -260,10 +137,9 @@
             </div>
 
             <div class="form-grid">
-                <!-- 🟢 शेतकरी आयडी (४-३-४ ऑटो फॉरमॅट) -->
                 <div class="form-group full-width" style="background: #fefce8; padding: 12px; border-radius: 8px; border: 1px solid #fde047;">
-                    <label style="color: #a16207;"><i class="fas fa-id-badge"></i> शेतकरी आयडी (Farmer ID) [४-३-४ फॉरमॅट]:</label>
-                    <input type="text" id="farmerId" placeholder="उदा. MH12 345 6789 (११ अक्षरे/अंक)" maxlength="13" required>
+                    <label style="color: #a16207;"><i class="fas fa-id-badge"></i> शेतकरी आयडी (Farmer ID):</label>
+                    <input type="text" id="farmerId" placeholder="उदा. MH12 345 6789" maxlength="13" oninput="formatFarmerIdInput(this)" required>
                 </div>
 
                 <div class="form-group">
@@ -287,12 +163,11 @@
                 </div>
                 <div class="form-group">
                     <label>मोबाईल नं:</label>
-                    <input type="text" id="mobile" placeholder="१० अंकी मोबाईल नंबर" maxlength="10" required>
+                    <input type="text" id="farmerMobile" placeholder="१० अंकी मोबाईल नंबर" maxlength="10" required>
                 </div>
-                <!-- 🟢 आधार क्रमांक (४-४-४ ऑटो फॉरमॅट) -->
                 <div class="form-group">
-                    <label>आधार नं. (४-४-४ फॉरमॅट):</label>
-                    <input type="text" id="aadhar" placeholder="उदा. 1234 5678 9012" maxlength="14" required>
+                    <label>आधार नं (४-४-४):</label>
+                    <input type="text" id="aadhar" placeholder="१२३४ ५६७८ ९०१२" maxlength="14" oninput="formatAadharInput(this)" required>
                 </div>
                 <div class="form-group full-width">
                     <label>शेतकऱ्याचा फोटो निवडा:</label>
@@ -315,7 +190,7 @@
                             <th>तालुका</th>
                             <th>गाव</th>
                             <th>गट नंबर</th>
-                            <!-- 🟢 खाता नं. कॉलम -->
+                            <!-- 🟢 नवीन जोडलेला खाता नं. कॉलम -->
                             <th>खाता नं.</th>
                             <th>क्षेत्र (हे.)</th>
                             <th style="width: 50px;">काढा</th>
@@ -324,12 +199,12 @@
                     <tbody id="landTbody">
                         <tr>
                             <td class="row-index">1</td>
-                            <td><input type="text" class="l-dist" placeholder="आवश्यक"></td>
-                            <td><input type="text" class="l-tal" placeholder="आवश्यक"></td>
-                            <td><input type="text" class="l-vil" placeholder="आवश्यक"></td>
-                            <td><input type="text" class="l-gat" placeholder="आवश्यक"></td>
-                            <td><input type="text" class="l-khata" placeholder="आवश्यक"></td>
-                            <td><input type="text" class="l-area" placeholder="आवश्यक"></td>
+                            <td><input type="text" class="l-dist" placeholder="जिल्हा"></td>
+                            <td><input type="text" class="l-tal" placeholder="तालुका"></td>
+                            <td><input type="text" class="l-vil" placeholder="गाव"></td>
+                            <td><input type="text" class="l-gat" placeholder="गट नं."></td>
+                            <td><input type="text" class="l-khata" placeholder="खाता नं."></td>
+                            <td><input type="text" class="l-area" placeholder="क्षेत्र"></td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -340,645 +215,203 @@
                 <button type="button" class="btn-add-row" onclick="addLandRow()"><i class="fas fa-plus-circle"></i> नवीन जमीन ऍड करा</button>
             </div>
 
-            <button id="btnProcess" type="button" class="btn-process" onclick="validateAndGenerate()"><i class="fas fa-magic"></i> ओळखपत्र तयार करा</button>
+            <button id="btnSubmit" type="button" class="btn-process" onclick="submitToBackend()"><i class="fas fa-file-pdf"></i> ओळखपत्र तयार करा व HD PDF डाऊनलोड करा</button>
         </form>
-
-        <div id="qrCodeContainer"></div>
     </div>
 
-    <!-- 🎨 कार्ड प्रिव्ह्यू पॉपअप विंडो (MODAL) -->
-    <div id="previewModal" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-id-card" style="color:var(--primary);"></i> कार्ड प्रिव्ह्यू तपासा</div>
-                <button type="button" class="btn-close-modal" onclick="closePreviewModal()"><i class="fas fa-times"></i></button>
+    <!-- ⚡ प्रोग्रेस मोडल (इतर सर्व्हिसेससारखाच) -->
+    <div id="progressModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modalTitle" style="color:#15803d; font-size:20px;"><i class="fas fa-spinner fa-spin"></i> ओळखपत्र तयार होत आहे...</h3>
+            <p id="modalDesc" style="font-size:14px; color:#64748b; margin-top:5px;">सुरक्षित सर्व्हरवर ३०० DPI HD PDF बनवण्याची प्रक्रिया सुरू आहे.</p>
+            <div class="progress-bar-wrap">
+                <div id="progressBar" class="progress-bar"></div>
             </div>
-
-            <div class="modal-body">
-                <div class="preview-notice">
-                    <i class="fas fa-circle-check"></i>
-                    <span>कार्ड तयार झाले आहे! माहिती अचूक असल्यास डाऊनलोड करा. दुरुस्ती हवी असल्यास खालील 'माहिती दुरुस्त करा' बटणावर क्लिक करा.</span>
-                </div>
-
-                <div class="cards-preview-scroll">
-                    <div class="card-preview-block">
-                        <label><i class="fas fa-circle-dot" style="color:var(--primary);"></i> समोरील बाजू (Front Side)</label>
-                        <canvas id="frontCanvas"></canvas>
-                    </div>
-                    <div class="card-preview-block">
-                        <label><i class="fas fa-circle-dot" style="color:var(--primary);"></i> मागील बाजू (Back Side)</label>
-                        <canvas id="backCanvas"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn-modal-back" onclick="closePreviewModal()">
-                    <i class="fas fa-arrow-left"></i> माहिती दुरुस्त करा (Edit / Back)
-                </button>
-
-                <button type="button" id="btnDownload" class="btn-modal-download" onclick="downloadIdCard()">
-                    <i class="fas fa-file-pdf"></i> फायनल HD PDF डाऊनलोड करा
-                </button>
-            </div>
+            <div id="stepMsg" class="step-msg">डेटा तपासत आहे...</div>
+            <button id="btnDone" class="btn-modal-done" onclick="closeModal()"><i class="fas fa-check"></i> डाऊनलोड पूर्ण (OK)</button>
         </div>
     </div>
 
     <script>
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
-        const FRONT_TEMPLATE_URL = 'front_bg.png'; 
-        const BACK_TEMPLATE_URL = 'back_bg.png';   
-        
-        let finalFrontImgData = null;
-        let finalBackImgData = null;
-        
-        let cleanFrontCanvas = document.createElement('canvas');
-        let cleanBackCanvas = document.createElement('canvas');
 
-        let maxRows = 5;
-
-        // 🔒 युजर ऑथेंटिकेशन आणि प्लॅन एक्सपायरी तपासणी
+        // 🔒 युजर ऑथेंटिकेशन
         let userData = null;
         try {
             userData = JSON.parse(localStorage.getItem('quickid_user'));
-        } catch(e) {
-            userData = null;
-        }
+        } catch(e) { userData = null; }
 
         if (!userData || !userData.mobile) {
             alert("कृपया प्रथम लॉगिन करा!");
             window.location.replace("login.html");
-        } else {
-            const remDays = parseInt(userData.remainingDays) || 0;
-            if (remDays <= 0 && userData.role !== 'admin' && !userData.isAdmin) {
-                alert("तुमच्या प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा!");
-                window.location.replace("recharge.html");
-            }
         }
 
-        // 🟢 १. आधार नंबर ४-४-४ फॉरमॅट इनपुट हँडलर
-        const aadharInput = document.getElementById('aadhar');
-        aadharInput.addEventListener('input', function(e) {
-            let digits = this.value.replace(/\D/g, '');
-            if (digits.length > 12) digits = digits.slice(0, 12);
-            let formatted = '';
-            for (let i = 0; i < digits.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += ' ';
-                formatted += digits[i];
+        // 🟢 आधार 4-4-4 फॉरमॅटिंग
+        function formatAadharInput(input) {
+            let val = input.value.replace(/\D/g, '').substring(0, 12);
+            let parts = [];
+            for (let i = 0; i < val.length; i += 4) {
+                parts.push(val.substring(i, i + 4));
             }
-            this.value = formatted;
-        });
+            input.value = parts.join(' ');
+        }
 
-        // 🟢 २. शेतकरी आयडी ४-३-४ फॉरमॅट इनपुट हँडलर
-        const farmerIdInput = document.getElementById('farmerId');
-        farmerIdInput.addEventListener('input', function(e) {
-            let val = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-            if (val.length > 11) val = val.slice(0, 11);
-            let formatted = '';
-            if (val.length > 0) formatted += val.slice(0, 4);
-            if (val.length > 4) formatted += ' ' + val.slice(4, 7);
-            if (val.length > 7) formatted += ' ' + val.slice(7, 11);
-            this.value = formatted;
-        });
-
-        function updateRowIndexes() {
-            const rows = document.querySelectorAll('#landTbody tr');
-            rows.forEach((row, index) => {
-                row.querySelector('.row-index').innerText = index + 1;
-            });
+        // 🟢 शेतकरी आयडी 4-3-4 फॉरमॅटिंग
+        function formatFarmerIdInput(input) {
+            let val = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 11);
+            let res = "";
+            if (val.length > 7) {
+                res = val.substring(0, 4) + ' ' + val.substring(4, 7) + ' ' + val.substring(7);
+            } else if (val.length > 4) {
+                res = val.substring(0, 4) + ' ' + val.substring(4);
+            } else {
+                res = val;
+            }
+            input.value = res;
         }
 
         function addLandRow() {
             const tbody = document.getElementById('landTbody');
-            const rowCount = tbody.getElementsByTagName('tr').length;
-            
-            if(rowCount >= maxRows) {
-                alert("तुम्ही जास्तीत जास्त ५ जमिनीच्या नोंदी ऍड करू शकता.");
+            const rowCount = tbody.querySelectorAll('tr').length;
+            if (rowCount >= 5) {
+                alert("एका ओळखपत्रावर जास्तीत जास्त ५ जमिनींची नोंद करता येते.");
                 return;
             }
-
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="row-index"></td>
-                <td><input type="text" class="l-dist"></td>
-                <td><input type="text" class="l-tal"></td>
-                <td><input type="text" class="l-vil"></td>
-                <td><input type="text" class="l-gat"></td>
-                <td><input type="text" class="l-khata"></td>
-                <td><input type="text" class="l-area"></td>
-                <td><button type="button" class="btn-remove" onclick="this.closest('tr').remove(); updateRowIndexes();"><i class="fas fa-times"></i></button></td>
+                <td class="row-index">${rowCount + 1}</td>
+                <td><input type="text" class="l-dist" placeholder="जिल्हा"></td>
+                <td><input type="text" class="l-tal" placeholder="तालुका"></td>
+                <td><input type="text" class="l-vil" placeholder="गाव"></td>
+                <td><input type="text" class="l-gat" placeholder="गट नं."></td>
+                <td><input type="text" class="l-khata" placeholder="खाता नं."></td>
+                <td><input type="text" class="l-area" placeholder="क्षेत्र"></td>
+                <td><button type="button" class="btn-remove" onclick="removeLandRow(this)"><i class="fas fa-trash"></i></button></td>
             `;
             tbody.appendChild(tr);
-            updateRowIndexes();
         }
 
-        function formatDate(dateString) {
-            if(!dateString) return "";
-            const parts = dateString.split("-");
-            return `${parts[2]}/${parts[1]}/${parts[0]}`;
-        }
-
-        function readFileAsDataURL(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function loadImage(src) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.crossOrigin = "Anonymous";
-                img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error("Image not found: " + src));
-                img.src = src;
-            });
-        }
-
-        function validateAndGenerate() {
-            const form = document.getElementById('farmerForm');
-            
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const farmerId = document.getElementById('farmerId');
-            const cleanFarmerId = farmerId.value.replace(/\s+/g, '');
-            if (cleanFarmerId.length !== 11) {
-                farmerId.setCustomValidity("शेतकरी आयडी बरोबर ११ अक्षरांचा/अंकांचा (४-३-४ फॉरमॅट) असावा.");
-                farmerId.reportValidity();
-                farmerId.addEventListener('input', function() { this.setCustomValidity(''); }, {once:true});
-                return;
-            }
-
-            const mobile = document.getElementById('mobile');
-            if (mobile.value.trim().length !== 10 || isNaN(mobile.value.trim())) {
-                mobile.setCustomValidity("मोबाईल नंबर बरोबर १० अंकांचा असावा.");
-                mobile.reportValidity();
-                mobile.addEventListener('input', function() { this.setCustomValidity(''); }, {once:true});
-                return;
-            }
-
-            const aadhar = document.getElementById('aadhar');
-            const cleanAadhar = aadhar.value.replace(/\s+/g, '');
-            if (cleanAadhar.length !== 12 || isNaN(cleanAadhar)) {
-                aadhar.setCustomValidity("आधार क्रमांक बरोबर १२ अंकांचा (४-४-४ फॉरमॅट) असावा.");
-                aadhar.reportValidity();
-                aadhar.addEventListener('input', function() { this.setCustomValidity(''); }, {once:true});
-                return;
-            }
-
-            let hasValidLandData = false;
+        function removeLandRow(btn) {
+            const tr = btn.closest('tr');
+            tr.remove();
             const rows = document.querySelectorAll('#landTbody tr');
-            rows.forEach(row => {
+            rows.forEach((r, idx) => {
+                r.querySelector('.row-index').innerText = (idx + 1).toString();
+            });
+        }
+
+        // 🚀 १००% बॅकएंड रिक्वेस्ट व थेट डाऊनलोड
+        async function submitToBackend() {
+            const farmerId = document.getElementById('farmerId').value.trim();
+            const engName = document.getElementById('engName').value.trim();
+            const marName = document.getElementById('marName').value.trim();
+            const dob = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const farmerMobile = document.getElementById('farmerMobile').value.trim();
+            const aadhar = document.getElementById('aadhar').value.trim();
+            const photoFile = document.getElementById('farmerPhoto').files[0];
+            const address = document.getElementById('address').value.trim();
+            const printSize = document.getElementById('printSize').value;
+
+            if (!farmerId || !engName || !marName || !dob || !farmerMobile || !aadhar || !address || !photoFile) {
+                alert("⚠️ कृपया सर्व आवश्यक वैयक्तिक माहिती, शेतीचा पत्ता आणि फोटो निवडा!");
+                return;
+            }
+
+            const landRows = document.querySelectorAll('#landTbody tr');
+            let landData = [];
+            landRows.forEach(row => {
                 let d = row.querySelector('.l-dist').value.trim();
                 let t = row.querySelector('.l-tal').value.trim();
                 let v = row.querySelector('.l-vil').value.trim();
                 let g = row.querySelector('.l-gat').value.trim();
                 let k = row.querySelector('.l-khata').value.trim();
                 let a = row.querySelector('.l-area').value.trim();
-                
                 if (d && t && v && g && k && a) {
-                    hasValidLandData = true;
+                    landData.push({ dist: d, tal: t, vil: v, gat: g, khata: k, area: a });
                 }
             });
 
-            if (!hasValidLandData) {
-                alert("⚠️ शेती विषयक माहिती भरणे आवश्यक आहे!\nकृपया किमान एका जमिनीचा संपूर्ण तपशील (जिल्हा, तालुका, गाव, गट नंबर, खाता नं. आणि क्षेत्र) भरा.");
-                const firstDistInput = document.querySelector('.l-dist');
-                firstDistInput.focus();
-                firstDistInput.style.border = "2px solid #dc2626"; 
-                setTimeout(() => firstDistInput.style.border = "1px solid #e2e8f0", 3000);
+            if (landData.length === 0) {
+                alert("⚠️ कृपया किमान एका शेतीचा संपूर्ण तपशील (गट नं. व खाता नं. सह) भरा!");
                 return;
             }
 
-            generateCard();
-        }
+            // मोडल दाखवणे
+            const modal = document.getElementById('progressModal');
+            const pBar = document.getElementById('progressBar');
+            const stepMsg = document.getElementById('stepMsg');
+            const btnDone = document.getElementById('btnDone');
+            
+            modal.style.display = 'flex';
+            pBar.style.width = '20%';
+            stepMsg.innerText = "माहिती सुरक्षित सर्व्हरकडे पाठवत आहे...";
 
-        async function generateCard() {
-            const btnProcess = document.getElementById('btnProcess');
-            btnProcess.innerHTML = "<i class='fas fa-spinner fa-spin'></i> कार्ड बनत आहे...";
-            btnProcess.disabled = true;
+            const formData = new FormData();
+            formData.append('mobile', userData.mobile);
+            formData.append('size', printSize);
+            formData.append('farmerId', farmerId);
+            formData.append('engName', engName);
+            formData.append('marName', marName);
+            formData.append('dob', dob);
+            formData.append('gender', gender);
+            formData.append('farmerMobile', farmerMobile);
+            formData.append('aadhar', aadhar);
+            formData.append('address', address);
+            formData.append('landDataJson', JSON.stringify(landData));
+            formData.append('photo', photoFile);
 
             try {
-                const photoFile = document.getElementById('farmerPhoto').files[0];
-                const photoUrl = await readFileAsDataURL(photoFile);
+                pBar.style.width = '55%';
+                stepMsg.innerText = "सर्व्हरवर ३०० DPI HD PDF तयार होत आहे...";
 
-                const rawFarmerId = document.getElementById('farmerId').value.replace(/\s+/g, '').toUpperCase();
-                const displayFarmerId = rawFarmerId.slice(0, 4) + ' ' + rawFarmerId.slice(4, 7) + ' ' + rawFarmerId.slice(7, 11);
-
-                const rawAadhar = document.getElementById('aadhar').value.replace(/\s+/g, '');
-                const displayAadhar = rawAadhar.slice(0, 4) + ' ' + rawAadhar.slice(4, 8) + ' ' + rawAadhar.slice(8, 12);
-
-                const data = {
-                    farmerId: displayFarmerId, 
-                    engName: document.getElementById('engName').value.trim().toUpperCase(),
-                    marName: document.getElementById('marName').value.trim(),
-                    dob: formatDate(document.getElementById('dob').value),
-                    gender: document.getElementById('gender').value,
-                    mobile: document.getElementById('mobile').value.trim(),
-                    aadhar: displayAadhar,
-                    address: document.getElementById('address').value.trim(),
-                    landData: []
-                };
-
-                const rows = document.querySelectorAll('#landTbody tr');
-                rows.forEach(row => {
-                    let d = row.querySelector('.l-dist').value.trim();
-                    let t = row.querySelector('.l-tal').value.trim();
-                    let v = row.querySelector('.l-vil').value.trim();
-                    let g = row.querySelector('.l-gat').value.trim();
-                    let k = row.querySelector('.l-khata').value.trim();
-                    let a = row.querySelector('.l-area').value.trim();
-                    if(d && t && v && g && k && a) {
-                        data.landData.push({ dist: d, tal: t, vil: v, gat: g, khata: k, area: a });
-                    }
-                });
-
-                const qrContainer = document.getElementById('qrCodeContainer');
-                qrContainer.innerHTML = "";
-                const qrText = `Farmer ID:${data.farmerId}, Name:${data.engName}, Mob:${data.mobile}`;
-                
-                new QRCode(qrContainer, { 
-                    text: qrText, 
-                    width: 200, 
-                    height: 200,
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-
-                setTimeout(async () => {
-                    try {
-                        let qrImgUrl = "";
-                        const qrCanvas = document.querySelector('#qrCodeContainer canvas');
-                        
-                        if(qrCanvas) {
-                            qrImgUrl = qrCanvas.toDataURL('image/png');
-                        } else {
-                            const qrImg = document.querySelector('#qrCodeContainer img');
-                            if(qrImg) qrImgUrl = qrImg.src;
-                        }
-
-                        await drawFrontCard(data, photoUrl, qrImgUrl);
-                        await drawBackCard(data);
-
-                        // 🟢 प्रिव्ह्यू पॉपअप विंडो उघडणे
-                        openPreviewModal();
-
-                        btnProcess.disabled = false;
-                        btnProcess.innerHTML = "<i class='fas fa-magic'></i> ओळखपत्र तयार करा";
-
-                    } catch (drawErr) {
-                        console.error(drawErr);
-                        alert("कार्ड रेखाटताना त्रुटी आली. कृपया इमेजेस आणि डेटा तपासा.");
-                        btnProcess.disabled = false;
-                        btnProcess.innerHTML = "<i class='fas fa-magic'></i> ओळखपत्र तयार करा";
-                    }
-                }, 800); 
-
-            } catch (err) {
-                console.error(err);
-                alert("तांत्रिक त्रुटी: " + err.message);
-                btnProcess.disabled = false;
-                btnProcess.innerHTML = "<i class='fas fa-magic'></i> ओळखपत्र तयार करा";
-            }
-        }
-
-        async function drawFrontCard(data, photoUrl, qrImgUrl) {
-            const canvas = document.getElementById('frontCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 1040; canvas.height = 650;
-
-            try {
-                const bgImg = await loadImage(FRONT_TEMPLATE_URL);
-                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-            } catch(e) {
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = "#16a34a"; ctx.lineWidth = 10; ctx.strokeRect(0, 0, canvas.width, canvas.height);
-            }
-
-            const photoX = 50;  const photoY = 130;  const photoW = 220; const photoH = 270;
-            const qrX = 830;    const qrY = 280;     const qrW = 180;    const qrH = 180;
-
-            const userPhoto = await loadImage(photoUrl);
-            ctx.drawImage(userPhoto, photoX, photoY, photoW, photoH); 
-            
-            try {
-                const qrCodeImg = await loadImage(qrImgUrl);
-                ctx.drawImage(qrCodeImg, qrX, qrY, qrW, qrH); 
-            } catch(e) { console.log("QR Error"); }
-
-            const labelX = 330;   
-            const colonX = 490;   
-            const valueX = 510;   
-            
-            let startY = 160;     
-            const gapY = 55;      
-
-            ctx.font = "bold 26px Mukta, sans-serif";
-            ctx.textAlign = "left";
-
-            // 🟢 शेतकऱ्याचे नाव काळ्या रंगात (Black Color)
-            ctx.fillStyle = "#000000";
-            ctx.fillText("Name", labelX, startY); ctx.fillText(":", colonX, startY);
-            ctx.fillText(data.engName, valueX, startY);
-
-            // 🟢 मराठी नाव काळ्या रंगात (Black Color)
-            startY += gapY; 
-            ctx.fillText("नाव", labelX, startY); ctx.fillText(":", colonX, startY);
-            ctx.fillText(data.marName, valueX, startY);
-
-            // उर्वरित माहिती (काळ्या रंगात)
-            startY += gapY; ctx.fillText("DOB", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.dob, valueX, startY);
-            startY += gapY; ctx.fillText("Gender", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.gender, valueX, startY);
-            startY += gapY; ctx.fillText("मोबाईल नं.", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.mobile, valueX, startY);
-            // आधार ४-४-४ फॉरमॅटमध्ये
-            startY += gapY; ctx.fillText("आधार नं.", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.aadhar, valueX, startY);
-            
-            // 🟢 कार्डवरील खालील शेतकरी आयडी: "Farmer ID : " सह हिरव्या रंगात (Green)
-            ctx.textAlign = "center";
-            ctx.font = "bold 38px Mukta, sans-serif";
-            ctx.fillStyle = "#075d2c"; // Bold Rich Green
-            ctx.fillText("Farmer ID : " + data.farmerId, 520, 530); 
-
-            cleanFrontCanvas.width = canvas.width;
-            cleanFrontCanvas.height = canvas.height;
-            cleanFrontCanvas.getContext('2d').drawImage(canvas, 0, 0);
-            finalFrontImgData = cleanFrontCanvas.toDataURL('image/jpeg', 1.0);
-
-            // प्रिव्ह्यू वॉटरमार्क (डाऊनलोड PDF मध्ये नसतो)
-            ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(-Math.PI / 6); 
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.font = "bold 130px Mukta, sans-serif";
-            ctx.fillStyle = "rgba(220, 38, 38, 0.15)"; 
-            ctx.fillText("NOT FOR PRINT", 0, -20);
-            ctx.font = "bold 45px Mukta, sans-serif";
-            ctx.fillStyle = "rgba(220, 38, 38, 0.25)";
-            ctx.fillText("(Download PDF for Clear Card)", 0, 70);
-            ctx.restore();
-        }
-
-        async function drawBackCard(data) {
-            const canvas = document.getElementById('backCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 1040; canvas.height = 650;
-
-            try {
-                const bgImg = await loadImage(BACK_TEMPLATE_URL);
-                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-            } catch(e) {
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = "#16a34a"; ctx.lineWidth = 10; ctx.strokeRect(0, 0, canvas.width, canvas.height);
-            }
-
-            ctx.fillStyle = "#000000";
-            ctx.font = "bold 28px Mukta, sans-serif";
-            ctx.textAlign = "left";
-
-            ctx.fillText("पत्ता: " + data.address, 100, 160);
-
-            let startX = 60;
-            let startY = 210;
-            let tableWidth = 920;
-            let rowHeight = 45;
-            let totalRows = data.landData.length;
-            
-            if(totalRows > 0) {
-                // 🟢 ७ प्रमाणबद्ध कॉलम्स (एकूण रुंदी ९२०px)
-                const cols = [
-                    { title: "अ. क्र.", w: 70 },
-                    { title: "जिल्हा", w: 150 },
-                    { title: "तालुका", w: 150 },
-                    { title: "गाव", w: 170 },
-                    { title: "गट नंबर", w: 120 },
-                    { title: "खाता नं.", w: 120 },
-                    { title: "क्षेत्र (हे.)", w: 140 }
-                ];
-
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = "#166534"; 
-
-                ctx.fillStyle = "#dcfce7";
-                ctx.fillRect(startX, startY, tableWidth, rowHeight);
-                
-                for(let i = 0; i <= totalRows + 1; i++) {
-                    let y = startY + (i * rowHeight);
-                    ctx.beginPath();
-                    ctx.moveTo(startX, y);
-                    ctx.lineTo(startX + tableWidth, y);
-                    ctx.stroke();
-                }
-
-                let currentX = startX;
-                ctx.fillStyle = "#166534"; 
-                ctx.font = "bold 21px Mukta, sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-
-                cols.forEach((col) => {
-                    ctx.beginPath();
-                    ctx.moveTo(currentX, startY);
-                    ctx.lineTo(currentX, startY + (rowHeight * (totalRows + 1)));
-                    ctx.stroke();
-
-                    ctx.fillText(col.title, currentX + (col.w / 2), startY + (rowHeight / 2));
-                    currentX += col.w;
-                });
-                
-                ctx.beginPath();
-                ctx.moveTo(startX + tableWidth, startY);
-                ctx.lineTo(startX + tableWidth, startY + (rowHeight * (totalRows + 1)));
-                ctx.stroke();
-
-                ctx.fillStyle = "#000000";
-                ctx.font = "19px Mukta, sans-serif";
-                
-                data.landData.forEach((land, rIndex) => {
-                    let rY = startY + rowHeight + (rIndex * rowHeight) + (rowHeight / 2);
-                    let cX = startX;
-                    
-                    ctx.fillText((rIndex + 1).toString(), cX + (cols[0].w / 2), rY); cX += cols[0].w;
-                    ctx.fillText(land.dist, cX + (cols[1].w / 2), rY); cX += cols[1].w;
-                    ctx.fillText(land.tal, cX + (cols[2].w / 2), rY); cX += cols[2].w;
-                    ctx.fillText(land.vil, cX + (cols[3].w / 2), rY); cX += cols[3].w;
-                    ctx.fillText(land.gat, cX + (cols[4].w / 2), rY); cX += cols[4].w;
-                    ctx.fillText(land.khata, cX + (cols[5].w / 2), rY); cX += cols[5].w;
-                    ctx.fillText(land.area, cX + (cols[6].w / 2), rY);
-                });
-            }
-
-            cleanBackCanvas.width = canvas.width;
-            cleanBackCanvas.height = canvas.height;
-            cleanBackCanvas.getContext('2d').drawImage(canvas, 0, 0);
-            finalBackImgData = cleanBackCanvas.toDataURL('image/jpeg', 1.0);
-
-            ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(-Math.PI / 6); 
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.font = "bold 130px Mukta, sans-serif";
-            ctx.fillStyle = "rgba(220, 38, 38, 0.15)"; 
-            ctx.fillText("NOT FOR PRINT", 0, -20);
-            ctx.font = "bold 45px Mukta, sans-serif";
-            ctx.fillStyle = "rgba(220, 38, 38, 0.25)";
-            ctx.fillText("(Download PDF for Clear Card)", 0, 70);
-            ctx.restore();
-        }
-
-        function generateFinalCanvas() {
-            const finalCanvas = document.createElement('canvas');
-            const finalCtx = finalCanvas.getContext('2d');
-            const printSize = document.getElementById('printSize').value;
-
-            const frontCanvas = cleanFrontCanvas;
-            const backCanvas = cleanBackCanvas;
-
-            if (printSize === '4x6') {
-                finalCanvas.width = 1200; finalCanvas.height = 1800; 
-            } else {
-                finalCanvas.width = 2480; finalCanvas.height = 3508; 
-            }
-            finalCtx.fillStyle = "white";
-            finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-
-            const drawWidth = 1040; 
-            const drawHeight = 655; 
-            const cornerRadius = 32; 
-
-            function drawRounded(ctx, sourceCanvas, dx, dy, dw, dh, radius) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(dx + radius, dy);
-                ctx.lineTo(dx + dw - radius, dy);
-                ctx.quadraticCurveTo(dx + dw, dy + dw, dy + radius);
-                ctx.lineTo(dx + dw, dy + dh - radius);
-                ctx.quadraticCurveTo(dx + dw, dy + dh, dx + dw - radius, dy + dh);
-                ctx.lineTo(dx + radius, dy + dh);
-                ctx.quadraticCurveTo(dx, dy + dh, dx, dy + dh - radius);
-                ctx.lineTo(dx, dy + radius);
-                ctx.quadraticCurveTo(dx, dy, dx + radius, dy);
-                ctx.closePath();
-                ctx.clip(); 
-                ctx.drawImage(sourceCanvas, 0, 0, sourceCanvas.width, sourceCanvas.height, dx, dy, dw, dh);
-                ctx.lineWidth = 6; 
-                ctx.strokeStyle = "#000000"; 
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            if (printSize === '4x6') {
-                const marginX = (finalCanvas.width - drawWidth) / 2; 
-                const gapBetweenCards = 130; 
-                const topPadding = (finalCanvas.height - (drawHeight * 2) - gapBetweenCards) / 2;
-
-                drawRounded(finalCtx, frontCanvas, marginX, topPadding, drawWidth, drawHeight, cornerRadius);
-                drawRounded(finalCtx, backCanvas, marginX, topPadding + drawHeight + gapBetweenCards, drawWidth, drawHeight, cornerRadius);
-            
-            } else if (printSize === 'A4') {
-                const gapBetweenCards = 140; 
-                const startX = (finalCanvas.width - (drawWidth * 2 + gapBetweenCards)) / 2; 
-                const gapY = 38; 
-
-                drawRounded(finalCtx, frontCanvas, startX, gapY, drawWidth, drawHeight, cornerRadius);
-                drawRounded(finalCtx, backCanvas, startX + drawWidth + gapBetweenCards, gapY, drawWidth, drawHeight, cornerRadius);
-
-                finalCtx.lineWidth = 3; 
-                finalCtx.strokeStyle = "#aaaaaa"; 
-                finalCtx.setLineDash([20, 15]); 
-                let cutLineY = gapY + drawHeight + (gapY / 2); 
-                finalCtx.beginPath();
-                finalCtx.moveTo(80, cutLineY); 
-                finalCtx.lineTo(finalCanvas.width - 80, cutLineY); 
-                finalCtx.stroke();
-                finalCtx.setLineDash([]);
-            }
-
-            return finalCanvas.toDataURL('image/jpeg', 1.0);
-        }
-
-        // 🟢 प्रिव्ह्यू पॉपअप विंडो उघडणे
-        function openPreviewModal() {
-            document.getElementById('previewModal').style.display = 'flex';
-        }
-
-        // 🟢 प्रिव्ह्यू पॉपअप विंडो बंद करून फॉर्मवर परत जाणे (Edit / Back)
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
-        // 🔒 सुरक्षित डाऊनलोड व बॅकएंड सर्व्हिस लॉग नोंदवणे
-        async function downloadIdCard() {
-            const btn = document.getElementById('btnDownload');
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> प्रक्रिया चालू आहे...";
-            btn.disabled = true;
-
-            const printSize = document.getElementById('printSize').value;
-            const farmerId = document.getElementById('farmerId').value.trim();
-            const engName = document.getElementById('engName').value.trim();
-
-            try {
-                // 🟢 बॅकएंडवर लॉग नोंदवणे
-                const formData = new FormData();
-                formData.append('mobile', userData.mobile);
-                formData.append('farmerId', farmerId);
-                formData.append('farmerName', engName);
-                formData.append('size', printSize);
-
-                const res = await fetch(`${BACKEND_URL}/api/services/log-farmer`, {
+                const res = await fetch(`${BACKEND_URL}/api/services/process-farmer`, {
                     method: 'POST',
                     body: formData
                 });
 
-                const logResult = await res.json();
-                if (logResult.status === 'error') {
-                    alert(logResult.message);
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                    return;
+                const data = await res.json();
+
+                if (!res.ok || data.status !== 'success') {
+                    throw new Error(data.detail || data.message || "सर्व्हरकडून त्रुटी आली.");
                 }
 
-                // 🟢 PDF डाऊनलोड सुरू करणे
-                exportToPDF();
+                pBar.style.width = '95%';
+                stepMsg.innerText = "PDF डाऊनलोड होत आहे...";
 
-                setTimeout(() => {
-                    btn.innerHTML = "<i class='fas fa-check'></i> डाऊनलोड पूर्ण!";
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.disabled = false;
-                    }, 2000);
-                }, 1000);
+                // Base64 चे थेट फाईल डाऊनलोड
+                const byteCharacters = atob(data.pdf_base64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = data.filename || `QuickIDPrint_Farmer_${printSize}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                pBar.style.width = '100%';
+                document.getElementById('modalTitle').innerHTML = "<i class='fas fa-check-circle' style='color:#16a34a;'></i> ओळखपत्र तयार झाले!";
+                document.getElementById('modalDesc').innerText = "तुमचे HD PDF ओळखपत्र तुमच्या Downloads फोल्डरमध्ये सेव्ह झाले आहे.";
+                stepMsg.innerText = "डाऊनलोड यशस्वी!";
+                btnDone.style.display = 'block';
 
             } catch (err) {
-                console.warn("Audit Log Notice:", err);
-                exportToPDF();
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
+                console.error(err);
+                alert("त्रुटी: " + err.message);
+                modal.style.display = 'none';
             }
         }
 
-        function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const printSize = document.getElementById('printSize').value;
-            const finalImgData = generateFinalCanvas(); 
-            let pdf;
-
-            if (printSize === '4x6') {
-                pdf = new jsPDF({ orientation: 'portrait', unit: 'in', format: [4, 6] });
-                pdf.addImage(finalImgData, 'JPEG', 0, 0, 4, 6);
-            } else {
-                pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                pdf.addImage(finalImgData, 'JPEG', 0, 0, 210, 297);
-            }
-            
-            const ts = new Date().getTime();
-            pdf.save(`QuickIDPrint_Farmer_${printSize}_${ts}.pdf`);
+        function closeModal() {
+            document.getElementById('progressModal').style.display = 'none';
+            document.getElementById('btnDone').style.display = 'none';
+            document.getElementById('progressBar').style.width = '0%';
         }
     </script>
 </body>
