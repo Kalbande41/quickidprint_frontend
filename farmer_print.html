@@ -92,13 +92,142 @@
         .btn-process { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: 800; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
         .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
         
-        .btn-download { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: 800; border-radius: 10px; cursor: pointer; margin-top: 15px; display: none; transition: 0.3s; }
-        .btn-download:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
-        
-        #previewArea { margin-top: 25px; display: none; }
-        canvas { max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        
-        .success-strip { background: #dcfce7; border: 1px solid #22c55e; color: #166534; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 700; margin-top: 20px; margin-bottom: 15px; display: none; }
+        /* 🎨 PREVIEW POPUP MODAL STYLES */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 15px;
+            animation: fadeIn 0.25s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-card {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 820px;
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes scaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+        }
+        .modal-title { font-size: 18px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .btn-close-modal { background: none; border: none; font-size: 20px; color: var(--slate); cursor: pointer; border-radius: 6px; padding: 4px 8px; transition: 0.2s; }
+        .btn-close-modal:hover { background: #e2e8f0; color: var(--dark); }
+
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            text-align: center;
+            background: #f1f5f9;
+        }
+        .preview-notice {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .cards-preview-scroll {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+        .card-preview-block {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .card-preview-block label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--slate);
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        .card-preview-block canvas {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            border: 1px solid #cbd5e1;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+        }
+        .btn-modal-back {
+            background: white;
+            border: 1.5px solid #cbd5e1;
+            color: var(--slate);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-modal-back:hover { background: #e2e8f0; color: var(--dark); border-color: #94a3b8; }
+
+        .btn-modal-download {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+        }
+        .btn-modal-download:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
+
         #qrCodeContainer { display: none; }
     </style>
 </head>
@@ -134,7 +263,7 @@
                 <!-- 🟢 शेतकरी आयडी (४-३-४ ऑटो फॉरमॅट) -->
                 <div class="form-group full-width" style="background: #fefce8; padding: 12px; border-radius: 8px; border: 1px solid #fde047;">
                     <label style="color: #a16207;"><i class="fas fa-id-badge"></i> शेतकरी आयडी (Farmer ID) [४-३-४ फॉरमॅट]:</label>
-                    <input type="text" id="farmerId" placeholder="उदा. 1234 567 8901 (११ अक्षरे/अंक)" maxlength="11" required>
+                    <input type="text" id="farmerId" placeholder="उदा. MH12 345 6789 (११ अक्षरे/अंक)" maxlength="13" required>
                 </div>
 
                 <div class="form-group">
@@ -215,18 +344,43 @@
         </form>
 
         <div id="qrCodeContainer"></div>
+    </div>
 
-        <div id="previewArea">
-            <div id="successMsg" class="success-strip">
-                <i class="fas fa-check-circle"></i> तुमचे ओळखपत्र तयार आहे! फायनल HD PDF साठी खालील बटणावर क्लिक करा.
+    <!-- 🎨 कार्ड प्रिव्ह्यू पॉपअप विंडो (MODAL) -->
+    <div id="previewModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-id-card" style="color:var(--primary);"></i> कार्ड प्रिव्ह्यू तपासा</div>
+                <button type="button" class="btn-close-modal" onclick="closePreviewModal()"><i class="fas fa-times"></i></button>
             </div>
-            
-            <canvas id="frontCanvas"></canvas>
-            <canvas id="backCanvas"></canvas>
-            
-            <button id="btnDownload" class="btn-download" onclick="downloadIdCard()">
-                <i class="fas fa-file-pdf"></i> HD PDF डाऊनलोड करा (300 DPI)
-            </button>
+
+            <div class="modal-body">
+                <div class="preview-notice">
+                    <i class="fas fa-circle-check"></i>
+                    <span>कार्ड तयार झाले आहे! माहिती अचूक असल्यास डाऊनलोड करा. दुरुस्ती हवी असल्यास खालील 'माहिती दुरुस्त करा' बटणावर क्लिक करा.</span>
+                </div>
+
+                <div class="cards-preview-scroll">
+                    <div class="card-preview-block">
+                        <label><i class="fas fa-circle-dot" style="color:var(--primary);"></i> समोरील बाजू (Front Side)</label>
+                        <canvas id="frontCanvas"></canvas>
+                    </div>
+                    <div class="card-preview-block">
+                        <label><i class="fas fa-circle-dot" style="color:var(--primary);"></i> मागील बाजू (Back Side)</label>
+                        <canvas id="backCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-back" onclick="closePreviewModal()">
+                    <i class="fas fa-arrow-left"></i> माहिती दुरुस्त करा (Edit / Back)
+                </button>
+
+                <button type="button" id="btnDownload" class="btn-modal-download" onclick="downloadIdCard()">
+                    <i class="fas fa-file-pdf"></i> फायनल HD PDF डाऊनलोड करा
+                </button>
+            </div>
         </div>
     </div>
 
@@ -413,7 +567,6 @@
                 const photoFile = document.getElementById('farmerPhoto').files[0];
                 const photoUrl = await readFileAsDataURL(photoFile);
 
-                // ४-३-४ शेतकरी आयडी आणि ४-४-४ आधार फॉरमॅटिंग
                 const rawFarmerId = document.getElementById('farmerId').value.replace(/\s+/g, '').toUpperCase();
                 const displayFarmerId = rawFarmerId.slice(0, 4) + ' ' + rawFarmerId.slice(4, 7) + ' ' + rawFarmerId.slice(7, 11);
 
@@ -471,10 +624,11 @@
                         await drawFrontCard(data, photoUrl, qrImgUrl);
                         await drawBackCard(data);
 
-                        document.getElementById('farmerForm').style.display = 'none';
-                        document.getElementById('previewArea').style.display = 'block';
-                        document.getElementById('successMsg').style.display = 'block';
-                        document.getElementById('btnDownload').style.display = 'block';
+                        // 🟢 प्रिव्ह्यू पॉपअप विंडो उघडणे
+                        openPreviewModal();
+
+                        btnProcess.disabled = false;
+                        btnProcess.innerHTML = "<i class='fas fa-magic'></i> ओळखपत्र तयार करा";
 
                     } catch (drawErr) {
                         console.error(drawErr);
@@ -526,21 +680,17 @@
             ctx.font = "bold 26px Mukta, sans-serif";
             ctx.textAlign = "left";
 
-            // 🟢 नाव (Name) हिरव्या रंगामध्ये (Green Color)
+            // 🟢 शेतकऱ्याचे नाव काळ्या रंगात (Black Color)
             ctx.fillStyle = "#000000";
             ctx.fillText("Name", labelX, startY); ctx.fillText(":", colonX, startY);
-            ctx.fillStyle = "#15803d"; // Deep Green
             ctx.fillText(data.engName, valueX, startY);
 
-            // 🟢 मराठी नाव हिरव्या रंगामध्ये (Green Color)
+            // 🟢 मराठी नाव काळ्या रंगात (Black Color)
             startY += gapY; 
-            ctx.fillStyle = "#000000";
             ctx.fillText("नाव", labelX, startY); ctx.fillText(":", colonX, startY);
-            ctx.fillStyle = "#15803d"; // Deep Green
             ctx.fillText(data.marName, valueX, startY);
 
             // उर्वरित माहिती (काळ्या रंगात)
-            ctx.fillStyle = "#000000";
             startY += gapY; ctx.fillText("DOB", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.dob, valueX, startY);
             startY += gapY; ctx.fillText("Gender", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.gender, valueX, startY);
             startY += gapY; ctx.fillText("मोबाईल नं.", labelX, startY); ctx.fillText(":", colonX, startY); ctx.fillText(data.mobile, valueX, startY);
@@ -706,7 +856,7 @@
                 ctx.beginPath();
                 ctx.moveTo(dx + radius, dy);
                 ctx.lineTo(dx + dw - radius, dy);
-                ctx.quadraticCurveTo(dx + dw, dy, dx + dw, dy + radius);
+                ctx.quadraticCurveTo(dx + dw, dy + dw, dy + radius);
                 ctx.lineTo(dx + dw, dy + dh - radius);
                 ctx.quadraticCurveTo(dx + dw, dy + dh, dx + dw - radius, dy + dh);
                 ctx.lineTo(dx + radius, dy + dh);
@@ -752,6 +902,16 @@
             return finalCanvas.toDataURL('image/jpeg', 1.0);
         }
 
+        // 🟢 प्रिव्ह्यू पॉपअप विंडो उघडणे
+        function openPreviewModal() {
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+
+        // 🟢 प्रिव्ह्यू पॉपअप विंडो बंद करून फॉर्मवर परत जाणे (Edit / Back)
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
         // 🔒 सुरक्षित डाऊनलोड व बॅकएंड सर्व्हिस लॉग नोंदवणे
         async function downloadIdCard() {
             const btn = document.getElementById('btnDownload');
@@ -789,6 +949,10 @@
 
                 setTimeout(() => {
                     btn.innerHTML = "<i class='fas fa-check'></i> डाऊनलोड पूर्ण!";
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }, 2000);
                 }, 1000);
 
             } catch (err) {
