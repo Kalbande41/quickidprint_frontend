@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्मार्ट मतदान कार्ड प्रिंट - QuickIDPrint</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --dark: #0f172a;
+            --slate: #334155;
+            --bg: #f8fafc;
+            --card-border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Top Navigation */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--dark); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { color: var(--primary); }
+
+        .container {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            max-width: 520px;
+            margin: 40px auto;
+            width: 90%;
+            border: 1px solid var(--card-border);
+        }
+
+        h2 { color: var(--primary); margin-bottom: 20px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .feature-box {
+            background: #f0f9ff;
+            border: 1px dashed #bae6fd;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #0369a1;
+            text-align: left;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+        .feature-box i { color: var(--primary); margin-right: 6px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--slate); font-size: 15px; }
+        .form-control {
+            width: 100%;
+            padding: 13px 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
+            background: var(--bg);
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12); }
+        
+        .btn-process {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25);
+        }
+        .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35); }
+        .btn-process:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+            display: none;
+            margin-top: 18px;
+            background: #fee2e2;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        .success-box {
+            color: #166534;
+            font-weight: bold;
+            display: none;
+            margin-top: 18px;
+            background: #dcfce7;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            font-size: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="homepage.html" class="brand"><i class="fas fa-id-card" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
+        <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
+    </nav>
+
+    <div class="container">
+        <h2><i class="fas fa-address-card"></i> स्मार्ट मतदान कार्ड प्रिंट</h2>
+        
+        <div class="feature-box">
+            <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित:</b> e-EPIC व्होटर कार्ड सुरक्षित सर्व्हरवर प्रोसेस होते.</div>
+            <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फोटो आपोआप क्लिअर होऊन काळी कटिंग बॉर्डर व अचूक साईझ लागू होईल.</div>
+        </div>
+
+        <p id="errorMsg" class="error"></p>
+        <p id="successMsg" class="success-box"></p>
+
+        <form id="cardForm" onsubmit="submitToBackend(event)">
+            <div class="form-group">
+                <label><i class="fas fa-layer-group" style="color:var(--primary);"></i> पेपरची साईझ निवडा:</label>
+                <select id="printSize" class="form-control">
+                    <option value="4x6">4x6 Photo Paper (Smart HD)</option>
+                    <option value="A4">A4 Full Size Paper</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-file-pdf" style="color:var(--primary);"></i> व्होटर कार्डची (e-EPIC) PDF फाईल निवडा:</label>
+                <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
+            </div>
+
+            <button type="submit" id="btnProcess" class="btn-process">
+                <i class="fas fa-file-arrow-down"></i> कार्ड प्रोसेस आणि डाऊनलोड करा
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        // 🔒 लॉगिन व प्लॅन वैधता तपासणी
+        let userData = null;
+        try {
+            userData = JSON.parse(localStorage.getItem('quickid_user'));
+        } catch(e) {
+            userData = null;
+        }
+
+        if (!userData || !userData.mobile) {
+            alert("कृपया प्रथम लॉगिन करा!");
+            window.location.replace("login.html");
+        } else {
+            const remDays = parseInt(userData.remainingDays) || 0;
+            if (remDays <= 0 && userData.role !== 'admin' && !userData.isAdmin) {
+                alert("तुमच्या प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा!");
+                window.location.replace("recharge.html");
+            }
+        }
+
+        async function submitToBackend(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnProcess');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            const fileInput = document.getElementById('pdfFile').files[0];
+            
+            if(!fileInput) {
+                alert("कृपया व्होटर कार्डची PDF फाईल निवडा.");
+                return;
+            }
+
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> सर्व्हरवर कार्ड तयार होत आहे, कृपया थांबा...";
+            btn.disabled = true;
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('pdfFile', fileInput);
+            formData.append('password', '');
+            formData.append('size', document.getElementById('printSize').value);
+            formData.append('cardName', 'Voter'); 
+            formData.append('userId', userData ? userData.mobile : '');
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/services/process-voter`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if(response.ok && data.success) {
+                    // PDF थेट डाऊनलोड ट्रिगर करणे
+                    const linkSource = `data:application/pdf;base64,${data.pdf_base64}`;
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = linkSource;
+                    downloadLink.download = `QuickIDPrint_Voter_${document.getElementById('printSize').value}_${Date.now()}.pdf`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    successMsg.innerHTML = "<i class='fas fa-check-circle'></i> <b>अभिनंदन!</b> HD मतदान कार्ड यशस्वीरीत्या डाऊनलोड झाले आहे.";
+                    successMsg.style.display = 'block';
+
+                    btn.innerHTML = "<i class='fas fa-check'></i> डाऊनलोड पूर्ण!";
+                    btn.style.background = "linear-gradient(135deg, #16a34a 0%, #15803d 100%)";
+                    
+                    setTimeout(() => { 
+                        document.getElementById('cardForm').reset();
+                        btn.innerHTML = "<i class='fas fa-file-arrow-down'></i> कार्ड प्रोसेस आणि डाऊनलोड करा";
+                        btn.style.background = ""; 
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    errorMsg.innerHTML = "<i class='fas fa-triangle-exclamation'></i> " + (data.error || "प्रोसेसिंग पूर्ण होऊ शकले नाही.");
+                    errorMsg.style.display = 'block';
+                    btn.innerHTML = "<i class='fas fa-file-arrow-down'></i> कार्ड प्रोसेस आणि डाऊनलोड करा";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.innerHTML = "<i class='fas fa-triangle-exclamation'></i> नेटवर्क एरर! सर्व्हरशी संपर्क होऊ शकला नाही.";
+                errorMsg.style.display = 'block';
+                btn.innerHTML = "<i class='fas fa-file-arrow-down'></i> कार्ड प्रोसेस आणि डाऊनलोड करा";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
