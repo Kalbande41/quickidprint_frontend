@@ -327,7 +327,8 @@
                 <div class="dropdown-menu" id="userMenu">
                     <a href="recharge.html"><i class="fas fa-wallet" style="color: var(--accent);"></i> सबस्क्रिप्शन रिचार्ज</a>
                     <a href="faq.html"><i class="fas fa-circle-question" style="color: var(--secondary);"></i> मदत आणि FAQ</a>
-                    <a href="#" id="adminLink" style="display: none; color: #d97706;" onclick="openAdminModal()"><i class="fas fa-crown"></i> ॲडमिन पॅनेल</a>
+                    <!-- 🟢 ॲडमिन लिंक थेट admin.html वर नेईल -->
+                    <a href="admin.html" id="adminLink" style="display: none; color: #d97706;"><i class="fas fa-crown"></i> ॲडमिन पॅनेल</a>
                     <a href="#" style="color: #ef4444;" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> सुरक्षित बाहेर पडा (Logout)</a>
                 </div>
             </div>
@@ -615,12 +616,12 @@
             }
         };
 
-        // Handle Service Click with Validity Check
-        async function handleServiceRedirect(targetUrl, serviceName) {
+        // 🟢 सुधारित: क्लिक केल्यावर नाहक लॉग पडणार नाही, फक्त वैधता तपासून थेट पेज उघडेल
+        function handleServiceRedirect(targetUrl, serviceName) {
             const days = parseInt(currentUser.remainingDays) || 0;
             const role = currentUser.role || (currentUser.isAdmin ? 'admin' : 'user');
 
-            // जर दिवस संपले असतील आणि ॲडमिन नसेल, तर रिचार्ज विचारणे
+            // जर दिवस संपले असतील आणि ॲडमिन नसेल, तर रिचार्ज अलर्ट दाखवणे
             if (days <= 0 && role !== 'admin') {
                 const proceed = confirm(`⚠️ '${serviceName}' वापरण्यासाठी तुमचा सबस्क्रिप्शन प्लॅन ॲक्टिव्ह असणे आवश्यक आहे.\n\nतुम्हाला रिचार्ज पेजवर जायचे आहे का?`);
                 if (proceed) {
@@ -629,20 +630,7 @@
                 return;
             }
 
-            // प्लॅन ॲक्टिव्ह असल्यास बॅकएंडला सर्व्हिस लॉग पाठवून पुढे जाणे
-            try {
-                const formData = new FormData();
-                formData.append('mobile', currentUser.mobile);
-                formData.append('serviceCategory', serviceName);
-                formData.append('serviceDetails', `${serviceName} साधन उघडले`);
-
-                fetch(`${BACKEND_URL}/api/log-service`, {
-                    method: 'POST',
-                    body: formData
-                });
-            } catch(e) {}
-
-            // टूलच्या पेजवर नेणे
+            // 🟢 थेट सेवेच्या पेजवर जाणे (कोणताही नाहक लॉग येथे पडणार नाही)
             window.location.href = targetUrl;
         }
 
