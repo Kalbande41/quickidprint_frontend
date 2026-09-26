@@ -89,23 +89,46 @@
         .btn-process { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: 800; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
         .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35); }
         
-        /* ⚡ इतर सर्व्हिसेससारखाच प्रोग्रेस मोडल */
+        /* 🔍 प्रिव्ह्यू आणि प्रोग्रेस मोडल */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px);
             display: none; align-items: center; justify-content: center; z-index: 9999;
+            padding: 15px;
         }
         .modal-box {
-            background: white; border-radius: 16px; padding: 30px; width: 90%; max-width: 440px;
-            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            background: white; border-radius: 16px; padding: 25px; width: 100%; max-width: 620px;
+            max-height: 92vh; overflow-y: auto; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
         }
         .progress-bar-wrap { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 20px 0 10px; }
         .progress-bar { width: 0%; height: 100%; background: #16a34a; transition: width 0.3s; }
         .step-msg { font-size: 14.5px; color: #475569; font-weight: 600; margin-top: 6px; }
-        .btn-modal-done {
-            background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 8px;
-            font-weight: 700; cursor: pointer; margin-top: 15px; display: none; width: 100%;
+
+        /* प्रिव्ह्यू इमेजेस डिस्प्ले */
+        #previewContent { display: none; margin-top: 15px; }
+        .preview-images-grid { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        .preview-card-item { text-align: left; }
+        .preview-card-item label { display: block; font-weight: 700; color: #15803d; font-size: 14px; margin-bottom: 6px; }
+        .preview-card-item img {
+            width: 100%; height: auto; border-radius: 10px; border: 1.5px solid #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff;
         }
+
+        .modal-actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-top: 15px; }
+        .btn-edit-back {
+            background: #f1f5f9; color: #334155; border: 1.5px solid #cbd5e1; padding: 13px;
+            font-size: 16px; font-weight: 700; border-radius: 10px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-edit-back:hover { background: #e2e8f0; color: #0f172a; }
+
+        .btn-final-download {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; border: none;
+            padding: 13px; font-size: 16px; font-weight: 800; border-radius: 10px; cursor: pointer;
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+        }
+        .btn-final-download:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(22, 163, 74, 0.35); }
     </style>
 </head>
 <body>
@@ -190,7 +213,7 @@
                             <th>तालुका</th>
                             <th>गाव</th>
                             <th>गट नंबर</th>
-                            <!-- 🟢 नवीन जोडलेला खाता नं. कॉलम -->
+                            <!-- 🟢 नवीन खाता नं. कॉलम -->
                             <th>खाता नं.</th>
                             <th>क्षेत्र (हे.)</th>
                             <th style="width: 50px;">काढा</th>
@@ -215,25 +238,55 @@
                 <button type="button" class="btn-add-row" onclick="addLandRow()"><i class="fas fa-plus-circle"></i> नवीन जमीन ऍड करा</button>
             </div>
 
-            <button id="btnSubmit" type="button" class="btn-process" onclick="submitToBackend()"><i class="fas fa-file-pdf"></i> ओळखपत्र तयार करा व HD PDF डाऊनलोड करा</button>
+            <button id="btnSubmit" type="button" class="btn-process" onclick="submitToBackend()"><i class="fas fa-eye"></i> ओळखपत्र प्रिव्ह्यू तपासा व डाऊनलोड करा</button>
         </form>
     </div>
 
-    <!-- ⚡ प्रोग्रेस मोडल (इतर सर्व्हिसेससारखाच) -->
+    <!-- ⚡ प्रोग्रेस आणि प्रिव्ह्यू मोडल -->
     <div id="progressModal" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="modalTitle" style="color:#15803d; font-size:20px;"><i class="fas fa-spinner fa-spin"></i> ओळखपत्र तयार होत आहे...</h3>
-            <p id="modalDesc" style="font-size:14px; color:#64748b; margin-top:5px;">सुरक्षित सर्व्हरवर ३०० DPI HD PDF बनवण्याची प्रक्रिया सुरू आहे.</p>
-            <div class="progress-bar-wrap">
-                <div id="progressBar" class="progress-bar"></div>
+            
+            <!-- १. प्रोग्रेस बार सेक्शन (लोडिंग दरम्यान) -->
+            <div id="loadingSection">
+                <h3 id="modalTitle" style="color:#15803d; font-size:20px;"><i class="fas fa-spinner fa-spin"></i> ओळखपत्र तयार होत आहे...</h3>
+                <p id="modalDesc" style="font-size:14px; color:#64748b; margin-top:5px;">सुरक्षित सर्व्हरवर ३०० DPI HD PDF आणि प्रिव्ह्यू तयार होत आहे.</p>
+                <div class="progress-bar-wrap">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div id="stepMsg" class="step-msg">डेटा तपासत आहे...</div>
             </div>
-            <div id="stepMsg" class="step-msg">डेटा तपासत आहे...</div>
-            <button id="btnDone" class="btn-modal-done" onclick="closeModal()"><i class="fas fa-check"></i> डाऊनलोड पूर्ण (OK)</button>
+
+            <!-- २. प्रिव्ह्यू सेक्शन (तयार झाल्यावर) -->
+            <div id="previewContent">
+                <h3 style="color:#15803d; font-size:21px; margin-bottom:4px;"><i class="fas fa-check-circle"></i> ओळखपत्र प्रिव्ह्यू (Preview Check)</h3>
+                <p style="font-size:13.5px; color:#64748b; margin-bottom:15px;">माहितीची खात्री करा. काही चूक असल्यास 'माहिती दुरुस्त करा' वर क्लिक करा.</p>
+                
+                <div class="preview-images-grid">
+                    <div class="preview-card-item">
+                        <label><i class="fas fa-id-card"></i> समोरची बाजू (Front Side):</label>
+                        <img id="imgFrontPreview" src="" alt="Front Preview">
+                    </div>
+                    <div class="preview-card-item">
+                        <label><i class="fas fa-map-marked-alt"></i> पाठीमागची बाजू (Back Side):</label>
+                        <img id="imgBackPreview" src="" alt="Back Preview">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-edit-back" onclick="closeModalToEdit()"><i class="fas fa-edit"></i> माहिती दुरुस्त करा</button>
+                    <button type="button" id="btnDownloadNow" class="btn-final-download" onclick="downloadReadyPDF()"><i class="fas fa-download"></i> HD PDF डाऊनलोड करा</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        // 🔒 तयार झालेली PDF मेमरीमध्ये साठवण्यासाठी
+        let readyPdfBlob = null;
+        let readyPdfFilename = "QuickIDPrint_Farmer.pdf";
 
         // 🔒 युजर ऑथेंटिकेशन
         let userData = null;
@@ -300,7 +353,7 @@
             });
         }
 
-        // 🚀 १००% बॅकएंड रिक्वेस्ट व थेट डाऊनलोड
+        // 🚀 १००% बॅकएंड रिक्वेस्ट व प्रिव्ह्यू लोड करणे
         async function submitToBackend() {
             const farmerId = document.getElementById('farmerId').value.trim();
             const engName = document.getElementById('engName').value.trim();
@@ -337,12 +390,15 @@
                 return;
             }
 
-            // मोडल दाखवणे
+            // मोडल दाखवणे (लोडिंग स्टेट)
             const modal = document.getElementById('progressModal');
             const pBar = document.getElementById('progressBar');
             const stepMsg = document.getElementById('stepMsg');
-            const btnDone = document.getElementById('btnDone');
-            
+            const loadingSection = document.getElementById('loadingSection');
+            const previewContent = document.getElementById('previewContent');
+
+            loadingSection.style.display = 'block';
+            previewContent.style.display = 'none';
             modal.style.display = 'flex';
             pBar.style.width = '20%';
             stepMsg.innerText = "माहिती सुरक्षित सर्व्हरकडे पाठवत आहे...";
@@ -363,7 +419,7 @@
 
             try {
                 pBar.style.width = '55%';
-                stepMsg.innerText = "सर्व्हरवर ३०० DPI HD PDF तयार होत आहे...";
+                stepMsg.innerText = "सर्व्हरवर ३०० DPI HD PDF आणि प्रिव्ह्यू तयार होत आहे...";
 
                 const res = await fetch(`${BACKEND_URL}/api/services/process-farmer`, {
                     method: 'POST',
@@ -376,30 +432,27 @@
                     throw new Error(data.detail || data.message || "सर्व्हरकडून त्रुटी आली.");
                 }
 
-                pBar.style.width = '95%';
-                stepMsg.innerText = "PDF डाऊनलोड होत आहे...";
+                pBar.style.width = '100%';
 
-                // Base64 चे थेट फाईल डाऊनलोड
+                // 🟢 Base64 PDF थेट Blob मध्ये सेव्ह (इन्स्टंट डाऊनलोडसाठी तयार)
                 const byteCharacters = atob(data.pdf_base64);
                 const byteNumbers = new Array(byteCharacters.length);
                 for (let i = 0; i < byteCharacters.length; i++) {
                     byteNumbers[i] = byteCharacters.charCodeAt(i);
                 }
                 const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: 'application/pdf' });
-                
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = data.filename || `QuickIDPrint_Farmer_${printSize}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                readyPdfBlob = new Blob([byteArray], { type: 'application/pdf' });
+                readyPdfFilename = data.filename || `QuickIDPrint_Farmer_${printSize}.pdf`;
 
-                pBar.style.width = '100%';
-                document.getElementById('modalTitle').innerHTML = "<i class='fas fa-check-circle' style='color:#16a34a;'></i> ओळखपत्र तयार झाले!";
-                document.getElementById('modalDesc').innerText = "तुमचे HD PDF ओळखपत्र तुमच्या Downloads फोल्डरमध्ये सेव्ह झाले आहे.";
-                stepMsg.innerText = "डाऊनलोड यशस्वी!";
-                btnDone.style.display = 'block';
+                // 🟢 प्रिव्ह्यू इमेजेस दाखवणे
+                document.getElementById('imgFrontPreview').src = `data:image/jpeg;base64,${data.front_preview}`;
+                document.getElementById('imgBackPreview').src = `data:image/jpeg;base64,${data.back_preview}`;
+
+                // लोडिंग लपवून प्रिव्ह्यू उघडणे
+                setTimeout(() => {
+                    loadingSection.style.display = 'none';
+                    previewContent.style.display = 'block';
+                }, 300);
 
             } catch (err) {
                 console.error(err);
@@ -408,9 +461,30 @@
             }
         }
 
-        function closeModal() {
+        // 📥 इन्स्टंट HD PDF डाऊनलोड (०.०१ सेकंद)
+        function downloadReadyPDF() {
+            if (!readyPdfBlob) {
+                alert("PDF उपलब्ध नाही, कृपया पुन्हा प्रयत्न करा.");
+                return;
+            }
+            const btn = document.getElementById('btnDownloadNow');
+            btn.innerHTML = "<i class='fas fa-check-circle'></i> डाऊनलोड पूर्ण!";
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(readyPdfBlob);
+            link.download = readyPdfFilename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                btn.innerHTML = "<i class='fas fa-download'></i> पुन्हा डाऊनलोड करा";
+            }, 2500);
+        }
+
+        // ✏️ माहिती दुरुस्त करण्यासाठी मागे जाणे
+        function closeModalToEdit() {
             document.getElementById('progressModal').style.display = 'none';
-            document.getElementById('btnDone').style.display = 'none';
             document.getElementById('progressBar').style.width = '0%';
         }
     </script>
