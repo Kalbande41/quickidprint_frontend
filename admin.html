@@ -212,10 +212,13 @@
                 <i class="fas fa-bell"></i> पेंडिंग रिचार्ज (<span id="pendingTabCount">0</span>)
             </button>
             <button class="admin-tab-btn" onclick="switchAdminTab('directRechTab', this)">
-                <i class="fas fa-bolt"></i> थेट दिवस जोडणे (Direct Recharge)
+                <i class="fas fa-bolt"></i> थेट दिवस जोडणे
             </button>
             <button class="admin-tab-btn" onclick="switchAdminTab('allUsersTab', this)">
                 <i class="fas fa-address-book"></i> सर्व युजर्स यादी
+            </button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('serviceLogsTab', this)">
+                <i class="fas fa-print"></i> सर्व्हिस प्रिंट लॉग्स (<span id="serviceLogsCount">0</span>)
             </button>
             <button class="admin-tab-btn" onclick="switchAdminTab('userAuditTab', this)">
                 <i class="fas fa-history"></i> युजर स्टेटमेंट शोध
@@ -333,7 +336,44 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 4: USER AUDIT STATEMENT LOOKUP         -->
+        <!-- TAB 4: SERVICE PRINT LOGS (SHOP & USER)    -->
+        <!-- ========================================== -->
+        <div id="serviceLogsTab" class="tab-panel">
+            <div class="card-box">
+                <div class="card-header">
+                    <h2><i class="fas fa-print" style="color: var(--primary);"></i> सर्व्हिस वापर व प्रिंटिंग इतिहास (केवळ डाऊनलोड झालेले)</h2>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="search-box">
+                            <i class="fas fa-search" style="color: var(--slate-400);"></i>
+                            <input type="text" id="searchLogInput" onkeyup="filterLogsTable()" placeholder="शॉप, नाव किंवा सेवेने शोधा...">
+                        </div>
+                        <button onclick="loadServiceLogs()" class="btn-dash" style="font-size: 13px;"><i class="fas fa-sync-alt"></i> रिफ्रेश</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>दिनांक</th>
+                                <th>शॉपचे नाव</th>
+                                <th>युजरचे नाव</th>
+                                <th>मोबाईल नंबर</th>
+                                <th>सेवा प्रकार</th>
+                                <th>तपशील (प्रिंट साईझ)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceLogsTableBody">
+                            <tr><td colspan="6" style="text-align: center; padding: 25px;">लॉग्स लोड होत आहेत...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: USER AUDIT STATEMENT LOOKUP         -->
         <!-- ========================================== -->
         <div id="userAuditTab" class="tab-panel">
             <div class="card-box">
@@ -374,6 +414,7 @@
     <script>
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
         let allUsersCache = [];
+        let allLogsCache = [];
 
         // 🔒 AUTH GUARD: फक्त Admin साठी प्रवेश
         document.addEventListener("DOMContentLoaded", function() {
@@ -403,10 +444,11 @@
             btnElement.classList.add('active');
         }
 
-        // 1. Load Overview Stats & Pending Requests
+        // 1. Load Overview Stats, Pending Requests & Service Logs
         async function loadDashboardData() {
             loadPendingRequests();
             loadAllUsers();
+            loadServiceLogs();
         }
 
         async function loadPendingRequests() {
@@ -597,7 +639,79 @@
             }
         }
 
-        // 4. User Statement Lookup
+        // 4. Load Service Logs (शॉपचे नाव आणि युजरचे नाव वेगळे दाखवणे)
+        async function loadServiceLogs() {
+            const tbody = document.getElementById('serviceLogsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">लॉग्स लोड होत आहेत...</td></tr>';
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/service-logs`);
+                const data = await res.json();
+
+                if (data.status === 'success' && data.logs) {
+                    allLogsCache = data.logs;
+                    document.getElementById('serviceLogsCount').innerText = allLogsCache.length;
+                    renderLogsTable(allLogsCache);
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#64748b;">कोणताही सर्व्हिस लॉग सापडला नाही.</td></tr>';
+                }
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">लॉग्स लोड करताना त्रुटी आली.</td></tr>';
+            }
+        }
+
+        function renderLogsTable(logs) {
+            const tbody = document.getElementById('serviceLogsTableBody');
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#64748b;">कोणताही सर्व्हिस लॉग सापडला नाही.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(l => {
+                // शॉप आणि युजरचे नाव स्वतंत्र दाखवणे
+                let sName = l.shop_name || '-';
+                let uName = l.user_name || '-';
+
+                // जर जुन्या नोंदी असतील तर shop_or_user मधून काढणे
+                if (sName === '-' && l.shop_or_user) {
+                    if (l.shop_or_user.includes('-')) {
+                        const parts = l.shop_or_user.split('-');
+                        sName = parts[0].trim();
+                        uName = parts[1].trim();
+                    } else {
+                        uName = l.shop_or_user;
+                    }
+                }
+
+                const dateFormatted = l.date ? l.date.split('T')[0] : (l.created_at ? l.created_at.split('T')[0] : '-');
+
+                return `
+                    <tr>
+                        <td>${dateFormatted}</td>
+                        <td><strong style="color: var(--primary);">${sName}</strong></td>
+                        <td><strong>${uName}</strong></td>
+                        <td><code>${l.mobile || '-'}</code></td>
+                        <td><span style="background:#eff6ff; color:#1d4ed8; padding:3px 8px; border-radius:6px; font-weight:800;">${l.service_category || '-'}</span></td>
+                        <td><span style="background:#f0fdf4; color:#15803d; padding:3px 8px; border-radius:6px; font-weight:700;">${l.service_details || '-'}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterLogsTable() {
+            const query = document.getElementById('searchLogInput').value.toLowerCase().trim();
+            const filtered = allLogsCache.filter(l => 
+                (l.shop_name && l.shop_name.toLowerCase().includes(query)) ||
+                (l.user_name && l.user_name.toLowerCase().includes(query)) ||
+                (l.shop_or_user && l.shop_or_user.toLowerCase().includes(query)) ||
+                (l.mobile && l.mobile.includes(query)) ||
+                (l.service_category && l.service_category.toLowerCase().includes(query)) ||
+                (l.service_details && l.service_details.toLowerCase().includes(query))
+            );
+            renderLogsTable(filtered);
+        }
+
+        // 5. User Statement Lookup
         async function handleStatementLookup(e) {
             e.preventDefault();
             const mob = document.getElementById('lookupMobile').value.trim();
