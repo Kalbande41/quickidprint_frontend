@@ -215,9 +215,10 @@
                 <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
             </div>
 
-            <div class="form-group" style="display:none;" id="pwdBox">
-                <label><i class="fas fa-key" style="color:var(--primary);"></i> PDF पासवर्ड (असल्यास):</label>
-                <input type="password" id="pdfPassword" class="form-control" placeholder="पासवर्ड असल्यास टाका">
+            <!-- 🔑 महा आयडी पासवर्ड फील्ड (सक्रिय व दृश्यमान) -->
+            <div class="form-group">
+                <label><i class="fas fa-key" style="color:var(--primary);"></i> महा आयडी PDF पासवर्ड (असल्यास टाका):</label>
+                <input type="password" id="pdfPassword" class="form-control" placeholder="उदा. पासवर्ड संरक्षित असल्यास पासवर्ड टाका">
             </div>
 
             <button type="submit" id="btnProcess" class="btn-process">
@@ -296,7 +297,7 @@
             e.preventDefault();
             
             const fileInput = document.getElementById('pdfFile').files[0];
-            const password = document.getElementById('pdfPassword').value;
+            const password = document.getElementById('pdfPassword').value.trim();
             const size = document.getElementById('printSize').value;
             
             if(!fileInput) {
@@ -315,7 +316,7 @@
 
             setTimeout(() => { updateProgress(55, 2); }, 800);
 
-            // 🟢 AUTO-RETRY LOGIC: नेटवर्क किंवा सर्व्हर व्यस्त असल्यास आपोआप दुसरा प्रयत्न करेल
+            // 🟢 AUTO-RETRY LOGIC: नेटवर्क व्यस्त असल्यास सुरक्षित पुन्हा प्रयत्न
             let response = null;
             let success = false;
 
