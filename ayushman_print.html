@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्मार्ट आयुष्मान कार्ड प्रिंट - QuickIDPrint</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ea580c;
+            --primary-hover: #c2410c;
+            --primary-light: #ffedd5;
+            --dark: #0f172a;
+            --slate: #334155;
+            --bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --success: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--card-border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--dark); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { color: var(--primary); }
+
+        .container {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            max-width: 520px;
+            margin: 40px auto;
+            width: 90%;
+            border: 1px solid var(--card-border);
+        }
+
+        h2 { color: var(--primary); margin-bottom: 20px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .feature-box {
+            background: #fff7ed;
+            border: 1px dashed #fed7aa;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #c2410c;
+            text-align: left;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+        .feature-box i { color: var(--primary); margin-right: 6px; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--slate); font-size: 15px; }
+        .form-control {
+            width: 100%;
+            padding: 13px 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
+            background: var(--bg);
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12); }
+        
+        .btn-process {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.25);
+        }
+        .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35); }
+        .btn-process:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        /* 🎨 CREATIVE POPUP MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: fadeIn 0.25s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-card {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            padding: 32px 28px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            border: 1px solid var(--card-border);
+            animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .card-anim-box {
+            width: 160px;
+            height: 100px;
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(234, 88, 12, 0.35);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fed7aa;
+        }
+        .card-inner-icon { font-size: 42px; color: rgba(255, 255, 255, 0.9); }
+        .laser-beam {
+            position: absolute; left: 0; top: 0; width: 100%; height: 4px;
+            background: #fdba74; box-shadow: 0 0 12px 3px #fdba74;
+            animation: scanMove 1.6s ease-in-out infinite alternate;
+        }
+        @keyframes scanMove { 0% { top: 0%; } 100% { top: 96%; } }
+
+        .modal-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .modal-desc { font-size: 14px; color: var(--slate); margin-bottom: 20px; font-weight: 600; }
+
+        .steps-list {
+            background: #f8fafc; border-radius: 14px; padding: 14px 16px;
+            text-align: left; margin-bottom: 20px; border: 1px solid var(--card-border);
+        }
+        .step-item {
+            display: flex; align-items: center; gap: 10px; font-size: 13.5px;
+            font-weight: 700; color: var(--slate); margin-bottom: 8px;
+        }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-item.active { color: var(--primary); }
+        .step-item.done { color: var(--success); }
+
+        .progress-bar-wrap {
+            width: 100%; height: 8px; background: #e2e8f0; border-radius: 20px;
+            overflow: hidden; margin-bottom: 12px;
+        }
+        .progress-bar-fill {
+            height: 100%; width: 25%; background: linear-gradient(90deg, #ea580c, #fdba74);
+            border-radius: 20px; transition: width 0.4s ease;
+        }
+        .modal-tip { font-size: 12px; color: #64748b; font-weight: 600; }
+
+        .modal-success-icon { font-size: 55px; color: var(--success); margin-bottom: 14px; display: none; }
+        .modal-error-icon { font-size: 50px; color: #ef4444; margin-bottom: 14px; display: none; }
+
+        .btn-modal-action {
+            display: none; width: 100%; padding: 12px; border-radius: 10px;
+            font-size: 15px; font-weight: 800; border: none; cursor: pointer; margin-top: 15px;
+        }
+        .btn-modal-close { background: var(--primary); color: white; }
+        .btn-modal-retry { background: #ef4444; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="homepage.html" class="brand"><i class="fas fa-heartbeat" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
+        <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
+    </nav>
+
+    <div class="container">
+        <h2><i class="fas fa-heartbeat"></i> स्मार्ट आयुष्मान कार्ड प्रिंट</h2>
+        
+        <div class="feature-box">
+            <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित व जलद:</b> आयुष्मान भारत (PM-JAY) कार्ड सुरक्षित क्लाउड प्रणालीद्वारे प्रोसेस होते.</div>
+            <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फोटो व मजकूर आपोआप क्लिअर होऊन काळी कटिंग बॉर्डर व अचूक स्मार्ट कार्ड साईझ लागू होईल.</div>
+        </div>
+
+        <form id="cardForm" onsubmit="handleAyushmanSubmit(event)">
+            <div class="form-group">
+                <label><i class="fas fa-layer-group" style="color:var(--primary);"></i> पेपरची साईझ निवडा:</label>
+                <select id="printSize" class="form-control">
+                    <option value="4x6">4x6 Photo Paper (Smart HD)</option>
+                    <option value="A4">A4 Full Size Paper</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-file-pdf" style="color:var(--primary);"></i> आयुष्मान कार्डची PDF फाईल निवडा:</label>
+                <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
+            </div>
+
+            <div class="form-group" style="display:none;" id="pwdBox">
+                <label><i class="fas fa-key" style="color:var(--primary);"></i> PDF पासवर्ड (असल्यास):</label>
+                <input type="password" id="pdfPassword" class="form-control" placeholder="पासवर्ड असल्यास टाका">
+            </div>
+
+            <button type="submit" id="btnProcess" class="btn-process">
+                <i class="fas fa-file-arrow-down"></i> कार्ड प्रोसेस आणि डाऊनलोड करा
+            </button>
+        </form>
+    </div>
+
+    <!-- 🎨 CREATIVE POPUP MODAL -->
+    <div id="processModal" class="modal-overlay">
+        <div class="modal-card">
+            
+            <div id="animCardBox" class="card-anim-box">
+                <i class="fas fa-heartbeat card-inner-icon"></i>
+                <div class="laser-beam"></div>
+            </div>
+            <i id="successIcon" class="fas fa-circle-check modal-success-icon"></i>
+            <i id="errorIcon" class="fas fa-circle-exclamation modal-error-icon"></i>
+
+            <h3 id="modalTitle" class="modal-title">आयुष्मान कार्ड तयार होत आहे...</h3>
+            <p id="modalDesc" class="modal-desc">कृपया प्रतीक्षा करा, HD प्रिंट तयार केली जात आहे.</p>
+
+            <div id="progressWrap" class="progress-bar-wrap">
+                <div id="progressFill" class="progress-bar-fill"></div>
+            </div>
+
+            <div id="stepsList" class="steps-list">
+                <div class="step-item done" id="step1">
+                    <i class="fas fa-check-circle"></i> <span>आयुष्मान भारत PDF फाईल तपासली</span>
+                </div>
+                <div class="step-item active" id="step2">
+                    <i class="fas fa-spinner fa-spin"></i> <span>फोटो क्लिअर व अचूक आयुष्मान कार्ड क्रॉपिंग...</span>
+                </div>
+                <div class="step-item" id="step3">
+                    <i class="far fa-circle"></i> <span>प्रिंट-रेडी HD PDF तयार होत आहे...</span>
+                </div>
+            </div>
+
+            <!-- 🔒 व्यावसायिक सूचना (AI शब्द काढलेला आहे) -->
+            <p id="modalTip" class="modal-tip">
+                <i class="fas fa-shield-halved" style="color: #ea580c;"></i> सुरक्षित हाय-स्पीड प्रणालीद्वारे प्रिंट-रेडी कार्ड तयार होत आहे.
+            </p>
+
+            <button id="btnModalClose" class="btn-modal-action btn-modal-close" onclick="closeModal()">
+                <i class="fas fa-check"></i> ठीक आहे (OK)
+            </button>
+            <button id="btnModalRetry" class="btn-modal-action btn-modal-retry" onclick="closeModal()">
+                <i class="fas fa-rotate-right"></i> पुन्हा प्रयत्न करा
+            </button>
+
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        let userData = null;
+        try {
+            userData = JSON.parse(localStorage.getItem('quickid_user'));
+        } catch(e) {
+            userData = null;
+        }
+
+        if (!userData || !userData.mobile) {
+            alert("कृपया प्रथम लॉगिन करा!");
+            window.location.replace("login.html");
+        } else {
+            const remDays = parseInt(userData.remainingDays) || 0;
+            if (remDays <= 0 && userData.role !== 'admin' && !userData.isAdmin) {
+                alert("तुमच्या प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा!");
+                window.location.replace("recharge.html");
+            }
+        }
+
+        async function handleAyushmanSubmit(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('pdfFile').files[0];
+            const password = document.getElementById('pdfPassword').value;
+            const size = document.getElementById('printSize').value;
+            
+            if(!fileInput) {
+                alert("कृपया आयुष्मान कार्डची PDF फाईल निवडा.");
+                return;
+            }
+
+            openProcessModal();
+
+            const formData = new FormData();
+            formData.append('pdfFile', fileInput);
+            formData.append('password', password);
+            formData.append('size', size);
+            formData.append('cardName', 'Ayushman'); 
+            formData.append('userId', userData ? userData.mobile : '');
+
+            setTimeout(() => { updateProgress(55, 2); }, 800);
+
+            // 🟢 AUTO-RETRY LOGIC: नेटवर्क किंवा सर्व्हर व्यस्त असल्यास आपोआप दुसरा प्रयत्न करेल
+            let response = null;
+            let success = false;
+
+            for (let attempt = 1; attempt <= 2; attempt++) {
+                try {
+                    if (attempt === 2) {
+                        document.getElementById('modalDesc').innerText = "क्लाउड नेटवर्कशी सुरक्षित संपर्क सुरू आहे, कृपया थोडा वेळ प्रतीक्षा करा...";
+                        await new Promise(r => setTimeout(r, 4000));
+                    }
+
+                    response = await fetch(`${BACKEND_URL}/api/services/process-ayushman`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        success = true;
+                        break;
+                    }
+                } catch (fetchErr) {
+                    console.warn(`प्रयत्न ${attempt} अयशस्वी:`, fetchErr);
+                    if (attempt === 2) {
+                        showModalError("सिस्टीमशी सुरक्षित संपर्क होण्यास वेळ लागत आहे. कृपया काही सेकंदांनी पुन्हा प्रयत्न करा.");
+                        return;
+                    }
+                }
+            }
+
+            if (!success || !response) {
+                let errMsg = "प्रोसेसिंग पूर्ण होऊ शकले नाही.";
+                try {
+                    const errData = await response.json();
+                    errMsg = errData.error || errData.detail || errMsg;
+                } catch(e) {}
+                showModalError(errMsg);
+                return;
+            }
+
+            try {
+                updateProgress(85, 3);
+                const data = await response.json();
+
+                if(data.success && data.pdf_base64) {
+                    updateProgress(100, 3);
+
+                    const linkSource = `data:application/pdf;base64,${data.pdf_base64}`;
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = linkSource;
+                    downloadLink.download = `QuickIDPrint_Ayushman_${size}_${Date.now()}.pdf`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    showModalSuccess();
+                    document.getElementById('cardForm').reset();
+                } else {
+                    showModalError(data.error || "PDF तयार करताना त्रुटी आली.");
+                }
+            } catch(jsonErr) {
+                showModalError("डेटा वाचताना अडचण आली. कृपया पुन्हा प्रयत्न करा.");
+            }
+        }
+
+        function openProcessModal() {
+            document.getElementById('processModal').style.display = 'flex';
+            document.getElementById('animCardBox').style.display = 'flex';
+            document.getElementById('successIcon').style.display = 'none';
+            document.getElementById('errorIcon').style.display = 'none';
+            document.getElementById('progressWrap').style.display = 'block';
+            document.getElementById('stepsList').style.display = 'block';
+            document.getElementById('btnModalClose').style.display = 'none';
+            document.getElementById('btnModalRetry').style.display = 'none';
+            
+            document.getElementById('modalTitle').innerText = "आयुष्मान कार्ड तयार होत आहे...";
+            document.getElementById('modalDesc').innerText = "कृपया प्रतीक्षा करा, HD प्रिंट तयार केली जात आहे.";
+            updateProgress(30, 1);
+        }
+
+        function updateProgress(percent, stepNumber) {
+            document.getElementById('progressFill').style.width = percent + '%';
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+
+            if(stepNumber >= 2) {
+                step2.className = 'step-item done';
+                step2.innerHTML = '<i class="fas fa-check-circle"></i> <span>फोटो क्लिअर व अचूक आयुष्मान कार्ड क्रॉपिंग पूर्ण</span>';
+                step3.className = 'step-item active';
+                step3.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>प्रिंट-रेडी HD PDF तयार होत आहे...</span>';
+            }
+            if(stepNumber >= 3) {
+                step3.className = 'step-item done';
+                step3.innerHTML = '<i class="fas fa-check-circle"></i> <span>प्रिंट-रेडी HD PDF तयार झाली!</span>';
+            }
+        }
+
+        function showModalSuccess() {
+            document.getElementById('animCardBox').style.display = 'none';
+            document.getElementById('progressWrap').style.display = 'none';
+            document.getElementById('stepsList').style.display = 'none';
+            document.getElementById('successIcon').style.display = 'block';
+
+            document.getElementById('modalTitle').innerHTML = "<span style='color:#16a34a;'>🎉 डाऊनलोड यशस्वी!</span>";
+            document.getElementById('modalDesc').innerText = "तुमचे HD आयुष्मान कार्ड तयार होऊन थेट डाऊनलोड झाले आहे.";
+            document.getElementById('modalTip').innerHTML = "📄 फाईल तुमच्या डिव्हाइसच्या Downloads फोल्डरमध्ये सेव्ह झाली आहे.";
+
+            document.getElementById('btnModalClose').style.display = 'block';
+        }
+
+        function showModalError(errorMessage) {
+            document.getElementById('animCardBox').style.display = 'none';
+            document.getElementById('progressWrap').style.display = 'none';
+            document.getElementById('stepsList').style.display = 'none';
+            document.getElementById('errorIcon').style.display = 'block';
+
+            document.getElementById('modalTitle').innerHTML = "<span style='color:#dc2626;'>अडचण आली!</span>";
+            document.getElementById('modalDesc').innerText = errorMessage;
+            document.getElementById('modalTip').innerHTML = "💡 कृपया इंटरनेट कनेक्शन तपासून पुन्हा प्रयत्न करा.";
+
+            document.getElementById('btnModalRetry').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('processModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
