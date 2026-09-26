@@ -197,7 +197,7 @@
         <h2><i class="fas fa-address-card"></i> स्मार्ट मतदान कार्ड प्रिंट</h2>
         
         <div class="feature-box">
-            <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित:</b> e-EPIC व्होटर कार्ड सुरक्षित सर्व्हरवर प्रोसेस होते.</div>
+            <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित व जलद:</b> e-EPIC व्होटर कार्ड उच्च दर्जाच्या सुरक्षित क्लाउड प्रणालीद्वारे प्रोसेस होते.</div>
             <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फोटो आपोआप HD क्लिअर होऊन काळी कटिंग बॉर्डर व अचूक साईझ लागू होईल.</div>
         </div>
 
@@ -252,7 +252,7 @@
             </div>
 
             <p id="modalTip" class="modal-tip">
-                <i class="fas fa-bolt" style="color: #f59e0b;"></i> Render सर्व्हरवर सुरक्षित प्रोसेस चालू आहे.
+                <i class="fas fa-shield-halved" style="color: #0284c7;"></i> सुरक्षित हाय-स्पीड AI प्रणालीद्वारे प्रिंट-रेडी कार्ड तयार होत आहे.
             </p>
 
             <button id="btnModalClose" class="btn-modal-action btn-modal-close" onclick="closeModal()">
@@ -308,14 +308,14 @@
 
             setTimeout(() => { updateProgress(55, 2); }, 800);
 
-            // 🟢 AUTO-RETRY LOGIC: सर्व्हर सुरू होत असल्यास आपोआप दुसरा प्रयत्न करेल
+            // 🟢 AUTO-RETRY LOGIC: नेटवर्क किंवा सर्व्हर व्यस्त असल्यास आपोआप सुरक्षित दुसरा प्रयत्न करेल
             let response = null;
             let success = false;
 
             for (let attempt = 1; attempt <= 2; attempt++) {
                 try {
                     if (attempt === 2) {
-                        document.getElementById('modalDesc').innerText = "सर्व्हर जागे होत आहे, पुन्हा संपर्क साधत आहे (काही सेकंद थांबा)...";
+                        document.getElementById('modalDesc').innerText = "क्लाउड नेटवर्कशी सुरक्षित संपर्क सुरू आहे, कृपया थोडा वेळ प्रतीक्षा करा...";
                         await new Promise(r => setTimeout(r, 4000));
                     }
 
@@ -331,7 +331,7 @@
                 } catch (fetchErr) {
                     console.warn(`प्रयत्न ${attempt} अयशस्वी:`, fetchErr);
                     if (attempt === 2) {
-                        showModalError("सर्व्हरशी संपर्क होऊ शकला नाही. कृपया १ मिनिटाने पुन्हा प्रयत्न करा.");
+                        showModalError("सिस्टीमशी सुरक्षित संपर्क होण्यास वेळ लागत आहे. कृपया काही सेकंदांनी पुन्हा प्रयत्न करा.");
                         return;
                     }
                 }
@@ -425,7 +425,7 @@
 
             document.getElementById('modalTitle').innerHTML = "<span style='color:#dc2626;'>अडचण आली!</span>";
             document.getElementById('modalDesc').innerText = errorMessage;
-            document.getElementById('modalTip').innerHTML = "💡 कृपया इंटरनेट किंवा सर्व्हर तपासून १ मिनिटाने पुन्हा ट्राय करा.";
+            document.getElementById('modalTip').innerHTML = "💡 कृपया इंटरनेट कनेक्शन तपासून पुन्हा प्रयत्न करा.";
 
             document.getElementById('btnModalRetry').style.display = 'block';
         }
