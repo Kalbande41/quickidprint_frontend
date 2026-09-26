@@ -25,7 +25,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Top Navigation */
         .top-nav {
             background: white;
             border-bottom: 1px solid var(--card-border);
@@ -100,22 +99,7 @@
         .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35); }
         .btn-process:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        .error-static {
-            color: #dc2626;
-            font-weight: bold;
-            display: none;
-            margin-top: 18px;
-            background: #fee2e2;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #fecaca;
-            font-size: 15px;
-            text-align: left;
-        }
-
-        /* =================================================== */
-        /* 🎨 CREATIVE PROCESSING POPUP MODAL (NEW)            */
-        /* =================================================== */
+        /* 🎨 CREATIVE POPUP MODAL */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -144,7 +128,6 @@
         }
         @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Animated Scanner Card Graphic */
         .card-anim-box {
             width: 160px;
             height: 100px;
@@ -159,122 +142,48 @@
             justify-content: center;
             border: 2px solid #bae6fd;
         }
-        .card-inner-icon {
-            font-size: 42px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        /* Moving Laser Beam */
+        .card-inner-icon { font-size: 42px; color: rgba(255, 255, 255, 0.9); }
         .laser-beam {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 4px;
-            background: #38bdf8;
-            box-shadow: 0 0 12px 3px #38bdf8;
+            position: absolute; left: 0; top: 0; width: 100%; height: 4px;
+            background: #38bdf8; box-shadow: 0 0 12px 3px #38bdf8;
             animation: scanMove 1.6s ease-in-out infinite alternate;
         }
-        @keyframes scanMove {
-            0% { top: 0%; }
-            100% { top: 96%; }
-        }
+        @keyframes scanMove { 0% { top: 0%; } 100% { top: 96%; } }
 
-        .modal-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 6px;
-        }
-        .modal-desc {
-            font-size: 14px;
-            color: var(--slate);
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
+        .modal-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .modal-desc { font-size: 14px; color: var(--slate); margin-bottom: 20px; font-weight: 600; }
 
-        /* Step Indicators */
         .steps-list {
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 14px 16px;
-            text-align: left;
-            margin-bottom: 20px;
-            border: 1px solid var(--card-border);
+            background: #f8fafc; border-radius: 14px; padding: 14px 16px;
+            text-align: left; margin-bottom: 20px; border: 1px solid var(--card-border);
         }
         .step-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--slate);
-            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px; font-size: 13.5px;
+            font-weight: 700; color: var(--slate); margin-bottom: 8px;
         }
         .step-item:last-child { margin-bottom: 0; }
-        .step-item i { font-size: 15px; width: 18px; }
         .step-item.active { color: var(--primary); }
-        .step-item.active i { color: var(--primary); }
         .step-item.done { color: var(--success); }
-        .step-item.done i { color: var(--success); }
 
-        /* Progress Bar */
         .progress-bar-wrap {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 12px;
+            width: 100%; height: 8px; background: #e2e8f0; border-radius: 20px;
+            overflow: hidden; margin-bottom: 12px;
         }
         .progress-bar-fill {
-            height: 100%;
-            width: 25%;
-            background: linear-gradient(90deg, #0284c7, #38bdf8);
-            border-radius: 20px;
-            transition: width 0.4s ease;
+            height: 100%; width: 25%; background: linear-gradient(90deg, #0284c7, #38bdf8);
+            border-radius: 20px; transition: width 0.4s ease;
         }
+        .modal-tip { font-size: 12px; color: #64748b; font-weight: 600; }
 
-        .modal-tip {
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        /* Success & Error State within Modal */
-        .modal-success-icon {
-            font-size: 55px;
-            color: var(--success);
-            margin-bottom: 14px;
-            display: none;
-            animation: bounce 0.4s ease;
-        }
-        .modal-error-icon {
-            font-size: 50px;
-            color: #ef4444;
-            margin-bottom: 14px;
-            display: none;
-        }
-        @keyframes bounce { 0% { transform: scale(0.5); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .modal-success-icon { font-size: 55px; color: var(--success); margin-bottom: 14px; display: none; }
+        .modal-error-icon { font-size: 50px; color: #ef4444; margin-bottom: 14px; display: none; }
 
         .btn-modal-action {
-            display: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            margin-top: 15px;
+            display: none; width: 100%; padding: 12px; border-radius: 10px;
+            font-size: 15px; font-weight: 800; border: none; cursor: pointer; margin-top: 15px;
         }
-        .btn-modal-close {
-            background: var(--primary);
-            color: white;
-        }
-        .btn-modal-retry {
-            background: #ef4444;
-            color: white;
-        }
+        .btn-modal-close { background: var(--primary); color: white; }
+        .btn-modal-retry { background: #ef4444; color: white; }
     </style>
 </head>
 <body>
@@ -291,8 +200,6 @@
             <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित:</b> e-EPIC व्होटर कार्ड सुरक्षित सर्व्हरवर प्रोसेस होते.</div>
             <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फोटो आपोआप HD क्लिअर होऊन काळी कटिंग बॉर्डर व अचूक साईझ लागू होईल.</div>
         </div>
-
-        <p id="errorStatic" class="error-static"></p>
 
         <form id="cardForm" onsubmit="handleVoterSubmit(event)">
             <div class="form-group">
@@ -314,13 +221,10 @@
         </form>
     </div>
 
-    <!-- =================================================== -->
-    <!-- 🎨 CREATIVE PROCESSING POPUP MODAL                  -->
-    <!-- =================================================== -->
+    <!-- 🎨 CREATIVE POPUP MODAL -->
     <div id="processModal" class="modal-overlay">
         <div class="modal-card">
             
-            <!-- Dynamic Icons -->
             <div id="animCardBox" class="card-anim-box">
                 <i class="fas fa-address-card card-inner-icon"></i>
                 <div class="laser-beam"></div>
@@ -331,12 +235,10 @@
             <h3 id="modalTitle" class="modal-title">मतदान कार्ड तयार होत आहे...</h3>
             <p id="modalDesc" class="modal-desc">कृपया प्रतीक्षा करा, HD प्रिंट तयार केली जात आहे.</p>
 
-            <!-- Progress Bar -->
             <div id="progressWrap" class="progress-bar-wrap">
                 <div id="progressFill" class="progress-bar-fill"></div>
             </div>
 
-            <!-- Step by Step Live Tracker -->
             <div id="stepsList" class="steps-list">
                 <div class="step-item done" id="step1">
                     <i class="fas fa-check-circle"></i> <span>e-EPIC PDF फाईल तपासली</span>
@@ -353,7 +255,6 @@
                 <i class="fas fa-bolt" style="color: #f59e0b;"></i> Render सर्व्हरवर सुरक्षित प्रोसेस चालू आहे.
             </p>
 
-            <!-- Action Buttons for Success or Error -->
             <button id="btnModalClose" class="btn-modal-action btn-modal-close" onclick="closeModal()">
                 <i class="fas fa-check"></i> ठीक आहे (OK)
             </button>
@@ -367,7 +268,6 @@
     <script>
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
-        // 🔒 लॉगिन व प्लॅन वैधता तपासणी
         let userData = null;
         try {
             userData = JSON.parse(localStorage.getItem('quickid_user'));
@@ -391,16 +291,12 @@
             
             const fileInput = document.getElementById('pdfFile').files[0];
             const size = document.getElementById('printSize').value;
-            const errorStatic = document.getElementById('errorStatic');
             
             if(!fileInput) {
                 alert("कृपया व्होटर कार्डची PDF फाईल निवडा.");
                 return;
             }
 
-            errorStatic.style.display = 'none';
-
-            // 🎨 १. क्रिएटिव्ह पॉप-अप उघडणे
             openProcessModal();
 
             const formData = new FormData();
@@ -410,37 +306,54 @@
             formData.append('cardName', 'Voter'); 
             formData.append('userId', userData ? userData.mobile : '');
 
-            // प्रोग्रेस बार स्टेप्स अपडेट
             setTimeout(() => { updateProgress(55, 2); }, 800);
 
-            try {
-                // Fetch कॉल (Render सर्व्हरला विनंती)
-                const response = await fetch(`${BACKEND_URL}/api/services/process-voter`, {
-                    method: 'POST',
-                    body: formData
-                });
+            // 🟢 AUTO-RETRY LOGIC: सर्व्हर सुरू होत असल्यास आपोआप दुसरा प्रयत्न करेल
+            let response = null;
+            let success = false;
 
-                updateProgress(85, 3);
-
-                // जर सर्व्हरने एरर दिला तर सुरक्षितपणे वाचणे
-                if (!response.ok) {
-                    let errMsg = "प्रोसेसिंग पूर्ण होऊ शकले नाही.";
-                    try {
-                        const errData = await response.json();
-                        errMsg = errData.error || errData.detail || errMsg;
-                    } catch(jsonErr) {
-                        errMsg = `सर्व्हर रिस्पॉन्स एरर (${response.status}). Render सर्व्हर सुरू होत असावा.`;
+            for (let attempt = 1; attempt <= 2; attempt++) {
+                try {
+                    if (attempt === 2) {
+                        document.getElementById('modalDesc').innerText = "सर्व्हर जागे होत आहे, पुन्हा संपर्क साधत आहे (काही सेकंद थांबा)...";
+                        await new Promise(r => setTimeout(r, 4000));
                     }
-                    showModalError(errMsg);
-                    return;
-                }
 
+                    response = await fetch(`${BACKEND_URL}/api/services/process-voter`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        success = true;
+                        break;
+                    }
+                } catch (fetchErr) {
+                    console.warn(`प्रयत्न ${attempt} अयशस्वी:`, fetchErr);
+                    if (attempt === 2) {
+                        showModalError("सर्व्हरशी संपर्क होऊ शकला नाही. कृपया १ मिनिटाने पुन्हा प्रयत्न करा.");
+                        return;
+                    }
+                }
+            }
+
+            if (!success || !response) {
+                let errMsg = "प्रोसेसिंग पूर्ण होऊ शकले नाही.";
+                try {
+                    const errData = await response.json();
+                    errMsg = errData.error || errData.detail || errMsg;
+                } catch(e) {}
+                showModalError(errMsg);
+                return;
+            }
+
+            try {
+                updateProgress(85, 3);
                 const data = await response.json();
 
                 if(data.success && data.pdf_base64) {
                     updateProgress(100, 3);
 
-                    // 📥 PDF थेट डाऊनलोड करणे
                     const linkSource = `data:application/pdf;base64,${data.pdf_base64}`;
                     const downloadLink = document.createElement("a");
                     downloadLink.href = linkSource;
@@ -449,20 +362,16 @@
                     downloadLink.click();
                     document.body.removeChild(downloadLink);
 
-                    // 🎉 पॉप-अपमध्ये यश दाखवणे
                     showModalSuccess();
                     document.getElementById('cardForm').reset();
                 } else {
-                    showModalError(data.error || "PDF जनरेट करताना त्रुटी आली.");
+                    showModalError(data.error || "PDF तयार करताना त्रुटी आली.");
                 }
-
-            } catch (err) {
-                console.error("Voter Fetch Error:", err);
-                showModalError("सर्व्हरशी संपर्क होऊ शकला नाही. Render सर्व्हर झोपेतून सुरू होत असावा (Cold Start). कृपया ३० सेकंद थांबा आणि पुन्हा प्रयत्न करा.");
+            } catch(jsonErr) {
+                showModalError("डेटा वाचताना अडचण आली. कृपया पुन्हा प्रयत्न करा.");
             }
         }
 
-        // ---------- पॉप-अप कंट्रोल फंक्शन्स ----------
         function openProcessModal() {
             document.getElementById('processModal').style.display = 'flex';
             document.getElementById('animCardBox').style.display = 'flex';
@@ -480,7 +389,6 @@
 
         function updateProgress(percent, stepNumber) {
             document.getElementById('progressFill').style.width = percent + '%';
-            
             const step2 = document.getElementById('step2');
             const step3 = document.getElementById('step3');
 
