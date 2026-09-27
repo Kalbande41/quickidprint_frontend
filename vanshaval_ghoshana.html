@@ -46,8 +46,40 @@
         .btn-add { background: #28a745; color: white; } .btn-add:hover { background: #218838; }
         .btn-preview { background: #6f42c1; color: white; width: 100%; font-size: 16px; padding: 12px; margin-top: 10px; } .btn-preview:hover { background: #5a32a3; }
         
-        /* Tree Live Build Area */
-        .live-tree-area { overflow-x: auto; padding: 20px; background: #fff; min-height: 150px; display: flex; justify-content: center; }
+        /* 🟢 Tree Live Build Area (पूर्ण स्क्रोल व स्लायडर व्यवस्थित काम करण्यासाठी सुधारित) */
+        .live-tree-area { 
+            overflow-x: auto; 
+            overflow-y: visible;
+            padding: 25px 20px; 
+            background: #fff; 
+            min-height: 160px; 
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        /* सुंदर आणि सहज सरकणारा स्लायडर (Scrollbar) */
+        .live-tree-area::-webkit-scrollbar {
+            height: 10px;
+        }
+        .live-tree-area::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 5px;
+        }
+        .live-tree-area::-webkit-scrollbar-thumb {
+            background: #5D9CEC;
+            border-radius: 5px;
+        }
+        .live-tree-area::-webkit-scrollbar-thumb:hover {
+            background: #4a89dc;
+        }
+
+        #builderTreeRoot {
+            width: max-content;
+            min-width: 100%;
+            display: flex;
+            justify-content: center;
+        }
 
         /* --- TREE CSS --- */
         .tree ul { padding-top: 14px; position: relative; display: flex; justify-content: center; padding-left: 0; margin: 0; }
@@ -98,6 +130,9 @@
         
         #docTreeWrapper {
             display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;
+        }
+        #docTreeRoot {
+            width: max-content;
         }
 
         .doc-footer { 
@@ -230,7 +265,7 @@
             </div>
             
             <div class="doc-text">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल करायची आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
             </div>
             
             <!-- Tree inside Document -->
@@ -246,17 +281,17 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
             </div>
 
-            <!-- Footer Section -->
+            <!-- Footer Section (✅ पत्ता एकाच ओळीत लॉक) -->
             <div class="doc-footer">
                 <div class="footer-left">
                     <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
                     <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
                 </div>
                 <div class="footer-right">
-    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br>
-    <span class="bold-val" id="out_signName">__________________</span><br>
-    <span style="white-space: nowrap;">रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span></span>
-</div>
+                    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br><br>
+                    <span class="bold-val" id="out_signName">__________________</span><br>
+                    <span style="white-space: nowrap;">रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span></span>
+                </div>
             </div>
         </div>
 
@@ -280,7 +315,7 @@
             const u = JSON.parse(localStorage.getItem('quickid_user'));
             if (u && u.mobile) userMobile = u.mobile;
         } catch(e) {}
-        if (!userMobile) userMobile = sessionStorage.getItem('username') || 'User';
+        if (!userMobile) userMobile = sessionStorage.getItem('username') || sessionStorage.getItem('userMobile') || 'User';
 
         const applicantName = document.getElementById('app_name').value || 'Vanshaval Generated';
         const benName = document.getElementById('ben_name').value || '-';
