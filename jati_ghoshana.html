@@ -314,8 +314,30 @@
       if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
   }
 
-  // 🔒 सुरक्षित प्रोसेस फंक्शन (Render + Supabase कनेक्टेड)
-  async function processForm(actionType) {
+  // 🟢 Render व Supabase कडे ऑडिट लॉग पाठवणे (Vanshaval प्रमाणे Background मध्ये)
+  function logUsage(actionLabel) {
+    let userMobile = '';
+    try {
+        const u = JSON.parse(localStorage.getItem('quickid_user'));
+        if (u && u.mobile) userMobile = u.mobile;
+    } catch(e) {}
+    if (!userMobile) userMobile = sessionStorage.getItem('username') || sessionStorage.getItem('userMobile') || 'User';
+
+    const formData = new FormData();
+    formData.append('mobile', userMobile);
+    formData.append('actionType', actionLabel);
+
+    fetch(`${BACKEND_URL}/api/services/log-caste-ghoshana`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => console.log("Log Success:", data))
+    .catch(err => console.log("Log Notice:", err));
+  }
+
+  // 🔒 सुरक्षित प्रोसेस फंक्शन (कोणताही अडथळा न आणता थेट प्रिंट व डाऊनलोड)
+  function processForm(actionType) {
     const form = document.getElementById('affidavitForm');
     
     if (!form.checkValidity()) {
@@ -329,34 +351,6 @@
         return;
     }
 
-    const btn = (actionType === 'print') ? document.getElementById('btnPrint') : document.getElementById('btnDownload');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> प्रक्रिया चालू आहे...";
-    btn.disabled = true;
-
-    // 🔒 लॉगिन युजर मोबाईल मिळवणे
-    let userMobile = '';
-    try {
-        const u = JSON.parse(localStorage.getItem('quickid_user'));
-        if (u && u.mobile) userMobile = u.mobile;
-    } catch(e) {}
-    if (!userMobile) userMobile = sessionStorage.getItem('username') || sessionStorage.getItem('userMobile') || '';
-
-    if (!userMobile) {
-        alert("अनधिकृत प्रवेश! कृपया आधी लॉगिन करा.");
-        window.location.href = "login.html";
-        return;
-    }
-
-    // 🟢 एक्सपायरी प्राथमिक तपासणी
-    const remainingDays = parseInt(sessionStorage.getItem('remainingDays')) || 0;
-    if (remainingDays <= 0 && userMobile !== '9999999999' && userMobile !== 'admin') {
-        alert("तुमच्या प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा.");
-        btn.innerHTML = originalHtml;
-        btn.disabled = false;
-        return;
-    }
-
     const applicantName = document.getElementById('name').value; 
     const village = document.getElementById('village').value;
     const taluka = document.getElementById('taluka').value;
@@ -365,91 +359,64 @@
     const category = document.getElementById('categoryInput').value;
     const targetType = document.getElementById('targetPersonType').value;
     const parentRel = document.getElementById('parentRelation').value;
-    const actionLabel = actionType === 'print' ? 'Printed' : 'Downloaded';
 
-    const formData = new FormData();
-    formData.append('mobile', userMobile);
-    formData.append('actionType', actionLabel);
-
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/services/log-caste-ghoshana`, {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await res.json();
-
-        if (res.status === 403 || data.status === 'error') {
-            alert(data.detail || data.message || "तुमच्या प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा.");
-            btn.innerHTML = originalHtml;
-            btn.disabled = false;
-            return;
-        }
-
-        // ✅ डेटा सेट करणे (Print Output भरणे)
-        document.getElementById('out_name').innerText = applicantName;
-        document.getElementById('out_father').innerText = document.getElementById('father').value;
-        document.getElementById('out_parentRelation').innerText = parentRel;
-        document.getElementById('out_age').innerText = document.getElementById('age').value;
-        document.getElementById('out_childName').innerText = document.getElementById('childName').value;
-        document.getElementById('out_targetPersonType').innerText = targetType;
-        
-        if (targetType === 'स्वतःचे') {
-            document.getElementById('out_targetPersonText').innerText = 'माझी';
-        } else if (targetType === 'माझ्या मुलीचे') {
-            document.getElementById('out_targetPersonText').innerText = 'माझ्या मुलीची';
-        } else {
-            document.getElementById('out_targetPersonText').innerText = 'माझ्या मुलाची';
-        }
-
-        document.getElementById('out_caste').innerText = caste;
-        document.getElementById('out_category').innerText = category;
-        document.getElementById('out_category_sub').innerText = category;
-        document.getElementById('out_caste_sub').innerText = caste;
-
-        // पत्ते सेट करणे
-        document.getElementById('out_village').innerText = village;
-        document.getElementById('out_taluka').innerText = taluka;
-        document.getElementById('out_district').innerText = district;
-
-        document.getElementById('out_village2').innerText = village;
-        document.getElementById('out_taluka2').innerText = taluka;
-        document.getElementById('out_district2').innerText = district;
-
-        document.getElementById('out_location').innerText = document.getElementById('location').value || taluka;
-        document.getElementById('out_district_left').innerText = district;
-
-        const rawDate = document.getElementById('date').value;
-        if (rawDate) {
-            const parts = rawDate.split('-');
-            document.getElementById('out_date').innerText = `${parts[2]}/${parts[1]}/${parts[0]}`;
-        }
-
-        document.getElementById('out_name2').innerText = applicantName;
-
-        setTimeout(() => {
-            if (actionType === 'print') {
-                const originalTitle = document.title; 
-                document.title = "QuickIDPrint_Caste"; 
-                window.print();
-                document.title = originalTitle; 
-            } else if (actionType === 'download') {
-                executeDownload();
-            }
-
-            setTimeout(() => {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }, 1500);
-
-        }, 400);
-
-    } catch (err) {
-        console.error("Backend Error:", err);
-        alert("सर्व्हरशी संपर्क होऊ शकला नाही. कृपया इंटरनेट कनेक्शन तपासा.");
-        btn.innerHTML = originalHtml;
-        btn.disabled = false;
+    // ✅ डेटा सेट करणे (Print Output भरणे)
+    document.getElementById('out_name').innerText = applicantName;
+    document.getElementById('out_father').innerText = document.getElementById('father').value;
+    document.getElementById('out_parentRelation').innerText = parentRel;
+    document.getElementById('out_age').innerText = document.getElementById('age').value;
+    document.getElementById('out_childName').innerText = document.getElementById('childName').value;
+    document.getElementById('out_targetPersonType').innerText = targetType;
+    
+    if (targetType === 'स्वतःचे') {
+        document.getElementById('out_targetPersonText').innerText = 'माझी';
+    } else if (targetType === 'माझ्या मुलीचे') {
+        document.getElementById('out_targetPersonText').innerText = 'माझ्या मुलीची';
+    } else {
+        document.getElementById('out_targetPersonText').innerText = 'माझ्या मुलाची';
     }
+
+    document.getElementById('out_caste').innerText = caste;
+    document.getElementById('out_category').innerText = category;
+    document.getElementById('out_category_sub').innerText = category;
+    document.getElementById('out_caste_sub').innerText = caste;
+
+    // पत्ते सेट करणे
+    document.getElementById('out_village').innerText = village;
+    document.getElementById('out_taluka').innerText = taluka;
+    document.getElementById('out_district').innerText = district;
+
+    document.getElementById('out_village2').innerText = village;
+    document.getElementById('out_taluka2').innerText = taluka;
+    document.getElementById('out_district2').innerText = district;
+
+    document.getElementById('out_location').innerText = document.getElementById('location').value || taluka;
+    document.getElementById('out_district_left').innerText = district;
+
+    const rawDate = document.getElementById('date').value;
+    if (rawDate) {
+        const parts = rawDate.split('-');
+        document.getElementById('out_date').innerText = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    document.getElementById('out_name2').innerText = applicantName;
+
+    const actionLabel = actionType === 'print' ? 'Printed' : 'Downloaded';
+    
+    // 🟢 बॅकग्राउंडमध्ये Render व Supabase ला लॉग नोंदवणे (वंशावळ प्रमाणे)
+    logUsage(actionLabel);
+
+    // 🖨️ थेट प्रिंट किंवा डाऊनलोड सुरू करणे
+    setTimeout(() => {
+        if (actionType === 'print') {
+            const originalTitle = document.title; 
+            document.title = "QuickIDPrint_Caste"; 
+            window.print();
+            document.title = originalTitle; 
+        } else if (actionType === 'download') {
+            executeDownload();
+        }
+    }, 200);
   }
 
   function executeDownload() {
