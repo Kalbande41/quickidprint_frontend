@@ -5,67 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>वंशावळ स्वयंघोषणा शपथपत्र | QuickIDPrint</title>
     
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Mukta Font & Portal Security -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="auth-guard.js"></script>
 
-    <!-- Direct PDF Generator Library -->
+    <!-- PDF Download Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --dark: #0f172a;
-            --slate: #334155;
-            --bg: #f8fafc;
-            --card-border: #e2e8f0;
+        body {
+            font-family: 'Mukta', sans-serif;
+            background-color: #e9ecef;
+            margin: 0; padding: 20px; color: #333;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; padding-bottom: 40px; }
-
-        /* Navigation Bar */
-        .top-nav-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 14px 24px; border-radius: 8px; margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--card-border);
-        }
-        .brand-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 19px; color: var(--dark); text-decoration: none; }
-        .brand-logo span { color: var(--primary); }
-        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
-        .back-link:hover { color: var(--primary); }
-
-        .container { max-width: 1050px; margin: 0 auto; width: 92%; }
-        h2 { text-align: center; color: #1e3a8a; margin-bottom: 20px; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* Layout & Cards */
+        .container { max-width: 1050px; margin: 0 auto; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
         
         .card {
-            background: #fff; padding: 22px; border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px;
-            border: 1px solid var(--card-border); border-top: 4px solid var(--primary);
+            background: #fff; padding: 20px; border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px;
+            border-top: 4px solid #5D9CEC;
         }
-        .card-title { font-size: 17.5px; font-weight: 700; margin-bottom: 15px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px; color: var(--primary); }
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #5D9CEC; }
 
         /* Form Grid */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; text-align: left; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; color: #475569; }
+        .form-group label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #555; }
         .form-group input, .form-group select {
-            padding: 9.5px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14.5px; outline: none; transition: 0.2s; background: var(--bg);
+            padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Mukta', sans-serif;
         }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: #fff; }
+        .form-group input:focus, .form-group select:focus { border-color: #5D9CEC; outline: none; }
 
-        /* Tree Builder Control */
-        .tree-control { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; }
-        .tree-control select, .tree-control input { padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
-        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14.5px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-add { background: #16a34a; color: white; } .btn-add:hover { background: #15803d; }
-        .btn-preview { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; width: 100%; font-size: 18px; padding: 15px; margin-top: 10px; border-radius: 10px; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.25); } 
-        .btn-preview:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37,99,235,0.35); }
+        /* Tree Control */
+        .tree-control { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; }
+        .tree-control select, .tree-control input { padding: 8px; border: 1px solid #aaa; border-radius: 4px; font-size: 13px; font-family: 'Mukta', sans-serif; }
+        .btn { padding: 9px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; font-family: 'Mukta', sans-serif;}
+        .btn-add { background: #28a745; color: white; } .btn-add:hover { background: #218838; }
+        .btn-preview { background: #6f42c1; color: white; width: 100%; font-size: 16px; padding: 12px; margin-top: 10px; } .btn-preview:hover { background: #5a32a3; }
         
-        .live-tree-area { overflow-x: auto; padding: 25px 15px; background: #fff; min-height: 160px; display: flex; justify-content: center; border: 1px dashed #cbd5e1; border-radius: 8px; }
+        /* Tree Live Build Area */
+        .live-tree-area { overflow-x: auto; padding: 20px; background: #fff; min-height: 150px; display: flex; justify-content: center; }
 
         /* --- TREE CSS --- */
         .tree ul { padding-top: 14px; position: relative; display: flex; justify-content: center; padding-left: 0; margin: 0; }
@@ -82,106 +64,84 @@
             display: inline-flex; flex-direction: column; align-items: center; white-space: nowrap; padding: 4px 6px;
             position: relative; border-radius: 4px; transition: background 0.2s; border: 1px solid transparent;
         }
-        .compact-node:hover { background-color: #eff6ff; border-color: #bfdbfe; }
-        .r-title { font-size: 13px; font-weight: 700; color: #000; line-height: 1.2; }
-        .r-name { font-size: 14px; color: #111; margin-top: 2px; line-height: 1.2; font-weight: 600; }
-        .r-doc { font-size: 11px; color: #444; margin-top: 1px; line-height: 1.1; }
+        .compact-node:hover { background-color: #f0f7ff; border-color: #cce; }
+        .r-title { font-size: 13px; font-weight: bold; color: #000; line-height: 1.2; }
+        .r-name { font-size: 14px; color: #222; margin-top: 2px; line-height: 1.2; font-weight: 600;}
+        .r-doc { font-size: 11.5px; color: #333; margin-top: 1px; line-height: 1.1; }
         
-        .node-actions { position: absolute; top: -10px; right: -10px; display: none; gap: 3px; z-index: 10; }
+        .node-actions { position: absolute; top: -10px; right: -10px; display: none; gap: 2px; z-index: 10; }
         .compact-node:hover .node-actions { display: flex; }
-        .act-btn { border-radius: 50%; width: 17px; height: 17px; font-size: 10px; cursor: pointer; border: none; color: #fff; display: flex; align-items: center; justify-content: center; }
-        .act-edit { background: #f59e0b; } .act-del { background: #ef4444; }
+        .act-btn { border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; border: none; color: #fff; display: flex; align-items: center; justify-content: center; }
+        .act-edit { background: #ff9800; } .act-del { background: #e74c3c; }
 
-        /* Modal Preview Window */
+        /* Modal (Dialogue Box) */
         .modal {
-            display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-            overflow-y: auto; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px);
-            padding: 20px 10px;
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
         }
         .modal-content {
-            background-color: #334155; margin: 0 auto; padding: 20px; border-radius: 12px; width: 100%; max-width: 920px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            background-color: #525659; margin: 2% auto; padding: 20px; border-radius: 8px; width: 95%; max-width: 900px;
         }
-        .modal-actions { display: flex; justify-content: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
-        .btn-cancel { background: #64748b; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
-        .btn-cancel:hover { background: #475569; }
-        .btn-print { background: #2563eb; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
-        .btn-print:hover { background: #1d4ed8; }
-        .btn-download { background: #16a34a; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
-        .btn-download:hover { background: #15803d; }
+        .modal-actions { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .btn-cancel { background: #e74c3c; color: white; padding: 10px 20px; font-size: 15px; } .btn-cancel:hover { background: #c0392b; }
+        .btn-print { background: #007bff; color: white; padding: 10px 20px; font-size: 15px; } .btn-print:hover { background: #0056b3; }
+        .btn-download { background: #28a745; color: white; padding: 10px 20px; font-size: 15px; } .btn-download:hover { background: #218838; }
 
-        /* ================= A4 DOCUMENT CONTAINER ================= */
+        /* A4 Document Preview inside Modal */
         #a4-document {
-            background: #fff; 
-            width: 210mm; 
-            min-height: 297mm; 
-            margin: 0 auto; 
-            padding: 16mm 18mm 14mm 18mm;
-            box-sizing: border-box; 
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
-            text-align: left;
+            background: #fff; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm;
+            box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: left;
             position: relative;
         }
-
-        .doc-title { text-align: center; font-size: 21px; font-weight: 800; margin-bottom: 18px; text-decoration: underline; color: #000; }
-        .doc-text { font-size: 15.5px; line-height: 1.85; margin-bottom: 10px; text-align: justify; color: #000; }
-
-        /* 🌳 वंशावळ सेंटर अलाइनमेंट कंटेनर */
+        .doc-title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 25px; text-decoration: underline; }
+        .doc-text { font-size: 16px; line-height: 2.2; margin-bottom: 15px; text-align: justify; }
+        
         #docTreeWrapper {
-            display: flex; 
-            justify-content: center; /* नेहमी मध्यभागी */
-            align-items: center;
-            width: 100%;
-            margin: 18px 0;
-            text-align: center;
+            display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;
         }
 
-        /* 🟢 फुटर (कोणतीही लाईन नाही, पत्ता एकाच ओळीत) */
         .doc-footer { 
-            display: flex; justify-content: space-between; align-items: flex-end;
-            margin-top: 45px; font-size: 15px; line-height: 1.6;
-            border-top: none; padding-top: 0;
+            display: flex; justify-content: space-between; 
+            margin-top: 80px; font-size: 16px; line-height: 1.8; 
         }
-        .footer-right { text-align: right; }
-        .bold-val { font-weight: 800; padding: 0 4px; color: #000; }
+        
+        .bold-val { font-weight: bold; padding: 0 5px; }
 
-        /* ================= STRICT 1-PAGE PRINT CSS ================= */
+        /* ================= PRINT SPECIFIC CSS ================= */
         @page { size: A4 portrait; margin: 10mm; }
         @media print {
             body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
-            .top-nav-bar, .container, .modal-actions, .node-actions, .print-hide { display: none !important; }
+            .container, .modal-actions, .node-actions, .print-hide { display: none !important; }
             
-            .modal { position: static !important; display: block !important; background: transparent !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
-            .modal-content { background: transparent !important; padding: 0 !important; margin: 0 !important; border: none !important; width: 100% !important; max-width: none !important; box-shadow: none !important; }
+            .modal { position: static; display: block; background: transparent !important; padding: 0; margin: 0; }
+            .modal-content { background: transparent !important; padding: 0; margin: 0; border: none; width: 100%; max-width: none; }
             
             #a4-document { 
                 width: 100% !important; height: auto !important; min-height: 100% !important; 
-                margin: 0 !important; padding: 6mm 10mm !important; box-shadow: none !important; border: none !important;
-                page-break-after: avoid !important; page-break-inside: avoid !important;
+                margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; 
             }
-            .doc-footer { border-top: none !important; margin-top: 35px !important; }
+            .doc-footer { margin-top: 60px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="top-nav-bar">
-        <a href="homepage.html" class="brand-logo"><i class="fas fa-sitemap" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
-        <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
+    <div style="text-align: right; margin-bottom: 15px;">
+        <a href="homepage.html" style="color: #2563eb; text-decoration: none; font-weight: 600; font-size: 15px;"> डॅशबोर्डवर जा</a>
     </div>
 
-    <h2><i class="fas fa-file-signature"></i> वंशावळ स्वयंघोषणा शपथपत्र</h2>
+    <h2>वंशावळ व शपथपत्र</h2>
 
     <!-- १. शपथपत्राची माहिती -->
     <div class="card">
-        <div class="card-title">१. शपथपत्राचा तपशील (डिटेल्स भरा)</div>
+        <div class="card-title">१. शपथपत्राचा मजकूर (डिटेल्स भरा)</div>
         <div class="form-grid">
-            <div class="form-group"><label>अर्जदाराचे नाव:</label><input type="text" id="app_name" placeholder="उदा. रमेश आनंदराव पाटील"></div>
-            <div class="form-group"><label>रहिवासी (गाव/शहर):</label><input type="text" id="app_village" placeholder="उदा. हदगाव"></div>
-            <div class="form-group"><label>तालुका:</label><input type="text" id="app_taluka" value="हदगाव"></div>
-            <div class="form-group"><label>जिल्हा:</label><input type="text" id="app_district" value="नांदेड"></div>
-            <div class="form-group"><label>अर्जदाराची जात:</label><input type="text" id="app_caste" placeholder="उदा. मराठा"></div>
+            <div class="form-group"><label>अर्जदाराचे नाव</label><input type="text" id="app_name" placeholder="उदा. रमेश आनंदराव पाटील"></div>
+            <div class="form-group"><label>रहिवासी (गाव/शहर)</label><input type="text" id="app_village" placeholder="उदा. हदगाव"></div>
+            <div class="form-group"><label>तालुका</label><input type="text" id="app_taluka" value="हदगाव"></div>
+            <div class="form-group"><label>जिल्हा</label><input type="text" id="app_district" value="नांदेड"></div>
+            <div class="form-group"><label>अर्जदाराची जात</label><input type="text" id="app_caste" placeholder="उदा. मराठा"></div>
             
             <div class="form-group">
                 <label>प्रमाणपत्र कोणाचे काढायचे आहे?</label>
@@ -192,26 +152,26 @@
                 </select>
             </div>
             
-            <div class="form-group"><label>लाभार्थ्याचे नाव:</label><input type="text" id="ben_name" placeholder="उदा. सचिन रमेश पाटील"></div>
+            <div class="form-group"><label>लाभार्थ्याचे नाव</label><input type="text" id="ben_name" placeholder="उदा. सचिन रमेश पाटील"></div>
             
             <div class="form-group">
-                <label>प्रमाणपत्राचे कारण:</label>
+                <label>प्रमाणपत्राचे कारण</label>
                 <select id="cert_purpose">
                     <option value="शासकीय कामाकरीता">शासकीय कामाकरीता</option>
                     <option value="शैक्षणिक कामाकरीता">शैक्षणिक कामाकरीता</option>
                 </select>
             </div>
 
-            <div class="form-group"><label>उपविभागीय कार्यालय (ठिकाण):</label><input type="text" id="office_loc" placeholder="उदा. हदगाव"></div>
-            <div class="form-group"><label>लाभार्थ्याची जात:</label><input type="text" id="ben_caste" placeholder="उदा. मराठा"></div>
-            <div class="form-group"><label>स्थळ (ठिकाण):</label><input type="text" id="sign_place" value="हदगाव"></div>
-            <div class="form-group"><label>दिनांक:</label><input type="date" id="sign_date"></div>
+            <div class="form-group"><label>उपविभागीय कार्यालय (ठिकाण)</label><input type="text" id="office_loc" placeholder="उदा. हदगाव"></div>
+            <div class="form-group"><label>लाभार्थ्याची जात</label><input type="text" id="ben_caste" placeholder="उदा. मराठा"></div>
+            <div class="form-group"><label>स्थळ (ठिकाण)</label><input type="text" id="sign_place" value="हदगाव"></div>
+            <div class="form-group"><label>दिनांक</label><input type="date" id="sign_date"></div>
         </div>
     </div>
 
     <!-- २. वंशावळ तयार करणे -->
     <div class="card">
-        <div class="card-title">२. वंशावळ तयार करा (Tree Builder)</div>
+        <div class="card-title">२. वंशावळ तयार करा</div>
         
         <div class="tree-control">
             <select id="relSelect" onchange="onRelationChange()">
@@ -241,11 +201,11 @@
                     <option value="chulatPanjobaMulga">चुलत आजोबा (चुलत पंजोबांचा मुलगा)</option><option value="khaparPanjoba">खापरपंजोबा</option>
                 </optgroup>
             </select>
-            <select id="parentSelect" style="display: none; border-color: #2563eb; font-weight: bold;"></select>
+            <select id="parentSelect" style="display: none; border-color: #007bff; font-weight: bold;"></select>
             <input type="text" id="personName" placeholder="व्यक्तीचे नाव">
-            <input type="text" id="personDoc" placeholder="डॉक्युमेंट / पुरावा">
-            <button class="btn btn-add" id="submitBtn" onclick="handleAddOrUpdate()"><i class="fas fa-plus"></i> जोडा</button>
-            <button class="btn btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display:none; background:#64748b;">रद्द करा</button>
+            <input type="text" id="personDoc" placeholder="डॉक्युमेंट">
+            <button class="btn btn-add" id="submitBtn" onclick="handleAddOrUpdate()">+ जोडा</button>
+            <button class="btn btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display:none; background:#6c757d;">रद्द करा</button>
         </div>
 
         <div class="live-tree-area">
@@ -254,16 +214,15 @@
     </div>
 
     <!-- ३. प्रीव्ह्यू बटन -->
-    <button class="btn btn-preview" onclick="openPreviewModal()"><i class="fas fa-eye"></i> शपथपत्र तपासा व प्रिंट / PDF काढा</button>
+    <button class="btn btn-preview" onclick="openPreviewModal()">👁️ फॉर्म पूर्ण झाला - प्रीव्ह्यू पहा</button>
 </div>
 
 <!-- ================= PREVIEW MODAL ================= -->
 <div id="previewModal" class="modal">
     <div class="modal-content">
         
-        <!-- A4 Document (Strict 1-Page Layout with Centered Tree) -->
+        <!-- A4 Page Container -->
         <div id="a4-document">
-            
             <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
             
             <div class="doc-text">
@@ -274,7 +233,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
             </div>
             
-            <!-- 🌳 नेहमी तंतोतंत मध्यभागी असणारी वंशावळ (Centered Tree) -->
+            <!-- Tree inside Document -->
             <div id="docTreeWrapper">
                 <div class="tree" id="docTreeRoot"></div>
             </div>
@@ -287,63 +246,66 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
             </div>
 
-            <!-- 🟢 फुटर (कोणतीही लाईन नाही, पत्ता एकाच ओळीत) -->
+            <!-- Footer Section -->
             <div class="doc-footer">
                 <div class="footer-left">
                     <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
                     <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
                 </div>
                 <div class="footer-right">
-                    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br>
+                    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br><br>
                     <span class="bold-val" id="out_signName">__________________</span><br>
-                    रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span>
+                    रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, <br>जि. <span class="bold-val" id="out_signDistrict">____</span>
                 </div>
             </div>
-
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Buttons -->
         <div class="modal-actions print-hide">
-            <button class="btn btn-cancel" onclick="closePreviewModal()"><i class="fas fa-edit"></i> माहिती दुरुस्त करा</button>
-            <button class="btn btn-print" onclick="triggerPrint()"><i class="fas fa-print"></i> 🖨️ प्रिंट काढा</button>
-            <button class="btn btn-download" id="btnDownload" onclick="downloadDirectPDF()"><i class="fas fa-file-pdf"></i> 📄 PDF सेव्ह करा</button>
+            <button class="btn btn-cancel" onclick="closePreviewModal()">❌ रद्द करा (Edit)</button>
+            <button class="btn btn-print" onclick="logUsage('Printed'); window.print()">🖨️ प्रिंट काढा</button>
+            <button class="btn btn-download" onclick="downloadPDF()">📄 PDF सेव्ह करा</button>
         </div>
     </div>
 </div>
 
-<!-- ================= JAVASCRIPT ================= -->
+<!-- Logic Script -->
 <script>
     const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
-    // 🔒 युजर ऑथेंटिकेशन आणि प्लॅन तपासणी
-    let userData = null;
-    try {
-        userData = JSON.parse(localStorage.getItem('quickid_user'));
-    } catch(e) { userData = null; }
+    // 🟢 Render व Supabase कडे ऑडिट लॉग नोंदवणे
+    function logUsage(remark) {
+        let userMobile = '';
+        try {
+            const u = JSON.parse(localStorage.getItem('quickid_user'));
+            if (u && u.mobile) userMobile = u.mobile;
+        } catch(e) {}
+        if (!userMobile) userMobile = sessionStorage.getItem('username') || 'User';
 
-    if (!userData || !userData.mobile) {
-        alert("कृपया प्रथम लॉगिन करा!");
-        window.location.replace("login.html");
-    }
-
-    // 🟢 Render व Supabase वर ऑडिट लॉग नोंदवणे
-    function logUsage(actionType) {
-        if (!userData || !userData.mobile) return;
+        const applicantName = document.getElementById('app_name').value || 'Vanshaval Generated';
+        const benName = document.getElementById('ben_name').value || '-';
+        const caste = document.getElementById('ben_caste').value || '-';
+        const village = document.getElementById('app_village').value || '-';
+        const taluka = document.getElementById('app_taluka').value || '-';
+        const district = document.getElementById('app_district').value || '-';
 
         const formData = new FormData();
-        formData.append('mobile', userData.mobile);
-        formData.append('applicantName', document.getElementById('app_name').value.trim() || 'वंशावळ');
-        formData.append('beneficiaryName', document.getElementById('ben_name').value.trim() || '-');
-        formData.append('caste', document.getElementById('ben_caste').value.trim() || '-');
-        formData.append('village', document.getElementById('app_village').value.trim() || '-');
-        formData.append('taluka', document.getElementById('app_taluka').value.trim() || '-');
-        formData.append('district', document.getElementById('app_district').value.trim() || '-');
-        formData.append('actionType', actionType);
+        formData.append('mobile', userMobile);
+        formData.append('applicantName', applicantName);
+        formData.append('beneficiaryName', benName);
+        formData.append('caste', caste);
+        formData.append('village', village);
+        formData.append('taluka', taluka);
+        formData.append('district', district);
+        formData.append('actionType', remark);
 
         fetch(`${BACKEND_URL}/api/services/log-vanshaval`, {
             method: 'POST',
             body: formData
-        }).catch(err => console.log("Audit Log notice:", err));
+        })
+        .then(res => res.json())
+        .then(data => console.log("Log Success:", data))
+        .catch(err => console.log("Log Notice:", err));
     }
 
     window.onload = function() {
@@ -355,41 +317,32 @@
         drawBuilderTree();
     };
 
-    /* ---------------- MODAL & WIDTH-ONLY ZOOM (CENTERED) ---------------- */
+    /* ---------------- MODAL & TEXT LOGIC ---------------- */
     function openPreviewModal() {
-        const appName = document.getElementById('app_name').value.trim();
-        if(!appName) {
-            alert("⚠️ कृपया अर्जदाराचे नाव भरा!");
-            document.getElementById('app_name').focus();
-            return;
-        }
-
-        document.getElementById('out_appName').innerText = appName;
-        document.getElementById('out_signName').innerText = appName;
+        document.getElementById('out_appName').innerText = document.getElementById('app_name').value || "___________";
+        document.getElementById('out_signName').innerText = document.getElementById('app_name').value || "___________";
         
-        const vil = document.getElementById('app_village').value.trim() || "_______";
-        const tal = document.getElementById('app_taluka').value.trim() || "_______";
-        const dist = document.getElementById('app_district').value.trim() || "_______";
-
-        document.getElementById('out_village').innerText = vil;
-        document.getElementById('out_signVillage').innerText = vil;
-        document.getElementById('out_taluka').innerText = tal;
-        document.getElementById('out_signTaluka').innerText = tal;
-        document.getElementById('out_district').innerText = dist;
-        document.getElementById('out_signDistrict').innerText = dist;
+        document.getElementById('out_village').innerText = document.getElementById('app_village').value || "_______";
+        document.getElementById('out_signVillage').innerText = document.getElementById('app_village').value || "_______";
         
-        document.getElementById('out_appCaste').innerText = document.getElementById('app_caste').value.trim() || "________";
+        document.getElementById('out_taluka').innerText = document.getElementById('app_taluka').value || "_______";
+        document.getElementById('out_signTaluka').innerText = document.getElementById('app_taluka').value || "_______";
+        
+        document.getElementById('out_district').innerText = document.getElementById('app_district').value || "_______";
+        document.getElementById('out_signDistrict').innerText = document.getElementById('app_district').value || "_______";
+        
+        document.getElementById('out_appCaste').innerText = document.getElementById('app_caste').value || "________";
         document.getElementById('out_relation').innerText = document.getElementById('relation_dropdown').value;
-        document.getElementById('out_benName').innerText = document.getElementById('ben_name').value.trim() || "___________";
+        document.getElementById('out_benName').innerText = document.getElementById('ben_name').value || "___________";
         
         document.getElementById('out_purpose').innerText = document.getElementById('cert_purpose').value;
-        document.getElementById('out_office').innerText = document.getElementById('office_loc').value.trim() || "_______";
+        document.getElementById('out_office').innerText = document.getElementById('office_loc').value || "_______";
         
-        let benCaste = document.getElementById('ben_caste').value.trim() || "________";
+        let benCaste = document.getElementById('ben_caste').value || "________";
         document.getElementById('out_benCaste').innerText = benCaste;
         document.getElementById('out_benCaste2').innerText = benCaste;
         
-        document.getElementById('out_place').innerText = document.getElementById('sign_place').value.trim() || "________";
+        document.getElementById('out_place').innerText = document.getElementById('sign_place').value || "________";
         
         let dateVal = document.getElementById('sign_date').value;
         if(dateVal) {
@@ -402,62 +355,25 @@
         document.getElementById('docTreeRoot').innerHTML = document.getElementById('builderTreeRoot').innerHTML;
         document.getElementById('previewModal').style.display = 'block';
 
-        // 🎯 केवळ रुंदीनुसार (Width-Only Zoom) आणि मध्यभागी अलाइनमेंट
+        // Zoom logic ONLY if the tree is horizontally too wide
         setTimeout(() => {
             const treeWrap = document.getElementById('docTreeWrapper');
             treeWrap.style.zoom = '1';
-            
             let actualTreeWidth = document.getElementById('docTreeRoot').scrollWidth;
             let maxAllowedWidth = 710; 
             
-            if (actualTreeWidth > maxAllowedWidth) {
+            if(actualTreeWidth > maxAllowedWidth) {
                 treeWrap.style.zoom = (maxAllowedWidth / actualTreeWidth).toFixed(3);
             }
         }, 100);
     }
 
-    function closePreviewModal() { 
-        document.getElementById('previewModal').style.display = 'none'; 
-    }
+    function closePreviewModal() { document.getElementById('previewModal').style.display = 'none'; }
     
-    // 🖨️ थेट प्रिंट काढणे
-    function triggerPrint() {
-        logUsage('Printed');
-        window.print();
-    }
-
-    // 📄 थेट PDF सेव्ह करणे
-    function downloadDirectPDF() {
+    function downloadPDF() {
+        alert("Print window उघडल्यानंतर 'Destination' मध्ये 'Save as PDF' पर्याय निवडून फाईल सेव्ह करा.");
         logUsage('Downloaded PDF');
-        const element = document.getElementById('a4-document');
-        const appName = document.getElementById('app_name').value.trim() || 'Arjdar';
-        
-        const btn = document.getElementById('btnDownload');
-        const origText = btn.innerHTML;
-        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PDF सेव्ह होत आहे...";
-        btn.disabled = true;
-
-        const opt = {
-            margin:       [8, 8, 8, 8],
-            filename:     `QuickIDPrint_Vanshaval_${appName}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: false },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(element).save().then(() => {
-            btn.innerHTML = "<i class='fas fa-check'></i> PDF सेव्ह झाली!";
-            setTimeout(() => {
-                btn.innerHTML = origText;
-                btn.disabled = false;
-            }, 2000);
-        }).catch(err => {
-            console.error(err);
-            alert("Print window उघडल्यानंतर 'Destination' मध्ये 'Save as PDF' पर्याय निवडून फाईल सेव्ह करा.");
-            window.print();
-            btn.innerHTML = origText;
-            btn.disabled = false;
-        });
+        window.print();
     }
 
     /* ---------------- TREE LOGIC ---------------- */
@@ -614,16 +530,16 @@
         editingTarget = (id === 'aai') ? { type: 'aai' } : { type: 'fixed', id: id }; let valName = '', valDoc = '';
         if (id === 'aai') { valName = vadilNode().aai.name; valDoc = vadilNode().aai.doc; } else { const node = findFixedNodeById(treeData, id); if (node) { valName = node.name; valDoc = node.doc; } }
         document.getElementById('personName').value = valName || ''; document.getElementById('personDoc').value = valDoc || '';
-        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#f59e0b'; document.getElementById('cancelBtn').style.display = 'inline-flex';
+        document.getElementById('submitBtn').innerText = 'बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#ff9800'; document.getElementById('cancelBtn').style.display = 'inline-block';
     }
     function startEditDynamic(uid) {
         const item = findDynamicItemByUid(treeData, uid); if (!item) return; editingTarget = { type: 'dynamic', uid: uid };
         document.getElementById('personName').value = item.name || ''; document.getElementById('personDoc').value = item.doc || '';
-        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#f59e0b'; document.getElementById('cancelBtn').style.display = 'inline-flex';
+        document.getElementById('submitBtn').innerText = 'बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#ff9800'; document.getElementById('cancelBtn').style.display = 'inline-block';
     }
     function cancelEdit() {
         editingTarget = null; document.getElementById('personName').value = ''; document.getElementById('personDoc').value = '';
-        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> जोडा'; document.getElementById('submitBtn').style.background = '#16a34a'; document.getElementById('cancelBtn').style.display = 'none';
+        document.getElementById('submitBtn').innerText = '+ जोडा'; document.getElementById('submitBtn').style.background = '#28a745'; document.getElementById('cancelBtn').style.display = 'none';
     }
     function findFixedNodeById(node, id) { if (node.id === id) return node; if (node.children) { for (let c of node.children) { const found = findFixedNodeById(c, id); if (found) return found; } } return null; }
     function findDynamicItemByUid(node, uid) {
