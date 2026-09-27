@@ -114,74 +114,52 @@
         #a4-document {
             background: #fff; 
             width: 210mm; 
-            height: 297mm; 
             min-height: 297mm; 
-            max-height: 297mm;
             margin: 0 auto; 
             padding: 16mm 18mm 14mm 18mm;
             box-sizing: border-box; 
             box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
             text-align: left;
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between;
-            overflow: hidden;
-        }
-
-        /* 🔒 १. टॉप लॉक सेक्शन */
-        .doc-top-locked {
-            flex-shrink: 0;
-        }
-        .doc-title { text-align: center; font-size: 21px; font-weight: 800; margin-bottom: 16px; text-decoration: underline; color: #000; }
-        .doc-text { font-size: 15.5px; line-height: 1.8; margin-bottom: 8px; text-align: justify; color: #000; }
-
-        /* 🌳 २. मधली राखीव जागा (Dedicated Tree Canvas) */
-        .doc-middle-tree-space {
-            flex: 1;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            overflow: hidden;
-            margin: 8px 0;
-            min-height: 140px;
             position: relative;
         }
+
+        .doc-title { text-align: center; font-size: 21px; font-weight: 800; margin-bottom: 18px; text-decoration: underline; color: #000; }
+        .doc-text { font-size: 15.5px; line-height: 1.85; margin-bottom: 10px; text-align: justify; color: #000; }
+
+        /* 🌳 वंशावळ सेंटर अलाइनमेंट कंटेनर */
         #docTreeWrapper {
-            display: inline-flex; 
-            justify-content: center; 
+            display: flex; 
+            justify-content: center; /* नेहमी मध्यभागी */
             align-items: center;
-            transform-origin: center center;
             width: 100%;
+            margin: 18px 0;
+            text-align: center;
         }
 
-        /* 🔒 ३. बॉटम लॉक सेक्शन (कोणतीही बॉर्डर/लाईन नाही) */
-        .doc-bottom-locked {
-            flex-shrink: 0;
-        }
+        /* 🟢 फुटर (कोणतीही लाईन नाही, पत्ता एकाच ओळीत) */
         .doc-footer { 
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-top: 15px; font-size: 15px; line-height: 1.6; border-top: none; /* 🟢 लाईन काढून टाकली */
-            padding-top: 6px;
+            margin-top: 45px; font-size: 15px; line-height: 1.6;
+            border-top: none; padding-top: 0;
         }
         .footer-right { text-align: right; }
         .bold-val { font-weight: 800; padding: 0 4px; color: #000; }
 
         /* ================= STRICT 1-PAGE PRINT CSS ================= */
-        @page { size: A4 portrait; margin: 0; }
+        @page { size: A4 portrait; margin: 10mm; }
         @media print {
-            html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; height: 297mm !important; overflow: hidden !important; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
             .top-nav-bar, .container, .modal-actions, .node-actions, .print-hide { display: none !important; }
             
             .modal { position: static !important; display: block !important; background: transparent !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
             .modal-content { background: transparent !important; padding: 0 !important; margin: 0 !important; border: none !important; width: 100% !important; max-width: none !important; box-shadow: none !important; }
             
             #a4-document { 
-                width: 210mm !important; height: 297mm !important; max-height: 297mm !important; 
-                margin: 0 auto !important; padding: 14mm 18mm 12mm 18mm !important; box-shadow: none !important; border: none !important;
-                page-break-after: avoid !important; page-break-inside: avoid !important; overflow: hidden !important;
+                width: 100% !important; height: auto !important; min-height: 100% !important; 
+                margin: 0 !important; padding: 6mm 10mm !important; box-shadow: none !important; border: none !important;
+                page-break-after: avoid !important; page-break-inside: avoid !important;
             }
-            .doc-footer { border-top: none !important; } /* प्रिंटमध्येही लाईन अजिबात येणार नाही */
+            .doc-footer { border-top: none !important; margin-top: 35px !important; }
         }
     </style>
 </head>
@@ -283,49 +261,42 @@
 <div id="previewModal" class="modal">
     <div class="modal-content">
         
-        <!-- A4 Document (Strict 1-Page Layout) -->
+        <!-- A4 Document (Strict 1-Page Layout with Centered Tree) -->
         <div id="a4-document">
             
-            <!-- 🔒 १. टॉप लॉक सेक्शन -->
-            <div class="doc-top-locked">
-                <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
-                
-                <div class="doc-text">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; शपथपत्र लिहून देणार मी <span class="bold-val" id="out_appName">___________</span>, रा. <span class="bold-val" id="out_village">_______</span>, ता. <span class="bold-val" id="out_taluka">_______</span>, जि. <span class="bold-val" id="out_district">_______</span> येथील रहिवासी असून मी जातीने <span class="bold-val" id="out_appCaste">________</span> आहे.
-                </div>
-                
-                <div class="doc-text">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
-                </div>
+            <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
+            
+            <div class="doc-text">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; शपथपत्र लिहून देणार मी <span class="bold-val" id="out_appName">___________</span>, रा. <span class="bold-val" id="out_village">_______</span>, ता. <span class="bold-val" id="out_taluka">_______</span>, जि. <span class="bold-val" id="out_district">_______</span> येथील रहिवासी असून मी जातीने <span class="bold-val" id="out_appCaste">________</span> आहे.
             </div>
             
-            <!-- 🌳 २. मधली राखीव जागा (Tree Canvas) -->
-            <div class="doc-middle-tree-space" id="treeContainerBox">
-                <div id="docTreeWrapper">
-                    <div class="tree" id="docTreeRoot"></div>
-                </div>
+            <div class="doc-text">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
+            </div>
+            
+            <!-- 🌳 नेहमी तंतोतंत मध्यभागी असणारी वंशावळ (Centered Tree) -->
+            <div id="docTreeWrapper">
+                <div class="tree" id="docTreeRoot"></div>
             </div>
 
-            <!-- 🔒 ३. बॉटम लॉक सेक्शन (कोणतीही लाईन नाही) -->
-            <div class="doc-bottom-locked">
-                <div class="doc-text">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; वरील लिहून दिलेली सर्व वंशावळ स्वयंघोषणापत्र हे सत्य असून यात काही खोटे वा गैर आढळून आल्यास त्यास मी स्वतः जबाबदार राहील.
-                </div>
-                
-                <div class="doc-text">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
-                </div>
+            <div class="doc-text">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; वरील लिहून दिलेली सर्व वंशावळ स्वयंघोषणापत्र हे सत्य असून यात काही खोटे वा गैर आढळून आल्यास त्यास मी स्वतः जबाबदार राहील.
+            </div>
+            
+            <div class="doc-text">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
+            </div>
 
-                <div class="doc-footer">
-                    <div class="footer-left">
-                        <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
-                        <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
-                    </div>
-                    <div class="footer-right">
-                        <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br>
-                        <span class="bold-val" id="out_signName">__________________</span><br>
-                        रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span>
-                    </div>
+            <!-- 🟢 फुटर (कोणतीही लाईन नाही, पत्ता एकाच ओळीत) -->
+            <div class="doc-footer">
+                <div class="footer-left">
+                    <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
+                    <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
+                </div>
+                <div class="footer-right">
+                    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br>
+                    <span class="bold-val" id="out_signName">__________________</span><br>
+                    रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span>
                 </div>
             </div>
 
@@ -384,7 +355,7 @@
         drawBuilderTree();
     };
 
-    /* ---------------- MODAL & SMART AUTO-FIT ENGINE ---------------- */
+    /* ---------------- MODAL & WIDTH-ONLY ZOOM (CENTERED) ---------------- */
     function openPreviewModal() {
         const appName = document.getElementById('app_name').value.trim();
         if(!appName) {
@@ -431,31 +402,18 @@
         document.getElementById('docTreeRoot').innerHTML = document.getElementById('builderTreeRoot').innerHTML;
         document.getElementById('previewModal').style.display = 'block';
 
-        // 🎯 स्मार्ट ऑटो-फिट
+        // 🎯 केवळ रुंदीनुसार (Width-Only Zoom) आणि मध्यभागी अलाइनमेंट
         setTimeout(() => {
-            const container = document.getElementById('treeContainerBox');
-            const wrapper = document.getElementById('docTreeWrapper');
-            const rootTree = document.getElementById('docTreeRoot');
+            const treeWrap = document.getElementById('docTreeWrapper');
+            treeWrap.style.zoom = '1';
             
-            wrapper.style.zoom = '1';
+            let actualTreeWidth = document.getElementById('docTreeRoot').scrollWidth;
+            let maxAllowedWidth = 710; 
             
-            const availW = container.clientWidth - 10;
-            const availH = container.clientHeight - 10;
-            
-            const treeW = rootTree.scrollWidth;
-            const treeH = rootTree.scrollHeight;
-            
-            if (treeW > 0 && treeH > 0) {
-                let scaleW = availW / treeW;
-                let scaleH = availH / treeH;
-                
-                let finalScale = Math.min(scaleW, scaleH);
-                if (finalScale > 1.0) finalScale = 1.0;
-                if (finalScale < 0.72) finalScale = 0.72; // किमान वाचनीय फॉन्ट
-                
-                wrapper.style.zoom = finalScale.toFixed(3);
+            if (actualTreeWidth > maxAllowedWidth) {
+                treeWrap.style.zoom = (maxAllowedWidth / actualTreeWidth).toFixed(3);
             }
-        }, 120);
+        }, 100);
     }
 
     function closePreviewModal() { 
@@ -480,8 +438,8 @@
         btn.disabled = true;
 
         const opt = {
-            margin:       0,
-            filename:     `Vanshaval_${appName}.pdf`,
+            margin:       [8, 8, 8, 8],
+            filename:     `QuickIDPrint_Vanshaval_${appName}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, logging: false },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
