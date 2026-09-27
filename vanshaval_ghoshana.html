@@ -5,65 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>वंशावळ स्वयंघोषणा शपथपत्र | QuickIDPrint</title>
     
-    <!-- Mukta Font & Portal Styling -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Direct PDF Download Library -->
+    <!-- Direct PDF Generator Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Mukta', sans-serif;
-            background-color: #f1f5f9;
-            margin: 0; padding: 20px; color: #1e293b;
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --dark: #0f172a;
+            --slate: #334155;
+            --bg: #f8fafc;
+            --card-border: #e2e8f0;
         }
 
-        /* Layout & Cards */
-        .container { max-width: 1050px; margin: 0 auto; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; padding-bottom: 40px; }
+
+        /* Navigation Bar */
         .top-nav-bar {
             display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+            background: white; padding: 14px 24px; border-radius: 8px; margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--card-border);
         }
-        .brand-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 18px; color: #0f172a; text-decoration: none; }
-        .brand-logo span { color: #2563eb; }
-        .back-link { color: #64748b; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
-        .back-link:hover { color: #2563eb; }
+        .brand-logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 19px; color: var(--dark); text-decoration: none; }
+        .brand-logo span { color: var(--primary); }
+        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { color: var(--primary); }
 
-        h2 { text-align: center; color: #1e3a8a; margin-bottom: 20px; font-weight: 800; font-size: 24px; }
+        .container { max-width: 1050px; margin: 0 auto; width: 92%; }
+        h2 { text-align: center; color: #1e3a8a; margin-bottom: 20px; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         
         .card {
-            background: #fff; padding: 20px; border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06); margin-bottom: 20px;
-            border-top: 4px solid #2563eb; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+            background: #fff; padding: 22px; border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px;
+            border: 1px solid var(--card-border); border-top: 4px solid var(--primary);
         }
-        .card-title { font-size: 17px; font-weight: 700; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; color: #2563eb; }
+        .card-title { font-size: 17.5px; font-weight: 700; margin-bottom: 15px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px; color: var(--primary); }
 
         /* Form Grid */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-        .form-group { display: flex; flex-direction: column; text-align: left; }
-        .form-group label { font-size: 13px; font-weight: 700; margin-bottom: 5px; color: #475569; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; text-align: left; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13.5px; font-weight: 700; margin-bottom: 5px; color: #475569; }
         .form-group input, .form-group select {
-            padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: 'Mukta', sans-serif; outline: none; transition: 0.2s;
+            padding: 9.5px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14.5px; outline: none; transition: 0.2s; background: var(--bg);
         }
-        .form-group input:focus, .form-group select:focus { border-color: #2563eb; background: #fff; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: #fff; }
 
-        /* Tree Control */
-        .tree-control { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; }
-        .tree-control select, .tree-control input { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; font-family: 'Mukta', sans-serif; outline: none; }
-        .btn { padding: 9px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.2s; font-family: 'Mukta', sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+        /* Tree Builder Control */
+        .tree-control { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; }
+        .tree-control select, .tree-control input { padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14.5px; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-add { background: #16a34a; color: white; } .btn-add:hover { background: #15803d; }
-        .btn-preview { background: #2563eb; color: white; width: 100%; font-size: 17px; padding: 14px; margin-top: 10px; border-radius: 8px; justify-content: center; box-shadow: 0 4px 10px rgba(37,99,235,0.2); } 
-        .btn-preview:hover { background: #1d4ed8; }
+        .btn-preview { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; width: 100%; font-size: 18px; padding: 15px; margin-top: 10px; border-radius: 10px; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.25); } 
+        .btn-preview:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37,99,235,0.35); }
         
-        /* Tree Live Build Area */
-        .live-tree-area { overflow-x: auto; padding: 20px; background: #fff; min-height: 150px; display: flex; justify-content: center; border: 1px dashed #cbd5e1; border-radius: 6px; margin-top: 15px; }
+        .live-tree-area { overflow-x: auto; padding: 25px 15px; background: #fff; min-height: 160px; display: flex; justify-content: center; border: 1px dashed #cbd5e1; border-radius: 8px; }
 
-        /* --- TREE CSS (मूळ रचना जशीच्या तशी) --- */
+        /* --- TREE CSS --- */
         .tree ul { padding-top: 14px; position: relative; display: flex; justify-content: center; padding-left: 0; margin: 0; }
         .tree li { text-align: center; list-style-type: none; position: relative; padding: 14px 6px 0 6px; }
         .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 1.5px solid #000; width: 50%; height: 14px; }
@@ -78,66 +82,104 @@
             display: inline-flex; flex-direction: column; align-items: center; white-space: nowrap; padding: 4px 6px;
             position: relative; border-radius: 4px; transition: background 0.2s; border: 1px solid transparent;
         }
-        .compact-node:hover { background-color: #f0f7ff; border-color: #cce; }
-        .r-title { font-size: 13px; font-weight: bold; color: #000; line-height: 1.2; }
-        .r-name { font-size: 14px; color: #222; margin-top: 2px; line-height: 1.2; font-weight: 600;}
-        .r-doc { font-size: 11.5px; color: #333; margin-top: 1px; line-height: 1.1; }
+        .compact-node:hover { background-color: #eff6ff; border-color: #bfdbfe; }
+        .r-title { font-size: 13px; font-weight: 700; color: #000; line-height: 1.2; }
+        .r-name { font-size: 14px; color: #111; margin-top: 2px; line-height: 1.2; font-weight: 600; }
+        .r-doc { font-size: 11px; color: #444; margin-top: 1px; line-height: 1.1; }
         
-        .node-actions { position: absolute; top: -10px; right: -10px; display: none; gap: 2px; z-index: 10; }
+        .node-actions { position: absolute; top: -10px; right: -10px; display: none; gap: 3px; z-index: 10; }
         .compact-node:hover .node-actions { display: flex; }
         .act-btn { border-radius: 50%; width: 17px; height: 17px; font-size: 10px; cursor: pointer; border: none; color: #fff; display: flex; align-items: center; justify-content: center; }
-        .act-edit { background: #ff9800; } .act-del { background: #e74c3c; }
+        .act-edit { background: #f59e0b; } .act-del { background: #ef4444; }
 
-        /* Modal (Dialogue Box) */
+        /* Modal Preview Window */
         .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
+            overflow-y: auto; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px);
+            padding: 20px 10px;
         }
         .modal-content {
-            background-color: #525659; margin: 2% auto; padding: 20px; border-radius: 8px; width: 95%; max-width: 900px;
+            background-color: #334155; margin: 0 auto; padding: 20px; border-radius: 12px; width: 100%; max-width: 920px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
-        .modal-actions { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
-        .btn-cancel { background: #e74c3c; color: white; padding: 10px 20px; font-size: 15px; } .btn-cancel:hover { background: #c0392b; }
-        .btn-print { background: #007bff; color: white; padding: 10px 20px; font-size: 15px; } .btn-print:hover { background: #0056b3; }
-        .btn-download { background: #28a745; color: white; padding: 10px 20px; font-size: 15px; } .btn-download:hover { background: #218838; }
+        .modal-actions { display: flex; justify-content: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+        .btn-cancel { background: #64748b; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
+        .btn-cancel:hover { background: #475569; }
+        .btn-print { background: #2563eb; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
+        .btn-print:hover { background: #1d4ed8; }
+        .btn-download { background: #16a34a; color: white; padding: 11px 22px; font-size: 15px; border-radius: 8px; } 
+        .btn-download:hover { background: #15803d; }
 
-        /* ================= A4 DOCUMENT (तुमच्या मूळ रचनेनुसार) ================= */
+        /* ================= A4 DOCUMENT CONTAINER ================= */
         #a4-document {
-            background: #fff; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm;
-            box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: left;
+            background: #fff; 
+            width: 210mm; 
+            height: 297mm; 
+            min-height: 297mm; 
+            max-height: 297mm;
+            margin: 0 auto; 
+            padding: 16mm 18mm 14mm 18mm;
+            box-sizing: border-box; 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
+            text-align: left;
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; /* टॉप व बॉटम जागेवर लॉक */
+            overflow: hidden;
+        }
+
+        /* 🔒 १. टॉप लॉक सेक्शन */
+        .doc-top-locked {
+            flex-shrink: 0;
+        }
+        .doc-title { text-align: center; font-size: 21px; font-weight: 800; margin-bottom: 16px; text-decoration: underline; color: #000; }
+        .doc-text { font-size: 15.5px; line-height: 1.8; margin-bottom: 8px; text-align: justify; color: #000; }
+
+        /* 🌳 २. मधली राखीव जागा (Dedicated Tree Canvas) */
+        .doc-middle-tree-space {
+            flex: 1; /* उपलब्ध संपूर्ण मोकळी जागा व्यापणे (~१६० मिमी) */
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            overflow: hidden;
+            margin: 8px 0;
+            min-height: 140px;
             position: relative;
         }
-        .doc-title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 25px; text-decoration: underline; color: #000; }
-        .doc-text { font-size: 16px; line-height: 2.1; margin-bottom: 12px; text-align: justify; color: #000; }
-        
         #docTreeWrapper {
-            display: flex; justify-content: center; margin-bottom: 20px; margin-top: 20px;
+            display: inline-flex; 
+            justify-content: center; 
+            align-items: center;
+            transform-origin: center center;
+            width: 100%;
         }
 
-        /* 🟢 नवीन स्पेस-सेव्हिंग फुटर (पत्ता एकाच ओळीत) */
+        /* 🔒 ३. बॉटम लॉक सेक्शन */
+        .doc-bottom-locked {
+            flex-shrink: 0;
+        }
         .doc-footer { 
-            display: flex; justify-content: space-between; 
-            margin-top: 60px; font-size: 16px; line-height: 1.8; 
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-top: 15px; font-size: 15px; line-height: 1.6; border-top: 1px dashed #bbb; padding-top: 12px;
         }
         .footer-right { text-align: right; }
-        .bold-val { font-weight: bold; padding: 0 5px; color: #000; }
+        .bold-val { font-weight: 800; padding: 0 4px; color: #000; }
 
-        /* ================= PRINT SPECIFIC CSS (तुमच्या मूळ कोडनुसार) ================= */
-        @page { size: A4 portrait; margin: 10mm; }
+        /* ================= STRICT 1-PAGE PRINT CSS ================= */
+        @page { size: A4 portrait; margin: 0; }
         @media print {
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+            html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; height: 297mm !important; overflow: hidden !important; }
             .top-nav-bar, .container, .modal-actions, .node-actions, .print-hide { display: none !important; }
             
-            /* Reset Modal */
-            .modal { position: static; display: block; background: transparent !important; padding: 0; margin: 0; }
-            .modal-content { background: transparent !important; padding: 0; margin: 0; border: none; width: 100%; max-width: none; }
+            .modal { position: static !important; display: block !important; background: transparent !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
+            .modal-content { background: transparent !important; padding: 0 !important; margin: 0 !important; border: none !important; width: 100% !important; max-width: none !important; box-shadow: none !important; }
             
-            /* Document stretches naturally exactly as in original code */
             #a4-document { 
-                width: 100% !important; height: auto !important; min-height: 100% !important; 
-                margin: 0 !important; padding: 10mm !important; box-shadow: none !important; border: none !important; 
+                width: 210mm !important; height: 297mm !important; max-height: 297mm !important; 
+                margin: 0 auto !important; padding: 14mm 18mm 12mm 18mm !important; box-shadow: none !important; border: none !important;
+                page-break-after: avoid !important; page-break-inside: avoid !important; overflow: hidden !important;
             }
-            .doc-footer { margin-top: 50px; }
         }
     </style>
 </head>
@@ -145,21 +187,21 @@
 
 <div class="container">
     <div class="top-nav-bar">
-        <a href="homepage.html" class="brand-logo"><i class="fas fa-sitemap" style="color:#2563eb;"></i> Quick<span>ID</span>Print</a>
+        <a href="homepage.html" class="brand-logo"><i class="fas fa-sitemap" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
         <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
     </div>
 
-    <h2>वंशावळ व शपथपत्र</h2>
+    <h2><i class="fas fa-file-signature"></i> वंशावळ स्वयंघोषणा शपथपत्र</h2>
 
     <!-- १. शपथपत्राची माहिती -->
     <div class="card">
-        <div class="card-title">१. शपथपत्राचा मजकूर (डिटेल्स भरा)</div>
+        <div class="card-title">१. शपथपत्राचा तपशील (डिटेल्स भरा)</div>
         <div class="form-grid">
-            <div class="form-group"><label>अर्जदाराचे नाव</label><input type="text" id="app_name" placeholder="उदा. रमेश आनंदराव पाटील"></div>
-            <div class="form-group"><label>रहिवासी (गाव/शहर)</label><input type="text" id="app_village" placeholder="उदा. हदगाव"></div>
-            <div class="form-group"><label>तालुका</label><input type="text" id="app_taluka" value="हदगाव"></div>
-            <div class="form-group"><label>जिल्हा</label><input type="text" id="app_district" value="नांदेड"></div>
-            <div class="form-group"><label>अर्जदाराची जात</label><input type="text" id="app_caste" placeholder="उदा. मराठा"></div>
+            <div class="form-group"><label>अर्जदाराचे नाव:</label><input type="text" id="app_name" placeholder="उदा. रमेश आनंदराव पाटील"></div>
+            <div class="form-group"><label>रहिवासी (गाव/शहर):</label><input type="text" id="app_village" placeholder="उदा. हदगाव"></div>
+            <div class="form-group"><label>तालुका:</label><input type="text" id="app_taluka" value="हदगाव"></div>
+            <div class="form-group"><label>जिल्हा:</label><input type="text" id="app_district" value="नांदेड"></div>
+            <div class="form-group"><label>अर्जदाराची जात:</label><input type="text" id="app_caste" placeholder="उदा. मराठा"></div>
             
             <div class="form-group">
                 <label>प्रमाणपत्र कोणाचे काढायचे आहे?</label>
@@ -170,26 +212,26 @@
                 </select>
             </div>
             
-            <div class="form-group"><label>लाभार्थ्याचे नाव</label><input type="text" id="ben_name" placeholder="उदा. सचिन रमेश पाटील"></div>
+            <div class="form-group"><label>लाभार्थ्याचे नाव:</label><input type="text" id="ben_name" placeholder="उदा. सचिन रमेश पाटील"></div>
             
             <div class="form-group">
-                <label>प्रमाणपत्राचे कारण</label>
+                <label>प्रमाणपत्राचे कारण:</label>
                 <select id="cert_purpose">
                     <option value="शासकीय कामाकरीता">शासकीय कामाकरीता</option>
                     <option value="शैक्षणिक कामाकरीता">शैक्षणिक कामाकरीता</option>
                 </select>
             </div>
 
-            <div class="form-group"><label>उपविभागीय कार्यालय (ठिकाण)</label><input type="text" id="office_loc" placeholder="उदा. हदगाव"></div>
-            <div class="form-group"><label>लाभार्थ्याची जात</label><input type="text" id="ben_caste" placeholder="उदा. मराठा"></div>
-            <div class="form-group"><label>स्थळ (ठिकाण)</label><input type="text" id="sign_place" value="हदगाव"></div>
-            <div class="form-group"><label>दिनांक</label><input type="date" id="sign_date"></div>
+            <div class="form-group"><label>उपविभागीय कार्यालय (ठिकाण):</label><input type="text" id="office_loc" placeholder="उदा. हदगाव"></div>
+            <div class="form-group"><label>लाभार्थ्याची जात:</label><input type="text" id="ben_caste" placeholder="उदा. मराठा"></div>
+            <div class="form-group"><label>स्थळ (ठिकाण):</label><input type="text" id="sign_place" value="हदगाव"></div>
+            <div class="form-group"><label>दिनांक:</label><input type="date" id="sign_date"></div>
         </div>
     </div>
 
     <!-- २. वंशावळ तयार करणे -->
     <div class="card">
-        <div class="card-title">२. वंशावळ तयार करा</div>
+        <div class="card-title">२. वंशावळ तयार करा (Tree Builder)</div>
         
         <div class="tree-control">
             <select id="relSelect" onchange="onRelationChange()">
@@ -221,9 +263,9 @@
             </select>
             <select id="parentSelect" style="display: none; border-color: #2563eb; font-weight: bold;"></select>
             <input type="text" id="personName" placeholder="व्यक्तीचे नाव">
-            <input type="text" id="personDoc" placeholder="डॉक्युमेंट">
-            <button class="btn btn-add" id="submitBtn" onclick="handleAddOrUpdate()">+ जोडा</button>
-            <button class="btn btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display:none; background:#6c757d;">रद्द करा</button>
+            <input type="text" id="personDoc" placeholder="डॉक्युमेंट / पुरावा">
+            <button class="btn btn-add" id="submitBtn" onclick="handleAddOrUpdate()"><i class="fas fa-plus"></i> जोडा</button>
+            <button class="btn btn-cancel" id="cancelBtn" onclick="cancelEdit()" style="display:none; background:#64748b;">रद्द करा</button>
         </div>
 
         <div class="live-tree-area">
@@ -232,53 +274,62 @@
     </div>
 
     <!-- ३. प्रीव्ह्यू बटन -->
-    <button class="btn btn-preview" onclick="openPreviewModal()">👁️ फॉर्म पूर्ण झाला - प्रीव्ह्यू पहा</button>
+    <button class="btn btn-preview" onclick="openPreviewModal()"><i class="fas fa-eye"></i> शपथपत्र तपासा व प्रिंट / PDF काढा</button>
 </div>
 
 <!-- ================= PREVIEW MODAL ================= -->
 <div id="previewModal" class="modal">
     <div class="modal-content">
         
-        <!-- A4 Page Container (Natural Original Flow) -->
+        <!-- A4 Document (Strict 1-Page Layout) -->
         <div id="a4-document">
-            <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
             
-            <div class="doc-text">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; शपथपत्र लिहून देणार मी <span class="bold-val" id="out_appName">___________</span>, रा. <span class="bold-val" id="out_village">_______</span>, ता. <span class="bold-val" id="out_taluka">_______</span>, जि. <span class="bold-val" id="out_district">_______</span> येथील रहिवासी असून मी जातीने <span class="bold-val" id="out_appCaste">________</span> आहे.
-            </div>
-            
-            <div class="doc-text">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
-            </div>
-            
-            <!-- Tree inside Document (Natural Position) -->
-            <div id="docTreeWrapper">
-                <div class="tree" id="docTreeRoot"></div>
-            </div>
-
-            <div class="doc-text">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; वरील लिहून दिलेली सर्व वंशावळ स्वयंघोषणापत्र हे सत्य असून यात काही खोटे वा गैर आढळून आल्यास त्यास मी स्वतः जबाबदार राहील.
-            </div>
-            
-            <div class="doc-text">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
-            </div>
-
-            <!-- 🟢 नवीन स्पेस-सेव्हिंग फुटर (एकाच ओळीत पत्ता) -->
-            <div class="doc-footer">
-                <div class="footer-left">
-                    <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
-                    <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
+            <!-- 🔒 १. टॉप लॉक सेक्शन (Top Locked) -->
+            <div class="doc-top-locked">
+                <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
+                
+                <div class="doc-text">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; शपथपत्र लिहून देणार मी <span class="bold-val" id="out_appName">___________</span>, रा. <span class="bold-val" id="out_village">_______</span>, ता. <span class="bold-val" id="out_taluka">_______</span>, जि. <span class="bold-val" id="out_district">_______</span> येथील रहिवासी असून मी जातीने <span class="bold-val" id="out_appCaste">________</span> आहे.
                 </div>
-                <div class="footer-right">
-                    <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br>
-                    <span class="bold-val" id="out_signName">__________________</span><br>
-                    रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span>
+                
+                <div class="doc-text">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; मला <span class="bold-val" id="out_relation">माझ्या</span> नावाने <span class="bold-val" id="out_benName">___________</span> या नावे उपविभागीय कार्यालय <span class="bold-val" id="out_office">_______</span> येथून <span class="bold-val" id="out_benCaste">________</span> जातीच्या जात प्रमाणपत्राची संचिका दाखल केली आहे व जात प्रमाणपत्राची <span class="bold-val" id="out_purpose">शासकीय कामाकरीता</span> अत्यंत आवश्यकता आहे. मी माझ्या कुटुंबाची वंशावळ पुढील प्रमाणे सादर करीत आहे.
                 </div>
             </div>
+            
+            <!-- 🌳 २. मधली राखीव जागा (Dedicated Tree Canvas with Smart Auto-Fit) -->
+            <div class="doc-middle-tree-space" id="treeContainerBox">
+                <div id="docTreeWrapper">
+                    <div class="tree" id="docTreeRoot"></div>
+                </div>
+            </div>
+
+            <!-- 🔒 ३. बॉटम लॉक सेक्शन (Bottom Locked + Single-line Address) -->
+            <div class="doc-bottom-locked">
+                <div class="doc-text">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; वरील लिहून दिलेली सर्व वंशावळ स्वयंघोषणापत्र हे सत्य असून यात काही खोटे वा गैर आढळून आल्यास त्यास मी स्वतः जबाबदार राहील.
+                </div>
+                
+                <div class="doc-text">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; तरी मा. साहेबांनी <span class="bold-val" id="out_benCaste2">________</span> जातीचे प्रमाणपत्र देऊन उपकृत करावे ही नम्र विनंती.
+                </div>
+
+                <div class="doc-footer">
+                    <div class="footer-left">
+                        <b>स्थळ :</b> <span class="bold-val" id="out_place">________</span><br>
+                        <b>दिनांक :</b> <span class="bold-val" id="out_date">____/____/202__</span>
+                    </div>
+                    <div class="footer-right">
+                        <b>स्वयंघोषणा शपथपत्र लिहून देणार</b><br><br>
+                        <span class="bold-val" id="out_signName">__________________</span><br>
+                        रा. <span class="bold-val" id="out_signVillage">____</span>, ता. <span class="bold-val" id="out_signTaluka">____</span>, जि. <span class="bold-val" id="out_signDistrict">____</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Buttons -->
+        <!-- Action Buttons -->
         <div class="modal-actions print-hide">
             <button class="btn btn-cancel" onclick="closePreviewModal()"><i class="fas fa-edit"></i> माहिती दुरुस्त करा</button>
             <button class="btn btn-print" onclick="triggerPrint()"><i class="fas fa-print"></i> 🖨️ प्रिंट काढा</button>
@@ -287,7 +338,7 @@
     </div>
 </div>
 
-<!-- Logic Script -->
+<!-- ================= JAVASCRIPT ================= -->
 <script>
     const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
@@ -331,32 +382,41 @@
         drawBuilderTree();
     };
 
-    /* ---------------- MODAL & TEXT LOGIC (तुमच्या मूळ पद्धतीनुसार) ---------------- */
+    /* ---------------- MODAL & SMART AUTO-FIT ENGINE ---------------- */
     function openPreviewModal() {
-        document.getElementById('out_appName').innerText = document.getElementById('app_name').value || "___________";
-        document.getElementById('out_signName').innerText = document.getElementById('app_name').value || "___________";
+        const appName = document.getElementById('app_name').value.trim();
+        if(!appName) {
+            alert("⚠️ कृपया अर्जदाराचे नाव भरा!");
+            document.getElementById('app_name').focus();
+            return;
+        }
+
+        document.getElementById('out_appName').innerText = appName;
+        document.getElementById('out_signName').innerText = appName;
         
-        document.getElementById('out_village').innerText = document.getElementById('app_village').value || "_______";
-        document.getElementById('out_signVillage').innerText = document.getElementById('app_village').value || "_______";
+        const vil = document.getElementById('app_village').value.trim() || "_______";
+        const tal = document.getElementById('app_taluka').value.trim() || "_______";
+        const dist = document.getElementById('app_district').value.trim() || "_______";
+
+        document.getElementById('out_village').innerText = vil;
+        document.getElementById('out_signVillage').innerText = vil;
+        document.getElementById('out_taluka').innerText = tal;
+        document.getElementById('out_signTaluka').innerText = tal;
+        document.getElementById('out_district').innerText = dist;
+        document.getElementById('out_signDistrict').innerText = dist;
         
-        document.getElementById('out_taluka').innerText = document.getElementById('app_taluka').value || "_______";
-        document.getElementById('out_signTaluka').innerText = document.getElementById('app_taluka').value || "_______";
-        
-        document.getElementById('out_district').innerText = document.getElementById('app_district').value || "_______";
-        document.getElementById('out_signDistrict').innerText = document.getElementById('app_district').value || "_______";
-        
-        document.getElementById('out_appCaste').innerText = document.getElementById('app_caste').value || "________";
+        document.getElementById('out_appCaste').innerText = document.getElementById('app_caste').value.trim() || "________";
         document.getElementById('out_relation').innerText = document.getElementById('relation_dropdown').value;
-        document.getElementById('out_benName').innerText = document.getElementById('ben_name').value || "___________";
+        document.getElementById('out_benName').innerText = document.getElementById('ben_name').value.trim() || "___________";
         
         document.getElementById('out_purpose').innerText = document.getElementById('cert_purpose').value;
-        document.getElementById('out_office').innerText = document.getElementById('office_loc').value || "_______";
+        document.getElementById('out_office').innerText = document.getElementById('office_loc').value.trim() || "_______";
         
-        let benCaste = document.getElementById('ben_caste').value || "________";
+        let benCaste = document.getElementById('ben_caste').value.trim() || "________";
         document.getElementById('out_benCaste').innerText = benCaste;
         document.getElementById('out_benCaste2').innerText = benCaste;
         
-        document.getElementById('out_place').innerText = document.getElementById('sign_place').value || "________";
+        document.getElementById('out_place').innerText = document.getElementById('sign_place').value.trim() || "________";
         
         let dateVal = document.getElementById('sign_date').value;
         if(dateVal) {
@@ -369,30 +429,49 @@
         document.getElementById('docTreeRoot').innerHTML = document.getElementById('builderTreeRoot').innerHTML;
         document.getElementById('previewModal').style.display = 'block';
 
-        // 🟢 Zoom logic ONLY if the tree is horizontally too wide (जशी तुमच्या मूळ कोडमध्ये होती)
+        // 🎯 स्मार्ट ऑटो-फिट: झाडाला राखीव मधल्या जागेत अचूक बसवणे
         setTimeout(() => {
-            const treeWrap = document.getElementById('docTreeWrapper');
-            treeWrap.style.zoom = '1';
-            let actualTreeWidth = document.getElementById('docTreeRoot').scrollWidth;
-            let maxAllowedWidth = 710; 
+            const container = document.getElementById('treeContainerBox');
+            const wrapper = document.getElementById('docTreeWrapper');
+            const rootTree = document.getElementById('docTreeRoot');
             
-            if(actualTreeWidth > maxAllowedWidth) {
-                treeWrap.style.zoom = (maxAllowedWidth / actualTreeWidth).toFixed(3);
+            wrapper.style.zoom = '1';
+            
+            const availW = container.clientWidth - 10;
+            const availH = container.clientHeight - 10;
+            
+            const treeW = rootTree.scrollWidth;
+            const treeH = rootTree.scrollHeight;
+            
+            if (treeW > 0 && treeH > 0) {
+                let scaleW = availW / treeW;
+                let scaleH = availH / treeH;
+                
+                // रुंदी आणि उंची यापैकी जी लहान असेल ती निवडणे
+                let finalScale = Math.min(scaleW, scaleH);
+                
+                // लहान वंशावळ असल्यास जास्त मोठे करू नका
+                if (finalScale > 1.0) finalScale = 1.0;
+                
+                // किमान वाचनीय फॉन्ट मर्यादा (Readable Limit ~0.72)
+                if (finalScale < 0.72) finalScale = 0.72;
+                
+                wrapper.style.zoom = finalScale.toFixed(3);
             }
-        }, 100);
+        }, 120);
     }
 
     function closePreviewModal() { 
         document.getElementById('previewModal').style.display = 'none'; 
     }
     
-    // 🖨️ प्रिंट काढणे
+    // 🖨️ थेट प्रिंट काढणे
     function triggerPrint() {
         logUsage('Printed');
         window.print();
     }
 
-    // 📄 PDF डाऊनलोड करणे
+    // 📄 थेट PDF सेव्ह करणे
     function downloadDirectPDF() {
         logUsage('Downloaded PDF');
         const element = document.getElementById('a4-document');
@@ -404,7 +483,7 @@
         btn.disabled = true;
 
         const opt = {
-            margin:       [8, 8, 8, 8],
+            margin:       0,
             filename:     `Vanshaval_${appName}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, logging: false },
@@ -426,7 +505,7 @@
         });
     }
 
-    /* ---------------- TREE LOGIC (मूळ जशीच्या तशी) ---------------- */
+    /* ---------------- TREE LOGIC ---------------- */
     let nextId = 1; let editingTarget = null;
     const treeData = {
         id: 'khaparPanjoba', role: 'खापरपंजोबा', name: '', doc: '', active: false,
@@ -580,16 +659,16 @@
         editingTarget = (id === 'aai') ? { type: 'aai' } : { type: 'fixed', id: id }; let valName = '', valDoc = '';
         if (id === 'aai') { valName = vadilNode().aai.name; valDoc = vadilNode().aai.doc; } else { const node = findFixedNodeById(treeData, id); if (node) { valName = node.name; valDoc = node.doc; } }
         document.getElementById('personName').value = valName || ''; document.getElementById('personDoc').value = valDoc || '';
-        document.getElementById('submitBtn').innerText = 'बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#ff9800'; document.getElementById('cancelBtn').style.display = 'inline-block';
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#f59e0b'; document.getElementById('cancelBtn').style.display = 'inline-flex';
     }
     function startEditDynamic(uid) {
         const item = findDynamicItemByUid(treeData, uid); if (!item) return; editingTarget = { type: 'dynamic', uid: uid };
         document.getElementById('personName').value = item.name || ''; document.getElementById('personDoc').value = item.doc || '';
-        document.getElementById('submitBtn').innerText = 'बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#ff9800'; document.getElementById('cancelBtn').style.display = 'inline-block';
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> बदल सेव्ह करा'; document.getElementById('submitBtn').style.background = '#f59e0b'; document.getElementById('cancelBtn').style.display = 'inline-flex';
     }
     function cancelEdit() {
         editingTarget = null; document.getElementById('personName').value = ''; document.getElementById('personDoc').value = '';
-        document.getElementById('submitBtn').innerText = '+ जोडा'; document.getElementById('submitBtn').style.background = '#16a34a'; document.getElementById('cancelBtn').style.display = 'none';
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> जोडा'; document.getElementById('submitBtn').style.background = '#16a34a'; document.getElementById('cancelBtn').style.display = 'none';
     }
     function findFixedNodeById(node, id) { if (node.id === id) return node; if (node.children) { for (let c of node.children) { const found = findFixedNodeById(c, id); if (found) return found; } } return null; }
     function findDynamicItemByUid(node, uid) {
