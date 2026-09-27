@@ -125,7 +125,7 @@
             position: relative; 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between; /* टॉप व बॉटम जागेवर लॉक */
+            justify-content: space-between;
             overflow: hidden;
         }
 
@@ -138,7 +138,7 @@
 
         /* 🌳 २. मधली राखीव जागा (Dedicated Tree Canvas) */
         .doc-middle-tree-space {
-            flex: 1; /* उपलब्ध संपूर्ण मोकळी जागा व्यापणे (~१६० मिमी) */
+            flex: 1;
             display: flex; 
             align-items: center; 
             justify-content: center;
@@ -155,13 +155,14 @@
             width: 100%;
         }
 
-        /* 🔒 ३. बॉटम लॉक सेक्शन */
+        /* 🔒 ३. बॉटम लॉक सेक्शन (कोणतीही बॉर्डर/लाईन नाही) */
         .doc-bottom-locked {
             flex-shrink: 0;
         }
         .doc-footer { 
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-top: 15px; font-size: 15px; line-height: 1.6; border-top: 1px dashed #bbb; padding-top: 12px;
+            margin-top: 15px; font-size: 15px; line-height: 1.6; border-top: none; /* 🟢 लाईन काढून टाकली */
+            padding-top: 6px;
         }
         .footer-right { text-align: right; }
         .bold-val { font-weight: 800; padding: 0 4px; color: #000; }
@@ -180,6 +181,7 @@
                 margin: 0 auto !important; padding: 14mm 18mm 12mm 18mm !important; box-shadow: none !important; border: none !important;
                 page-break-after: avoid !important; page-break-inside: avoid !important; overflow: hidden !important;
             }
+            .doc-footer { border-top: none !important; } /* प्रिंटमध्येही लाईन अजिबात येणार नाही */
         }
     </style>
 </head>
@@ -284,7 +286,7 @@
         <!-- A4 Document (Strict 1-Page Layout) -->
         <div id="a4-document">
             
-            <!-- 🔒 १. टॉप लॉक सेक्शन (Top Locked) -->
+            <!-- 🔒 १. टॉप लॉक सेक्शन -->
             <div class="doc-top-locked">
                 <div class="doc-title">वंशावळ स्वयंघोषणा शपथपत्र</div>
                 
@@ -297,14 +299,14 @@
                 </div>
             </div>
             
-            <!-- 🌳 २. मधली राखीव जागा (Dedicated Tree Canvas with Smart Auto-Fit) -->
+            <!-- 🌳 २. मधली राखीव जागा (Tree Canvas) -->
             <div class="doc-middle-tree-space" id="treeContainerBox">
                 <div id="docTreeWrapper">
                     <div class="tree" id="docTreeRoot"></div>
                 </div>
             </div>
 
-            <!-- 🔒 ३. बॉटम लॉक सेक्शन (Bottom Locked + Single-line Address) -->
+            <!-- 🔒 ३. बॉटम लॉक सेक्शन (कोणतीही लाईन नाही) -->
             <div class="doc-bottom-locked">
                 <div class="doc-text">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; वरील लिहून दिलेली सर्व वंशावळ स्वयंघोषणापत्र हे सत्य असून यात काही खोटे वा गैर आढळून आल्यास त्यास मी स्वतः जबाबदार राहील.
@@ -429,7 +431,7 @@
         document.getElementById('docTreeRoot').innerHTML = document.getElementById('builderTreeRoot').innerHTML;
         document.getElementById('previewModal').style.display = 'block';
 
-        // 🎯 स्मार्ट ऑटो-फिट: झाडाला राखीव मधल्या जागेत अचूक बसवणे
+        // 🎯 स्मार्ट ऑटो-फिट
         setTimeout(() => {
             const container = document.getElementById('treeContainerBox');
             const wrapper = document.getElementById('docTreeWrapper');
@@ -447,14 +449,9 @@
                 let scaleW = availW / treeW;
                 let scaleH = availH / treeH;
                 
-                // रुंदी आणि उंची यापैकी जी लहान असेल ती निवडणे
                 let finalScale = Math.min(scaleW, scaleH);
-                
-                // लहान वंशावळ असल्यास जास्त मोठे करू नका
                 if (finalScale > 1.0) finalScale = 1.0;
-                
-                // किमान वाचनीय फॉन्ट मर्यादा (Readable Limit ~0.72)
-                if (finalScale < 0.72) finalScale = 0.72;
+                if (finalScale < 0.72) finalScale = 0.72; // किमान वाचनीय फॉन्ट
                 
                 wrapper.style.zoom = finalScale.toFixed(3);
             }
