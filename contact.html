@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>संपर्क साधा (Contact Us) | QuickIDPrint</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font: Mukta -->
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <style>
+    body { font-family: 'Mukta', sans-serif; background-color: #f8fafc; }
+  </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen justify-between">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-sm font-black text-lg">Q</div>
+        <span class="text-xl font-black tracking-tight text-slate-900">Quick<span class="text-indigo-600">IDPrint</span></span>
+      </a>
+      <div class="flex items-center gap-3 text-sm font-semibold">
+        <a href="index.html" class="text-slate-600 hover:text-indigo-600 transition"><i class="fas fa-home mr-1"></i> होम</a>
+        <a href="about.html" class="text-slate-600 hover:text-indigo-600 transition"><i class="fas fa-info-circle mr-1"></i> आमच्याबद्दल</a>
+        <a href="login.html" class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition shadow-xs">लॉगिन</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full space-y-10">
+    <div class="text-center space-y-2">
+      <span class="px-3.5 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider">ग्राहक सेवा आणि सहाय्य</span>
+      <h1 class="text-3xl sm:text-4xl font-black text-slate-900">आमच्याशी संपर्क साधा</h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto">प्लॅन रिचार्ज, नवीन सर्व्हिस किंवा कोणत्याही तांत्रिक अडचणीसाठी आम्ही आपल्या सेवेत सदैव तत्पर आहोत.</p>
+    </div>
+
+    <!-- Contact Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      
+      <!-- Phone Card -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs text-center space-y-3 hover:shadow-md transition">
+        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl mx-auto">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900">थेट कॉल करा</h3>
+        <p class="text-xs text-slate-500">सकाळी ९ ते रात्री ९ पर्यंत सहाय्य</p>
+        <a href="tel:9403901395" class="block font-bold text-blue-600 hover:underline text-base">+91 9403901395</a>
+      </div>
+
+      <!-- WhatsApp Card -->
+      <div class="bg-white p-6 rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/20 shadow-xs text-center space-y-3 hover:shadow-md transition">
+        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900">व्हॉट्सॲप चॅट</h3>
+        <p class="text-xs text-slate-500">त्वरित मेसेज व स्क्रीनशॉट पाठवा</p>
+        <a href="https://wa.me/919403901395?text=नमस्कार! मला QuickIDPrint बद्दल मदत हवी आहे." target="_blank" class="inline-block px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-xs transition">
+          चॅट सुरू करा
+        </a>
+      </div>
+
+      <!-- Address Card -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs text-center space-y-3 hover:shadow-md transition">
+        <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl mx-auto">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 class="font-bold text-lg text-slate-900">मुख्य कार्यालय</h3>
+        <p class="text-xs text-slate-500">हदगाव, जि. नांदेड, महाराष्ट्र</p>
+        <span class="block font-bold text-slate-700 text-sm">पिन कोड: ४३१७१२</span>
+      </div>
+
+    </div>
+
+    <!-- Quick Message Box -->
+    <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-xs space-y-4 max-w-2xl mx-auto">
+      <h3 class="text-xl font-bold text-slate-900 text-center">मेसेज पाठवा (Send Message)</h3>
+      <div class="space-y-3">
+        <input type="text" id="custName" placeholder="तुमचे नाव" class="w-full p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-indigo-500">
+        <input type="tel" id="custMobile" placeholder="मोबाईल नंबर" class="w-full p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-indigo-500">
+        <textarea id="custMsg" rows="3" placeholder="तुमची अडचण किंवा प्रश्न येथे लिहा..." class="w-full p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-indigo-500"></textarea>
+        <button onclick="sendToWhatsApp()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs cursor-pointer">
+          <i class="fab fa-whatsapp text-lg"></i> व्हॉट्सॲपवर पाठवा
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 space-y-1">
+    <p class="font-semibold text-slate-700">QuickIDPrint • २४x७ सपोर्ट हेल्पलाईन: +91 9403901395</p>
+    <p>&copy; 2026 QuickIDPrint. सर्व हक्क सुरक्षित.</p>
+  </footer>
+
+  <script>
+    function sendToWhatsApp() {
+      const name = document.getElementById('custName').value.trim();
+      const mobile = document.getElementById('custMobile').value.trim();
+      const msg = document.getElementById('custMsg').value.trim();
+
+      if (!name || !msg) {
+        alert("कृपया तुमचे नाव आणि मेसेज टाईप करा.");
+        return;
+      }
+
+      const fullText = `*QuickIDPrint संपर्क चौकशी*\n👤 नाव: ${name}\n📱 मोबाईल: ${mobile || '-'}\n💬 मेसेज: ${msg}`;
+      const url = `https://wa.me/919403901395?text=${encodeURIComponent(fullText)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
