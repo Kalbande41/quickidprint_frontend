@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickIDPrint - ऑनलाईन स्मार्ट आयडी व घोषणापत्र सेवा</title>
+    <title>QuickIDPrint - ऑनलाईन स्मार्ट आयडी, घोषणापत्र व टूल्स सेवा</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         :root {
@@ -33,7 +33,7 @@
         body { background-color: var(--light-bg); color: var(--dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
         header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(12px);
             padding: 12px 6%;
             display: flex;
@@ -45,23 +45,23 @@
             z-index: 100;
         }
 
-        .logo-section { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .logo-section { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 42px; width: auto; object-fit: contain; }
         .logo-box {
-            width: 44px; height: 44px; border-radius: 12px;
+            width: 42px; height: 42px; border-radius: 12px;
             background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             display: flex; align-items: center; justify-content: center;
-            color: var(--primary); font-size: 22px; border: 1px solid #bfdbfe;
+            color: var(--primary); font-size: 20px; border: 1px solid #bfdbfe;
         }
-        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 25px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
         .logo-text h1 .brand-quick { color: var(--primary); }
         .logo-text h1 .brand-id { color: var(--accent); }
         .logo-text h1 .brand-print { color: var(--primary); }
-        .logo-text p { color: var(--slate-600); font-size: 13px; font-weight: 600; margin-top: 3px; }
+        .logo-text p { color: var(--slate-600); font-size: 12px; font-weight: 600; margin-top: 3px; }
 
-        /* Navigation Links */
         .nav-links { display: flex; align-items: center; gap: 20px; }
-        .nav-links a { text-decoration: none; color: var(--slate-600); font-weight: 700; font-size: 15px; transition: 0.2s; }
-        .nav-links a:hover { color: var(--secondary); }
+        .nav-link-item { text-decoration: none; color: var(--slate-600); font-weight: 700; font-size: 14.5px; transition: 0.2s; }
+        .nav-link-item:hover { color: var(--secondary); }
 
         .header-buttons { display: flex; align-items: center; gap: 10px; }
         .btn {
@@ -74,8 +74,9 @@
         .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; }
         .btn-accent { background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%); color: white; }
 
+        /* Hero */
         .hero {
-            position: relative; padding: 70px 6% 80px;
+            position: relative; padding: 65px 6% 75px;
             background: radial-gradient(circle at top right, #e0e7ff 0%, #ffffff 60%, #fef3c7 100%);
             display: flex; align-items: center; justify-content: space-between; gap: 40px;
             border-bottom: 1px solid var(--card-border);
@@ -84,153 +85,165 @@
         .hero-pill {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(255, 255, 255, 0.9); border: 1px solid #fed7aa;
-            padding: 6px 16px; border-radius: 30px; font-size: 13px; font-weight: 800;
-            color: #c2410c; margin-bottom: 18px;
+            padding: 5px 15px; border-radius: 30px; font-size: 13px; font-weight: 800;
+            color: #c2410c; margin-bottom: 16px;
         }
-        .hero-content h1 { font-size: 42px; line-height: 1.2; font-weight: 800; color: var(--dark); margin-bottom: 18px; }
+        .hero-content h1 { font-size: 42px; line-height: 1.25; font-weight: 800; color: var(--dark); margin-bottom: 16px; }
         .hero-content h1 span.highlight {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .hero-content p { font-size: 18px; color: var(--slate-600); line-height: 1.6; margin-bottom: 30px; }
-        .hero-actions { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 35px; }
+        .hero-content p { font-size: 17px; color: var(--slate-600); line-height: 1.6; margin-bottom: 25px; }
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
-        .hero-mockup-wrapper { max-width: 420px; width: 100%; z-index: 2; }
+        .hero-mockup-wrapper { max-width: 380px; width: 100%; z-index: 2; }
         .mockup-main-card {
-            background: white; border-radius: 24px; padding: 26px;
+            background: white; border-radius: 22px; padding: 24px;
             box-shadow: var(--shadow-lg); border: 1px solid var(--card-border);
         }
         .mockup-id-box {
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            border-radius: 16px; padding: 22px; color: white; margin-bottom: 20px;
+            border-radius: 14px; padding: 20px; color: white; margin-bottom: 16px;
         }
-        .mockup-name { font-size: 18px; font-weight: 800; }
-        .mockup-no { font-family: monospace; font-size: 15px; color: #93c5fd; }
+        .mockup-name { font-size: 17px; font-weight: 800; }
+        .mockup-no { font-family: monospace; font-size: 14px; color: #93c5fd; }
 
-        .banner-wrapper { padding: 35px 6% 10px; }
-        .modern-banner {
-            max-width: 980px; margin: 0 auto;
-            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-            border-radius: 20px; padding: 30px 40px; color: white;
-            display: flex; justify-content: space-between; align-items: center; gap: 25px;
-        }
-        .banner-info h3 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-
+        /* Section Headers */
         .section-header { text-align: center; margin: 55px 0 30px; }
         .section-tag {
             display: inline-block; background: #dbeafe; color: var(--secondary);
-            font-size: 13px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
-            text-transform: uppercase; margin-bottom: 10px;
+            font-size: 12px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
+            text-transform: uppercase; margin-bottom: 8px;
         }
         .section-header h2 { font-size: 30px; font-weight: 800; color: var(--dark); }
 
-        .services-grid { padding: 0 6%; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .services-grid {
+            padding: 0 6%; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;
+        }
         .card-modern {
             background: var(--white); border-radius: 18px; padding: 24px 20px;
-            border: 1px solid var(--card-border); text-align: center; transition: all 0.3s ease;
+            border: 1.5px solid var(--card-border); text-align: center; transition: all 0.3s ease;
             cursor: pointer; display: flex; flex-direction: column; align-items: center;
         }
         .card-modern:hover { transform: translateY(-6px); border-color: #93c5fd; box-shadow: var(--shadow-lg); }
         .card-icon {
-            width: 65px; height: 65px; border-radius: 16px; display: flex; align-items: center;
+            width: 65px; height: 65px; border-radius: 18px; display: flex; align-items: center;
             justify-content: center; font-size: 28px; color: white; margin-bottom: 16px;
         }
-        .card-modern h3 { font-size: 18px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
-        .card-action-link { margin-top: 10px; font-size: 13.5px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 6px; }
+        .card-modern h3 { font-size: 17px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .card-action-link { margin-top: 10px; font-size: 13.5px; font-weight: 700; color: var(--secondary); display: flex; align-items: center; gap: 5px; }
+
+        /* Color Gradients */
+        .theme-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .theme-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .theme-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .theme-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .theme-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .theme-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .theme-indigo { background: linear-gradient(135deg, #6366f1, #4338ca); }
+        .theme-pink { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .theme-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .theme-cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+
+        /* Banner */
+        .banner-wrapper { padding: 40px 6% 10px; }
+        .modern-banner {
+            max-width: 980px; margin: 0 auto;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            border-radius: 20px; padding: 28px 35px; color: white;
+            display: flex; justify-content: space-between; align-items: center; gap: 20px;
+        }
 
         /* FAQ */
         .faq-wrapper { max-width: 860px; margin: 0 auto 50px; padding: 0 6%; }
-        .faq-card { background: var(--white); border: 1px solid var(--card-border); border-radius: 14px; margin-bottom: 12px; overflow: hidden; }
-        .faq-q { padding: 18px 22px; font-size: 16.5px; font-weight: 800; color: var(--dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-card { background: var(--white); border: 1px solid var(--card-border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+        .faq-q { padding: 18px 22px; font-size: 16px; font-weight: 800; color: var(--dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .faq-q:hover { color: var(--secondary); }
         .faq-card.active .faq-q i { transform: rotate(180deg); color: var(--secondary); }
-        .faq-a { padding: 0 22px; max-height: 0; overflow: hidden; transition: 0.3s ease; color: var(--slate-600); font-size: 15px; line-height: 1.6; }
+        .faq-a { padding: 0 22px; max-height: 0; overflow: hidden; transition: 0.3s ease; color: var(--slate-600); font-size: 14.5px; line-height: 1.6; }
         .faq-card.active .faq-a { padding: 10px 22px 20px; max-height: 300px; border-top: 1px solid #f1f5f9; }
 
         /* Footer */
         footer { background: #0b1329; color: var(--white); padding: 50px 6% 25px; margin-top: 60px; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr; gap: 35px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px; margin-bottom: 20px; }
-        .footer-col h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
-        .footer-col h4 { font-size: 16px; font-weight: 700; margin-bottom: 14px; color: #f1f5f9; }
-        .footer-links { list-style: none; padding: 0; margin: 0; space-y: 8px; }
-        .footer-links li { margin-bottom: 8px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 14px; transition: 0.2s; }
-        .footer-links a:hover { color: #60a5fa; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px; margin-bottom: 20px; }
+        .footer-col h4 { font-size: 16px; font-weight: 800; margin-bottom: 14px; color: white; }
+        .footer-col a { display: block; color: #94a3b8; text-decoration: none; margin-bottom: 8px; font-size: 14px; transition: 0.2s; }
+        .footer-col a:hover { color: white; }
         .footer-bottom { text-align: center; color: #64748b; font-size: 13.5px; }
 
+        /* Ticker */
         .ticker-capsule {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 760px; background: rgba(15, 23, 42, 0.94);
             border-radius: 50px; border: 1px solid rgba(255,255,255,0.15);
             display: flex; align-items: center; overflow: hidden; z-index: 999;
         }
-        .ticker-pill { background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%); color: white; padding: 9px 20px; font-weight: 800; font-size: 13px; border-radius: 50px 0 0 50px; }
+        .ticker-pill { background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%); color: white; padding: 8px 18px; font-weight: 800; font-size: 12.5px; border-radius: 50px 0 0 50px; }
         .ticker-track { flex: 1; overflow: hidden; padding: 0 15px; }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: scrollTicker 24s linear infinite; font-size: 14px; font-weight: 600; color: #f1f5f9; }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: scrollTicker 24s linear infinite; font-size: 13.5px; font-weight: 600; color: #f1f5f9; }
         .ticker-content span { margin-right: 45px; }
         @keyframes scrollTicker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        @media (max-width: 992px) {
-            .nav-links { display: none; }
-            .hero { flex-direction: column; text-align: center; padding: 45px 6%; }
+        @media (max-width: 900px) {
+            .hero { flex-direction: column; text-align: center; padding: 40px 6%; }
             .hero-actions { justify-content: center; }
+            .nav-links { display: none; }
             .modern-banner { flex-direction: column; text-align: center; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 600px) {
             .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header with About, Contact, Terms Links -->
+    <!-- Header -->
     <header>
         <a href="index.html" class="logo-section">
-            <div class="logo-box"><i class="fas fa-id-card"></i></div>
+            <img src="logo.png" alt="QuickIDPrint" class="logo-img" onerror="this.style.display='none'; document.getElementById('logoBox').style.display='flex';">
+            <div class="logo-box" id="logoBox" style="display: none;"><i class="fas fa-id-card"></i></div>
             <div class="logo-text">
                 <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
                 <p>जलद • सोपे • विश्वासनीय</p>
             </div>
         </a>
 
-        <!-- Desktop Navigation Links -->
-        <nav class="nav-links">
-            <a href="about.html"><i class="fas fa-info-circle mr-1"></i> आमच्याबद्दल</a>
-            <a href="contact.html"><i class="fas fa-phone-alt mr-1"></i> संपर्क</a>
-            <a href="terms_conditions.html"><i class="fas fa-shield-alt mr-1"></i> नियम व अटी</a>
-        </nav>
+        <!-- Header Nav Links -->
+        <div class="nav-links">
+            <a href="about.html" class="nav-link-item">आमच्याबद्दल</a>
+            <a href="contact.html" class="nav-link-item">संपर्क</a>
+            <a href="terms_conditions.html" class="nav-link-item">नियम व अटी</a>
+        </div>
 
         <div class="header-buttons">
+            <a href="QuickIDPrint_User_Manual.pdf" target="_blank" class="btn btn-manual"><i class="fas fa-book-open"></i> <span>मॅन्युअल</span></a>
             <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> <span>लॉगिन</span></a>
             <a href="register.html" class="btn btn-accent"><i class="fas fa-user-plus"></i> <span>नोंदणी</span></a>
-            <a href="https://wa.me/919403901395" target="_blank" class="btn btn-manual" style="background:#22c55e; color:white; border:none;"><i class="fab fa-whatsapp"></i> <span>मदत</span></a>
         </div>
     </header>
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-pill"><i class="fas fa-bolt"></i> महाराष्ट्रातील अग्रगण्य सीएससी व महा-ई-सेवा पोर्टल</div>
-            <h1>ऑनलाईन <span class="highlight">स्मार्ट आयडी</span> आणि घोषणापत्र सेवा</h1>
-            <p>काही मिनिटांत अचूक माहिती भरून तयार करा आणि HD क्वालिटीमध्ये थेट प्रिंटसाठी तयार स्मार्ट आयडी कार्ड, सर्व अधिकृत घोषणापत्रे आणि PDF टूल्स मिळवा.</p>
+            <div class="hero-pill"><i class="fas fa-bolt"></i> महाराष्ट्रातील नंबर १ सीएससी व सेतू केंद्र सेवा पोर्टल</div>
+            <h1>ऑनलाईन <span class="highlight">स्मार्ट आयडी</span>, घोषणापत्रे व टूल्स</h1>
+            <p>एका क्लिकमध्ये HD क्वालिटी स्मार्ट आयडी कार्ड्स, शासकीय स्वयंघोषणापत्रे आणि मोफत PDF व फोटो टूल्सचा अमर्यादित लाभ घ्या.</p>
             <div class="hero-actions">
-                <a href="register.html" class="btn btn-accent" style="padding: 12px 28px; font-size: 16px;"><i class="fas fa-user-plus"></i> मोफत नोंदणी करा</a>
-                <a href="login.html" class="btn btn-primary" style="padding: 12px 26px; font-size: 16px;"><i class="fas fa-arrow-right-to-bracket"></i> लॉगिन करा</a>
+                <a href="register.html" class="btn btn-accent" style="padding: 12px 26px; font-size: 16px;"><i class="fas fa-user-plus"></i> नवीन मोफत नोंदणी</a>
+                <a href="login.html" class="btn btn-primary" style="padding: 12px 24px; font-size: 16px;"><i class="fas fa-arrow-right-to-bracket"></i> लॉगिन करा</a>
             </div>
         </div>
 
         <div class="hero-mockup-wrapper">
             <div class="mockup-main-card">
                 <div class="mockup-id-box">
-                    <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase;">Smart ID Card</div>
+                    <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase;">Smart ID Card Ready</div>
                     <div class="mockup-name" style="margin-top: 5px;">महाराष्ट्र शासन सेवा</div>
                     <div class="mockup-no" style="margin-top: 5px;">XXXX - XXXX - 1234</div>
                 </div>
-                <div style="font-weight: 700; color: #1e293b; font-size: 14px; line-height: 1.8;">
-                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> आधार, पॅन, मतदान व शेतकरी ओळखपत्र<br>
-                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> वंशावळ शपथपत्र व सर्व स्वयं घोषणापत्रे<br>
-                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> PDF कॉम्प्रेशन व फोटो रिसायझर टूल्स
+                <div style="font-weight: 700; color: #1e293b; font-size: 13.5px; line-height: 1.8;">
+                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> आधार, पॅन, मतदान व आभा कार्ड<br>
+                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> UDID दिव्यांग कार्ड व शेतकरी ओळखपत्र<br>
+                    <i class="fas fa-check-circle" style="color: #16a34a;"></i> मोफत PDF Compressor व Image to PDF
                 </div>
             </div>
         </div>
@@ -239,9 +252,9 @@
     <!-- Banner -->
     <div class="banner-wrapper">
         <div class="modern-banner">
-            <div class="banner-info">
-                <h3><i class="fas fa-bullhorn" style="color: var(--accent);"></i> नवीन अकाउंट उघडायचे आहे का?</h3>
-                <p>आमच्या सर्व अमर्यादित सेवांचा लाभ घेण्यासाठी लगेच स्वतः मोफत नोंदणी करा!</p>
+            <div>
+                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 5px;"><i class="fas fa-bullhorn" style="color: var(--accent);"></i> नवीन अकाउंट उघडायचे आहे का?</h3>
+                <p style="color: #cbd5e1; font-size: 14.5px;">सर्व सेवांचा लाभ घेण्यासाठी लगेच स्वतः मोफत नोंदणी करा!</p>
             </div>
             <div>
                 <a href="register.html" class="btn btn-accent"><i class="fas fa-user-plus"></i> नवीन नोंदणी करा</a>
@@ -249,89 +262,120 @@
         </div>
     </div>
 
-    <!-- 1. Smart IDs -->
+    <!-- 1. Smart IDs Section (८ सेवा - आभा व UDID सह) -->
     <div class="section-header">
         <span class="section-tag">High Definition</span>
-        <h2>१. स्मार्ट आयडी कार्ड प्रिंटिंग</h2>
+        <h2>स्मार्ट आयडी कार्ड प्रिंटिंग</h2>
     </div>
     <section class="services-grid">
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);"><i class="fas fa-fingerprint"></i></div>
-            <h3>आधार कार्ड प्रिंट</h3>
+        <div class="card-modern" onclick="handleServiceClick('आधार कार्ड प्रिंट')">
+            <div class="card-icon theme-orange"><i class="fas fa-fingerprint"></i></div>
+            <h3>१. आधार कार्ड प्रिंट</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fas fa-address-card"></i></div>
-            <h3>मतदान कार्ड प्रिंट</h3>
+        <div class="card-modern" onclick="handleServiceClick('मतदान कार्ड प्रिंट')">
+            <div class="card-icon theme-blue"><i class="fas fa-address-card"></i></div>
+            <h3>२. मतदान कार्ड प्रिंट</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-id-badge"></i></div>
-            <h3>पॅन कार्ड प्रिंट</h3>
+        <div class="card-modern" onclick="handleServiceClick('पॅन कार्ड प्रिंट')">
+            <div class="card-icon theme-red"><i class="fas fa-id-badge"></i></div>
+            <h3>३. पॅन कार्ड प्रिंट</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);"><i class="fas fa-tractor"></i></div>
-            <h3>शेतकरी ओळखपत्र</h3>
+        <div class="card-modern" onclick="handleServiceClick('शेतकरी ओळखपत्र')">
+            <div class="card-icon theme-green"><i class="fas fa-tractor"></i></div>
+            <h3>४. शेतकरी ओळखपत्र</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="fas fa-heartbeat"></i></div>
-            <h3>आयुष्मान कार्ड</h3>
+        <div class="card-modern" onclick="handleServiceClick('आयुष्मान कार्ड')">
+            <div class="card-icon theme-purple"><i class="fas fa-heartbeat"></i></div>
+            <h3>५. आयुष्मान कार्ड</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);"><i class="fas fa-address-book"></i></div>
-            <h3>महा आयडी प्रिंट</h3>
+        <div class="card-modern" onclick="handleServiceClick('महा आयडी प्रिंट')">
+            <div class="card-icon theme-teal"><i class="fas fa-address-book"></i></div>
+            <h3>६. महा आयडी प्रिंट</h3>
+            <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <!-- नवीन जोडलेली सेवा: आभा कार्ड -->
+        <div class="card-modern" onclick="handleServiceClick('आभा कार्ड प्रिंट')">
+            <div class="card-icon theme-indigo"><i class="fas fa-notes-medical"></i></div>
+            <h3>७. आभा कार्ड (ABHA)</h3>
+            <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <!-- नवीन जोडलेली सेवा: UDID कार्ड -->
+        <div class="card-modern" onclick="handleServiceClick('UDID दिव्यांग ओळखपत्र')">
+            <div class="card-icon theme-pink"><i class="fas fa-wheelchair"></i></div>
+            <h3>८. UDID दिव्यांग कार्ड</h3>
             <div class="card-action-link">सुरू करा <i class="fas fa-arrow-right"></i></div>
         </div>
     </section>
 
-    <!-- 2. Affidavits -->
+    <!-- 2. Declarations Section (७ घोषणापत्रे) -->
     <div class="section-header">
-        <span class="section-tag">कायदेशीर फॉरमॅट्स</span>
-        <h2>२. स्वयं घोषणापत्रे व शपथपत्रे</h2>
+        <span class="section-tag">Official Format</span>
+        <h2>शासकीय स्वयंघोषणापत्रे</h2>
     </div>
     <section class="services-grid">
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);"><i class="fas fa-sitemap"></i></div>
-            <h3>वंशावळ शपथपत्र</h3>
+        <div class="card-modern" onclick="handleServiceClick('जातीचे घोषणापत्र')">
+            <div class="card-icon theme-red"><i class="fas fa-users"></i></div>
+            <h3>जातीचे घोषणापत्र</h3>
             <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fas fa-certificate"></i></div>
-            <h3>जात प्रमाणपत्र घोषणापत्र</h3>
+        <div class="card-modern" onclick="handleServiceClick('वंशावळ घोषणापत्र')">
+            <div class="card-icon theme-indigo"><i class="fas fa-sitemap"></i></div>
+            <h3>वंशावळ घोषणापत्र</h3>
             <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-file-invoice-dollar"></i></div>
-            <h3>उत्पन्न घोषणापत्र (१ व ३ वर्षे)</h3>
+        <div class="card-modern" onclick="handleServiceClick('उत्पन्न घोषणापत्र')">
+            <div class="card-icon theme-blue"><i class="fas fa-file-invoice-dollar"></i></div>
+            <h3>उत्पन्न घोषणापत्र</h3>
             <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);"><i class="fas fa-house-user"></i></div>
-            <h3>रहिवासी व नॅशनलिटी घोषणापत्र</h3>
+        <div class="card-modern" onclick="handleServiceClick('३ वर्षाचे उत्पन्न')">
+            <div class="card-icon theme-green"><i class="fas fa-file-contract"></i></div>
+            <h3>३ वर्षाचे उत्पन्न</h3>
+            <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="card-modern" onclick="handleServiceClick('रहिवासी घोषणापत्र')">
+            <div class="card-icon theme-orange"><i class="fas fa-home"></i></div>
+            <h3>रहिवासी घोषणापत्र</h3>
+            <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="card-modern" onclick="handleServiceClick('राष्ट्रीयत्व घोषणापत्र')">
+            <div class="card-icon theme-purple"><i class="fas fa-flag"></i></div>
+            <h3>राष्ट्रीयत्व घोषणापत्र</h3>
+            <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="card-modern" onclick="handleServiceClick('नॉन-क्रीमीलेअर घोषणापत्र')">
+            <div class="card-icon theme-teal"><i class="fas fa-file-signature"></i></div>
+            <h3>नॉन-क्रीमीलेअर</h3>
             <div class="card-action-link">तयार करा <i class="fas fa-arrow-right"></i></div>
         </div>
     </section>
 
-    <!-- 3. Tools -->
+    <!-- 3. Quick Utility Tools (३ टूल्स - Image to PDF सह) -->
     <div class="section-header">
-        <span class="section-tag">उपयुक्त टूल्स</span>
-        <h2>३. स्मार्ट युटिलिटी टूल्स</h2>
+        <span class="section-tag">100% Free Tools</span>
+        <h2>मोफत क्विक टूल्स (Utility Tools)</h2>
     </div>
-    <section class="services-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 360px)); justify-content: center;">
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #4338ca, #3730a3);"><i class="fas fa-file-pdf"></i></div>
-            <h3>स्मार्ट PDF कॉम्प्रेशर</h3>
-            <p style="font-size: 13px; color: #64748b; margin-top: 4px;">सरकारी फॉर्म्ससाठी PDF चा आकार १००-२०० KB पर्यंत कमी करा</p>
-            <div class="card-action-link">वापरा <i class="fas fa-arrow-right"></i></div>
+    <section class="services-grid">
+        <div class="card-modern" onclick="handleServiceClick('PDF Compressor')">
+            <div class="card-icon theme-amber"><i class="fas fa-file-pdf"></i></div>
+            <h3>PDF Compressor</h3>
+            <div class="card-action-link">टूल वापरा <i class="fas fa-arrow-right"></i></div>
         </div>
-        <div class="card-modern" onclick="handleServiceClick()">
-            <div class="card-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);"><i class="fas fa-crop-alt"></i></div>
-            <h3>फोटो रिसायझर व ऑप्टिमायझर</h3>
-            <p style="font-size: 13px; color: #64748b; margin-top: 4px;">पासपोर्ट फोटो, स्वाक्षरी, px, cm, inch मध्ये अचूक रिसाईझ</p>
-            <div class="card-action-link">वापरा <i class="fas fa-arrow-right"></i></div>
+        <div class="card-modern" onclick="handleServiceClick('Photo Resizer')">
+            <div class="card-icon theme-pink"><i class="fas fa-image"></i></div>
+            <h3>Photo Resizer</h3>
+            <div class="card-action-link">टूल वापरा <i class="fas fa-arrow-right"></i></div>
+        </div>
+        <!-- नवीन जोडलेले टूल: Image to PDF -->
+        <div class="card-modern" onclick="handleServiceClick('Image to PDF')">
+            <div class="card-icon theme-cyan"><i class="fas fa-images"></i></div>
+            <h3>Image to PDF</h3>
+            <div class="card-action-link">टूल वापरा <i class="fas fa-arrow-right"></i></div>
         </div>
     </section>
 
@@ -343,46 +387,40 @@
     <div class="faq-wrapper">
         <div class="faq-card">
             <div class="faq-q" onclick="toggleFAQ(this)">१. QuickIDPrint पोर्टल काय आहे? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-a">QuickIDPrint हे सीएससी, सेतू आणि नेट कॅफे चालकांसाठी तयार केलेले आधुनिक पोर्टल आहे, ज्याद्वारे तुम्ही स्मार्ट आयडी कार्ड्स, मराठी घोषणापत्रे आणि PDF टूल्स १-क्लिकमध्ये वापरू शकता.</div>
+            <div class="faq-a">QuickIDPrint हे सेतू व सीएससी ऑपरेटरसाठी खास बनवलेले पोर्टल आहे, ज्यातून तुम्ही आधार, पॅन, मतदान, आभा, UDID कार्ड्स व सर्व शासकीय घोषणापत्रे काही सेकंदात तयार करू शकता.</div>
         </div>
         <div class="faq-card">
             <div class="faq-q" onclick="toggleFAQ(this)">२. सबस्क्रिप्शन प्लॅन कसा आहे? <i class="fas fa-chevron-down"></i></div>
-            <div class="faq-a">आम्ही १ महिना, ३ महिने आणि १ वर्ष असे परवडणारे अमर्यादित सबस्क्रिप्शन प्लॅन देतो, ज्यामध्ये कोणतीही छुपी फी नसते.</div>
+            <div class="faq-a">आम्ही १ महिना, ३ महिने आणि १ वर्ष असे परवडणारे अमर्यादित सबस्क्रिप्शन प्लॅन्स देतो. सर्व सेवा अमर्यादित उपलब्ध असतात.</div>
         </div>
     </div>
 
-    <!-- Footer with All Legal & Navigation Links -->
+    <!-- Footer -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
-                <h3>QuickIDPrint</h3>
+                <h3 style="font-size: 22px; font-weight: 800; color: white;">QuickIDPrint</h3>
                 <p style="color: #94a3b8; margin-top: 8px; font-size: 14px; line-height: 1.6;">
-                    सीएससी, आपले सरकार आणि सेतू केंद्र चालकांसाठी सर्वात विश्वासार्ह आणि जलद स्मार्ट डिजिटल प्लॅटफॉर्म.
+                    महाराष्ट्रातील सीएससी, महा-ई-सेवा व सेतू चालकांसाठी स्मार्ट आयडी, घोषणापत्रे आणि टूल्सचे विश्वसनीय पोर्टल.
                 </p>
             </div>
-            
             <div class="footer-col">
                 <h4>महत्त्वाच्या लिंक्स</h4>
-                <ul class="footer-links">
-                    <li><a href="about.html"><i class="fas fa-angle-right mr-1"></i> आमच्याबद्दल (About Us)</a></li>
-                    <li><a href="contact.html"><i class="fas fa-angle-right mr-1"></i> संपर्क साधा (Contact Us)</a></li>
-                    <li><a href="terms_conditions.html"><i class="fas fa-angle-right mr-1"></i> नियम आणि अटी (Terms)</a></li>
-                    <li><a href="login.html"><i class="fas fa-angle-right mr-1"></i> ऑपरेटर लॉगिन</a></li>
-                    <li><a href="register.html"><i class="fas fa-angle-right mr-1"></i> नवीन नोंदणी</a></li>
-                </ul>
+                <a href="about.html"><i class="fas fa-angle-right mr-1"></i> आमच्याबद्दल (About Us)</a>
+                <a href="contact.html"><i class="fas fa-angle-right mr-1"></i> संपर्क (Contact Us)</a>
+                <a href="terms_conditions.html"><i class="fas fa-angle-right mr-1"></i> नियम आणि अटी (Terms)</a>
             </div>
-
             <div class="footer-col">
-                <h4>संपर्क </h4>
+                <h4>मदत व हेल्पलाइन</h4>
                 <p style="color: #cbd5e1; font-size: 14px; line-height: 1.8;">
-                    <i class="fas fa-phone-alt mr-2 text-indigo-400"></i> +91 9403901395<br>
+                    <i class="fas fa-phone-alt text-indigo-400"></i> +91 9403901395<br>
+                    <i class="fab fa-whatsapp text-emerald-400"></i> WhatsApp चॅट २४x७
                 </p>
             </div>
-
             <div class="footer-col">
                 <h4>WhatsApp मदत</h4>
-                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 10px;">काही अडचण असल्यास थेट व्हॉट्सॲपवर संपर्क करा:</p>
-                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; text-decoration: none; font-size: 28px;"><i class="fab fa-whatsapp"></i></a>
+                <p style="color: #94a3b8; font-size: 13px; margin-bottom: 10px;">काही अडचण असल्यास थेट संपर्क करा:</p>
+                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; font-size: 32px;"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
         <div class="footer-bottom">&copy; 2026 QuickIDPrint. सर्व हक्क सुरक्षित.</div>
@@ -393,14 +431,15 @@
         <div class="ticker-pill"><i class="fas fa-bell"></i> नवीन</div>
         <div class="ticker-track">
             <div class="ticker-content">
-                <span>🚀 <strong>नवीन अपडेट:</strong> 'वंशावळ व सर्व घोषणापत्रे' सेवा आता उपलब्ध!</span>
-                <span>⚡ <strong>QuickIDPrint:</strong> तुमचे काम आता अधिक वेगाने आणि स्मार्ट पद्धतीने.</span>
+                <span>🚀 <strong>नवीन सेवा:</strong> 'आभा कार्ड' आणि 'UDID दिव्यांग कार्ड' प्रिंटिंग आता उपलब्ध!</span>
+                <span>🛠️ <strong>नवीन टूल:</strong> 'Image to PDF' मोफत टूल आता उपलब्ध!</span>
+                <span>⚡ <strong>QuickIDPrint:</strong> तुमची सर्व कामे आता अधिक वेगाने आणि सोप्या पद्धतीने.</span>
             </div>
         </div>
     </div>
 
     <script>
-        // 🛡️ लॉगिन असल्यास थेट homepage वर पाठवा:
+        // 🛡️ युजर आधीच लॉगिन असल्यास थेट homepage.html वर पाठवा:
         if (localStorage.getItem('quickid_user')) {
             window.location.replace('homepage.html');
         }
@@ -409,7 +448,7 @@
             el.parentElement.classList.toggle('active');
         }
 
-        function handleServiceClick() {
+        function handleServiceClick(name) {
             window.location.href = 'login.html';
         }
     </script>
