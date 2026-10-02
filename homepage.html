@@ -49,7 +49,7 @@
             border-bottom: 1px solid var(--card-border);
         }
         .logo-area { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-        .site-logo { width: 48px; height: 48px; object-fit: contain; }
+        .site-logo { width: 44px; height: 44px; object-fit: contain; }
         .logo-fallback {
             width: 44px; height: 44px; border-radius: 12px; background: #eff6ff;
             color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 22px;
@@ -211,451 +211,347 @@
         .service-card h3 { font-size: 17px; font-weight: 800; color: var(--slate-800); margin-bottom: 16px; }
 
         .start-btn {
-            width: 100%; padding: 9px 14px; border-radius: 12px; border: 1.5px solid #cbd5e1;
-            background: #f8fafc; color: var(--primary); font-size: 14px; font-weight: 800;
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            transition: all 0.2s ease;
+            margin-top: auto; padding: 9px 20px; border-radius: 12px;
+            font-size: 13.5px; font-weight: 800; display: inline-flex; align-items: center;
+            gap: 8px; transition: 0.2s; border: none; width: 100%; justify-content: center;
         }
-        .service-card:hover .start-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(18, 58, 143, 0.2);
-        }
+        .btn-blue-outline { background: #eff6ff; color: var(--secondary); border: 1px solid #bfdbfe; }
+        .service-card:hover .btn-blue-outline { background: var(--secondary); color: white; }
 
-        /* Color Themes */
-        .theme-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-        .theme-blue { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-        .theme-green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .theme-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-        .theme-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .theme-teal { background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%); }
-        .theme-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
-        .theme-pink { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
-        .theme-amber { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
-        .theme-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        /* Category Theme Colors */
+        .color-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .color-blue { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .color-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .color-green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .color-purple { background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); }
+        .color-teal { background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%); }
+        .color-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
+        .color-pink { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
+        .color-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .color-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); }
 
-        /* Footer */
-        footer { background: #0b1329; color: var(--white); padding: 40px 5% 20px; margin-top: 60px; }
-        .footer-content {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-            gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 22px; margin-bottom: 18px;
-        }
-        .footer-link {
-            color: #cbd5e1; text-decoration: none; font-size: 13.5px; display: inline-flex;
-            align-items: center; gap: 6px; background: rgba(255,255,255,0.08); padding: 7px 14px; border-radius: 8px;
-        }
-        .footer-bottom { text-align: center; font-size: 13px; color: #94a3b8; }
-
-        /* Floating Ticker */
-        .floating-ticker-wrapper {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 760px; background: rgba(15, 23, 42, 0.94);
-            backdrop-filter: blur(10px); border-radius: 50px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
-            display: flex; align-items: center; overflow: hidden; z-index: 999;
-        }
-        .ticker-label {
-            background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
-            color: white; padding: 8px 18px; font-weight: 800; font-size: 12.5px;
-            display: flex; align-items: center; gap: 6px; border-radius: 50px 0 0 50px;
-        }
-        .floating-ticker { flex: 1; overflow: hidden; padding: 0 15px; }
-        .ticker-text {
-            display: inline-block; white-space: nowrap; animation: modernScroll 24s linear infinite;
-            font-size: 13.5px; font-weight: 600; color: #f1f5f9;
-        }
-        .ticker-text span { margin-right: 45px; }
-        .ticker-text strong { color: #fed7aa; }
-        @keyframes modernScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        @media (max-width: 850px) {
-            .navbar { padding: 10px 4%; }
-            .dashboard-hero { flex-direction: column; text-align: center; padding: 25px 18px; }
+        @media (max-width: 900px) {
+            .dashboard-hero { flex-direction: column; text-align: center; }
             .hero-right-card { width: 100%; }
             .quick-access-box { grid-template-columns: 1fr; }
-            .btn-nav-manual span, .user-info { display: none; }
+            .hero-tags { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. MODERN NAVBAR -->
-    <nav class="navbar">
+    <!-- Frosted Header -->
+    <header class="navbar">
         <a href="homepage.html" class="logo-area">
             <img src="logo.png" alt="QuickIDPrint" class="site-logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
             <div class="logo-fallback" id="logoFallback" style="display: none;"><i class="fas fa-id-card"></i></div>
             <div class="logo-text">
                 <h2><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h2>
-                <p>जलद • सोपे • विश्वासनीय</p>
+                <p>महा-ई-सेवा ऑपरेटर डॅशबोर्ड</p>
             </div>
         </a>
-        
+
         <div class="nav-right">
-            <a href="QuickIDPrint_User_Manual.pdf" target="_blank" class="btn-nav btn-nav-manual" title="User Manual">
-                <i class="fas fa-book-open"></i> <span>मॅन्युअल</span>
+            <a href="QuickIDPrint_User_Manual.pdf" target="_blank" class="btn-nav btn-nav-manual">
+                <i class="fas fa-book-open"></i> मॅन्युअल
             </a>
 
-            <a href="recharge.html" class="btn-nav btn-nav-recharge" title="प्लॅन रिन्यू करा">
-                <i class="fas fa-bolt"></i> <span>Recharge</span>
-            </a>
-
-            <!-- Plan Expiry Badge -->
-            <div class="token-badge" id="planBadge" title="प्लॅनची मुदत">
-                <div class="status-dot" id="statusDot"></div>
-                <span id="displayExpiry">तपासत आहे...</span>
+            <!-- Expiry Badge -->
+            <div class="token-badge" id="tokenBadge">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="navRemainingDays">तपासत आहे...</span>
             </div>
 
-            <!-- User Profile Dropdown -->
+            <!-- Recharge Button -->
+            <a href="recharge.html" class="btn-nav btn-nav-recharge">
+                <i class="fas fa-bolt"></i> रिचार्ज
+            </a>
+
+            <!-- User Menu -->
             <div class="user-profile" onclick="toggleDropdown()">
                 <div class="avatar-circle" id="userAvatar">U</div>
                 <div class="user-info">
-                    <small>Welcome,</small>
-                    <span id="displayUserName">लोड होत आहे...</span>
+                    <small id="userShopName">सेतू केंद्र</small>
+                    <span id="navUserName">ऑपरेटर</span>
                 </div>
-                <i class="fas fa-chevron-down" style="font-size: 11px; color: var(--slate-400); margin-left: 4px;"></i>
-                
+                <i class="fas fa-chevron-down" style="font-size: 11px; color: var(--slate-400);"></i>
+
                 <div class="dropdown-menu" id="userMenu">
-                    <a href="recharge.html"><i class="fas fa-wallet" style="color: var(--accent);"></i> सबस्क्रिप्शन रिचार्ज</a>
-                    <a href="faq.html"><i class="fas fa-circle-question" style="color: var(--secondary);"></i> मदत आणि FAQ</a>
-                    <a href="admin.html" id="adminLink" style="display: none; color: #d97706;"><i class="fas fa-crown"></i> ॲडमिन पॅनेल</a>
-                    <a href="#" style="color: #ef4444;" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> सुरक्षित बाहेर पडा (Logout)</a>
+                    <a href="profile.html"><i class="fas fa-user-edit text-primary"></i> प्रोफाईल व डिटेल्स</a>
+                    <a href="statement.html"><i class="fas fa-file-invoice text-success"></i> रिचार्ज स्टेटमेंट</a>
+                    <a href="https://wa.me/919403901395" target="_blank"><i class="fab fa-whatsapp text-emerald-500"></i> WhatsApp सपोर्ट</a>
+                    <a href="javascript:void(0)" onclick="logoutUser()" style="color: var(--danger);"><i class="fas fa-power-off"></i> लॉगआऊट</a>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 
     <div class="container">
         
-        <!-- 2. MODERN 2026 HERO DASHBOARD BANNER -->
+        <!-- Modern SaaS Hero Banner -->
         <section class="dashboard-hero">
             <div class="hero-left">
-                <h1>👋 नमस्कार, <span id="heroWelcomeName" style="color: #fde047;">वापरकर्ता</span>!</h1>
-                <p>आपले QuickIDPrint स्मार्ट डॅशबोर्डवर स्वागत आहे. आपली सर्व स्मार्ट आयडी कार्ड्स, शासकीय घोषणापत्रे आणि टूल्स खाली उपलब्ध आहेत.</p>
                 <div class="hero-tags">
-                    <div class="hero-pill"><i class="fas fa-shield-halved" style="color: #22c55e;"></i> १००% सुरक्षित सिस्टीम</div>
-                    <div class="hero-pill"><i class="fas fa-bolt" style="color: #facc15;"></i> हाय-स्पीड प्रोसेसिंग</div>
-                    <div class="hero-pill"><i class="fas fa-print" style="color: #38bdf8;"></i> थेट HD प्रिंट फॉरमॅट</div>
+                    <span class="hero-pill"><i class="fas fa-shield-alt text-emerald-400"></i> १००% सुरक्षित क्लाउड सिस्टीम</span>
+                    <span class="hero-pill"><i class="fas fa-bolt text-amber-400"></i> अल्ट्रा-फास्ट एचडी प्रोसेसिंग</span>
                 </div>
+                <h1 style="margin-top: 14px;">नमस्कार, <span id="heroWelcomeName">ऑपरेटर</span>!</h1>
+                <p>तुमच्या सेतू व सीएससी केंद्रावरील सर्व आयडी कार्ड्स, शासकीय स्वयंघोषणापत्रे आणि डॉक्युमेंट टूल्स एकाच डॅशबोर्डवरून जलद प्रिंट करा.</p>
             </div>
 
             <div class="hero-right-card">
-                <small>सबस्क्रिप्शन स्टेटस</small>
-                <div class="hero-days-count" id="heroDaysCount">--</div>
-                <div class="hero-plan-expiry" id="heroExpiryText">मुदत तपासत आहे...</div>
-                <a href="recharge.html" class="btn-hero-renew">
-                    <i class="fas fa-sync-alt"></i> प्लॅन रिन्यू करा
-                </a>
+                <small>सबस्क्रिप्शन स्थिती</small>
+                <div class="hero-days-count" id="heroDaysCount">0</div>
+                <div class="hero-plan-expiry">मुदत: <strong id="heroExpiryDate">-</strong></div>
+                <a href="recharge.html" class="btn-hero-renew"><i class="fas fa-sync-alt"></i> प्लॅन रिन्यू करा</a>
             </div>
         </section>
 
-        <!-- 3. WHATSAPP ALERT STRIP -->
+        <!-- WhatsApp Helpline -->
         <div class="whatsapp-banner">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <i class="fab fa-whatsapp"></i> 
-                <span><strong>सपोर्ट व मदत:</strong> काही अडचण असल्यास किंवा रिचार्ज मंजुरीसाठी आमच्याशी थेट संपर्क साधा.</span>
+                <i class="fab fa-whatsapp"></i>
+                <span>काही तांत्रिक अडचण किंवा प्लॅन रिन्यूअलसाठी थेट WhatsApp वर मदत मिळवा:</span>
             </div>
-            <a href="https://wa.me/919403901395?text=नमस्कार! मला QuickIDPrint पोर्टलवर मदत हवी आहे." target="_blank">
-                WhatsApp: 9403901395
+            <a href="https://wa.me/919403901395?text=नमस्कार! मला QuickIDPrint पोर्टलबाबत मदत हवी आहे." target="_blank">
+                ९४०३९०१३९५ (WhatsApp करा)
             </a>
         </div>
 
-        <!-- 4. QUICK ACCESS ROW -->
+        <!-- Quick Access Row -->
         <div class="quick-access-box">
-            <a href="recharge.html" class="qa-item">
-                <div class="qa-icon qa-green"><i class="fas fa-wallet"></i></div>
-                <div>
-                    <h4>सबस्क्रिप्शन प्लॅन्स</h4>
-                    <p>नवीन प्लॅन निवडा व दिवस वाढवा</p>
-                </div>
-            </a>
-            <a href="QuickIDPrint_User_Manual.pdf" target="_blank" class="qa-item">
-                <div class="qa-icon qa-blue"><i class="fas fa-book-open"></i></div>
-                <div>
-                    <h4>पोर्टल मार्गदर्शिका</h4>
-                    <p>वापराचे नियम व पद्धत वाचा</p>
-                </div>
-            </a>
-            <a href="faq.html" class="qa-item">
-                <div class="qa-icon qa-purple"><i class="fas fa-info-circle"></i></div>
-                <div>
-                    <h4>नेहमीचे प्रश्न (FAQ)</h4>
-                    <p>समस्या आणि त्यांची उत्तरे</p>
-                </div>
-            </a>
+            <div class="qa-item" onclick="handleServiceRedirect('आधार कार्ड प्रिंट', 'aadhaar_print.html')">
+                <div class="qa-icon qa-blue"><i class="fas fa-fingerprint"></i></div>
+                <div><h4>आधार कार्ड प्रिंट</h4><p>अचूक AI क्रॉपिंग आणि ३०० DPI प्रिंट</p></div>
+            </div>
+            <div class="qa-item" onclick="handleServiceRedirect('पॅन कार्ड प्रिंट', 'pan_print.html')">
+                <div class="qa-icon qa-green"><i class="fas fa-id-badge"></i></div>
+                <div><h4>पॅन कार्ड प्रिंट</h4><p>NSDL / UTI पॅन कार्ड डायरेक्ट प्रिंट</p></div>
+            </div>
+            <div class="qa-item" onclick="handleServiceRedirect('रहिवासी घोषणापत्र', 'rahavasi_ghoshana.html')">
+                <div class="qa-icon qa-purple"><i class="fas fa-home"></i></div>
+                <div><h4>रहिवासी घोषणापत्र</h4><p>स्वयंघोषणापत्र त्वरित जनरेट करा</p></div>
+            </div>
         </div>
 
-        <!-- 5. SMART ID CARDS (८ सेवा - आभा व UDID सह) -->
+        <!-- 1. Smart IDs Section (८ सेवा) -->
         <div class="section-header">
-            <h2><i class="fas fa-id-badge" style="color: var(--accent);"></i> स्मार्ट आयडी कार्ड प्रिंटिंग</h2>
-            <span class="section-tag">HD Print Ready</span>
+            <h2><i class="fas fa-id-card text-primary"></i> १. स्मार्ट आयडी कार्ड प्रिंटिंग</h2>
+            <span class="section-tag">High Definition</span>
         </div>
-
         <div class="services-grid">
-            <div class="service-card" onclick="handleServiceRedirect('aadhaar_print.html', 'आधार कार्ड प्रिंट')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-orange"><i class="fas fa-fingerprint"></i></div>
-                <h3>१. आधार कार्ड प्रिंट</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('आधार कार्ड प्रिंट', 'aadhaar_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-orange"><i class="fas fa-fingerprint"></i></div>
+                <h3>आधार कार्ड प्रिंट</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('voter_print.html', 'मतदान कार्ड प्रिंट')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-blue"><i class="fas fa-address-card"></i></div>
-                <h3>२. मतदान कार्ड प्रिंट</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('मतदान कार्ड प्रिंट', 'voter_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-blue"><i class="fas fa-address-card"></i></div>
+                <h3>मतदान कार्ड प्रिंट</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('farmer_print.html', 'शेतकरी ओळखपत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-green"><i class="fas fa-tractor"></i></div>
-                <h3>३. शेतकरी ओळखपत्र</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('पॅन कार्ड प्रिंट', 'pan_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-red"><i class="fas fa-id-badge"></i></div>
+                <h3>पॅन कार्ड प्रिंट</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('pan_print.html', 'पॅन कार्ड प्रिंट')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-red"><i class="fas fa-id-badge"></i></div>
-                <h3>४. पॅन कार्ड प्रिंट</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('शेतकरी ओळखपत्र', 'farmer_id.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-green"><i class="fas fa-tractor"></i></div>
+                <h3>शेतकरी ओळखपत्र</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('ayushman_print.html', 'आयुष्मान कार्ड')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-purple"><i class="fas fa-heartbeat"></i></div>
-                <h3>५. आयुष्मान कार्ड</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('आयुष्मान कार्ड', 'ayushman_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-purple"><i class="fas fa-heartbeat"></i></div>
+                <h3>आयुष्मान कार्ड</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('maha_id.html', 'महा आयडी प्रिंट')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-teal"><i class="fas fa-address-book"></i></div>
-                <h3>६. महा आयडी प्रिंट</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('महा आयडी प्रिंट', 'maha_id.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-teal"><i class="fas fa-address-book"></i></div>
+                <h3>महा आयडी प्रिंट</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <!-- नवीन जोडलेली सेवा: आभा कार्ड -->
-            <div class="service-card" onclick="handleServiceRedirect('abha_print.html', 'आभा कार्ड प्रिंट')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-indigo"><i class="fas fa-notes-medical"></i></div>
-                <h3>७. आभा कार्ड (ABHA)</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <!-- आभा कार्ड -->
+            <div class="service-card" onclick="handleServiceRedirect('आभा कार्ड प्रिंट', 'abha_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-indigo"><i class="fas fa-notes-medical"></i></div>
+                <h3>आभा कार्ड (ABHA)</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <!-- नवीन जोडलेली सेवा: UDID दिव्यांग कार्ड -->
-            <div class="service-card" onclick="handleServiceRedirect('udid_print.html', 'UDID दिव्यांग ओळखपत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-pink"><i class="fas fa-wheelchair"></i></div>
-                <h3>८. UDID दिव्यांग कार्ड</h3>
-                <span class="start-btn">सेवा सुरु करा <i class="fas fa-arrow-right"></i></span>
+            <!-- UDID कार्ड -->
+            <div class="service-card" onclick="handleServiceRedirect('UDID दिव्यांग ओळखपत्र', 'udid_print.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-pink"><i class="fas fa-wheelchair"></i></div>
+                <h3>UDID दिव्यांग कार्ड</h3>
+                <button class="start-btn btn-blue-outline">कार्ड बनवा <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- 6. DECLARATIONS (शासकीय घोषणापत्रे) -->
+        <!-- 2. Declarations Section (७ घोषणापत्रे) -->
         <div class="section-header">
-            <h2><i class="fas fa-file-signature" style="color: var(--secondary);"></i> अधिकृत शासकीय घोषणापत्रे</h2>
+            <h2><i class="fas fa-file-contract text-primary"></i> २. शासकीय स्वयंघोषणापत्रे</h2>
             <span class="section-tag">Official Format</span>
         </div>
-
         <div class="services-grid">
-            <div class="service-card" onclick="handleServiceRedirect('caste_ghoshana.html', 'जातीचे घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-red"><i class="fas fa-users"></i></div>
-                <h3>जातीचे घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('जातीचे घोषणापत्र', 'jati_ghoshana.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-red"><i class="fas fa-users"></i></div>
+                <h3>जातीचे घोषणापत्र</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('vanshaval.html', 'वंशावळ घोषणापत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-indigo"><i class="fas fa-sitemap"></i></div>
+            <div class="service-card" onclick="handleServiceRedirect('वंशावळ घोषणापत्र', 'vanshaval_ghoshana.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-indigo"><i class="fas fa-sitemap"></i></div>
                 <h3>वंशावळ घोषणापत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('utpanna.html', 'उत्पन्न घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-blue"><i class="fas fa-file-invoice-dollar"></i></div>
-                <h3>उत्पन्न घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('उत्पन्न घोषणापत्र', 'utpanna_ghoshana.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-blue"><i class="fas fa-file-invoice-dollar"></i></div>
+                <h3>उत्पन्न घोषणापत्र</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('utpanna3.html', '३ वर्षाचे उत्पन्न घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-green"><i class="fas fa-file-contract"></i></div>
-                <h3>३ वर्षाचे उत्पन्न घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('३ वर्षाचे उत्पन्न', 'three_year_income.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-green"><i class="fas fa-file-contract"></i></div>
+                <h3>३ वर्षाचे उत्पन्न</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('rahivasi.html', 'रहिवासी घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-orange"><i class="fas fa-home"></i></div>
-                <h3>रहिवासी घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('रहिवासी घोषणापत्र', 'rahavasi_ghoshana.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-orange"><i class="fas fa-home"></i></div>
+                <h3>रहिवासी घोषणापत्र</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('nationality.html', 'राष्ट्रीयत्व घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-purple"><i class="fas fa-flag"></i></div>
-                <h3>राष्ट्रीयत्व घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('राष्ट्रीयत्व घोषणापत्र', 'rashtriyatva_ghoshana.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-purple"><i class="fas fa-flag"></i></div>
+                <h3>राष्ट्रीयत्व घोषणापत्र</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('non_creamy.html', 'नॉन-क्रीमीलेअर घोषणा पत्र')">
-                <div class="service-cost-badge"><i class="fas fa-unlock-alt"></i> अमर्यादित</div>
-                <div class="service-icon-box theme-teal"><i class="fas fa-file-signature"></i></div>
-                <h3>नॉन-क्रीमीलेअर घोषणा पत्र</h3>
-                <span class="start-btn">तयार करा <i class="fas fa-arrow-right"></i></span>
+            <div class="service-card" onclick="handleServiceRedirect('नॉन-क्रीमीलेअर घोषणापत्र', 'non_creamy_layer.html')">
+                <span class="service-cost-badge"><i class="fas fa-infinity"></i> अमर्यादित</span>
+                <div class="service-icon-box color-teal"><i class="fas fa-file-signature"></i></div>
+                <h3>नॉन-क्रीमीलेअर</h3>
+                <button class="start-btn btn-blue-outline">तयार करा <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- 7. QUICK UTILITY TOOLS (३ टूल्स - Image to PDF सह) -->
+        <!-- 3. Quick Utility Tools (३ टूल्स) -->
         <div class="section-header">
-            <h2><i class="fas fa-tools" style="color: var(--slate-600);"></i> क्विक टूल्स (Quick Tools)</h2>
-            <span class="section-tag">100% Free</span>
+            <h2><i class="fas fa-tools text-primary"></i> ३. मोफत क्विक टूल्स (Utility Tools)</h2>
+            <span class="section-tag">100% Free Tools</span>
         </div>
-
-        <div class="services-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
-            <div class="service-card" onclick="handleServiceRedirect('pdf_compressor.html', 'PDF Compressor')">
-                <div class="service-cost-badge badge-tool"><i class="fas fa-gift"></i> मोफत टूल</div>
-                <div class="service-icon-box theme-amber"><i class="fas fa-file-pdf"></i></div>
+        <div class="services-grid">
+            <div class="service-card" onclick="handleServiceRedirect('PDF Compressor', 'pdf_compressor.html')">
+                <span class="service-cost-badge badge-tool"><i class="fas fa-bolt"></i> मोफत</span>
+                <div class="service-icon-box color-amber"><i class="fas fa-file-pdf"></i></div>
                 <h3>PDF Compressor</h3>
-                <span class="start-btn">टूल उघडा <i class="fas fa-arrow-right"></i></span>
+                <button class="start-btn btn-blue-outline">टूल वापरा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <div class="service-card" onclick="handleServiceRedirect('photo_resizer.html', 'Photo Resizer')">
-                <div class="service-cost-badge badge-tool"><i class="fas fa-gift"></i> मोफत टूल</div>
-                <div class="service-icon-box theme-pink"><i class="fas fa-image"></i></div>
+            <div class="service-card" onclick="handleServiceRedirect('Photo Resizer', 'photo_resizer.html')">
+                <span class="service-cost-badge badge-tool"><i class="fas fa-bolt"></i> मोफत</span>
+                <div class="service-icon-box color-pink"><i class="fas fa-image"></i></div>
                 <h3>Photo Resizer</h3>
-                <span class="start-btn">टूल उघडा <i class="fas fa-arrow-right"></i></span>
+                <button class="start-btn btn-blue-outline">टूल वापरा <i class="fas fa-arrow-right"></i></button>
             </div>
 
-            <!-- नवीन जोडलेले टूल: Image to PDF -->
-            <div class="service-card" onclick="handleServiceRedirect('image_to_pdf.html', 'Image to PDF Converter')">
-                <div class="service-cost-badge badge-tool"><i class="fas fa-gift"></i> मोफत टूल</div>
-                <div class="service-icon-box theme-cyan"><i class="fas fa-images"></i></div>
+            <div class="service-card" onclick="handleServiceRedirect('Image to PDF', 'image_to_pdf.html')">
+                <span class="service-cost-badge badge-tool"><i class="fas fa-bolt"></i> मोफत</span>
+                <div class="service-icon-box color-cyan"><i class="fas fa-images"></i></div>
                 <h3>Image to PDF</h3>
-                <span class="start-btn">टूल उघडा <i class="fas fa-arrow-right"></i></span>
+                <button class="start-btn btn-blue-outline">टूल वापरा <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
     </div>
 
-    <!-- 8. SLEEK MODERN FOOTER -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <h3 style="font-size: 20px; font-weight: 800; color: white;">QuickIDPrint</h3>
-                <p style="color: #94a3b8; font-size: 13.5px; margin-top: 4px;">ऑनलाईन स्मार्ट आयडी, घोषणापत्रे आणि टूल्स सेवा.</p>
-            </div>
-            <div>
-                <a href="terms_conditions.html" target="_blank" class="footer-link">
-                    <i class="fas fa-file-contract"></i> नियम व अटी (Terms & Conditions)
-                </a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 QuickIDPrint. सर्व हक्क राखीव. | २४x७ हेल्पलाइन: +91 9403901395
-        </div>
-    </footer>
-
-    <!-- 9. FLOATING TICKER -->
-    <div class="floating-ticker-wrapper">
-        <div class="ticker-label"><i class="fas fa-bell"></i> नवीन</div>
-        <div class="floating-ticker">
-            <div class="ticker-text">
-                <span>🚀 <strong>नवीन सेवा:</strong> 'आभा कार्ड' आणि 'UDID दिव्यांग कार्ड' प्रिंटिंग आता उपलब्ध!</span>
-                <span>🛠️ <strong>नवीन टूल:</strong> 'Image to PDF Converter' मोफत टूल आता उपलब्ध!</span>
-                <span>⚡ <strong>QuickIDPrint:</strong> तुमची सर्व कामे आता अधिक वेगाने आणि सोप्या पद्धतीने.</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- LOGIC: AUTH GUARD & SERVICE VALIDATION     -->
-    <!-- ========================================== -->
+    <!-- Back-Button Trap & Session Security -->
     <script>
-        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
-        let currentUser = null;
-
-        // 🛡️ BROWSER BACK BUTTON TRAP
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
-            history.pushState(null, null, location.href);
+            history.go(1);
         };
 
-        window.onload = function() {
-            // Check session from localStorage
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        document.addEventListener("DOMContentLoaded", () => {
             const userStr = localStorage.getItem('quickid_user');
             if (!userStr) {
                 window.location.replace("login.html");
                 return;
             }
 
-            currentUser = JSON.parse(userStr);
-            const userName = currentUser.name || "वापरकर्ता";
-            const remainingDays = parseInt(currentUser.remainingDays) || 0;
-            const expireDate = currentUser.expireDate || "N/A";
-            const role = currentUser.role || (currentUser.isAdmin ? 'admin' : 'user');
+            const user = JSON.parse(userStr);
+            const remaining = parseInt(user.remainingDays) || 0;
+            const isAdmin = user.role === 'admin' || user.mobile === '9999999999';
 
-            // Set user names
-            document.getElementById('displayUserName').innerText = userName;
-            document.getElementById('heroWelcomeName').innerText = userName;
-            document.getElementById('userAvatar').innerText = userName.charAt(0).toUpperCase();
+            document.getElementById('navUserName').innerText = user.name || "ऑपरेटर";
+            document.getElementById('userShopName').innerText = user.shop || "सेतू केंद्र";
+            document.getElementById('heroWelcomeName').innerText = user.name || "ऑपरेटर";
+            document.getElementById('userAvatar').innerText = (user.name ? user.name.charAt(0) : 'U').toUpperCase();
 
-            const displayObj = document.getElementById('displayExpiry');
-            const statusDot = document.getElementById('statusDot');
-            const heroDaysCount = document.getElementById('heroDaysCount');
-            const heroExpiryText = document.getElementById('heroExpiryText');
+            const badgeText = document.getElementById('navRemainingDays');
+            const dot = document.getElementById('statusDot');
+            const daysCount = document.getElementById('heroDaysCount');
+            const expDate = document.getElementById('heroExpiryDate');
 
-            // 👑 Admin Bypass
-            if (role === 'admin' || currentUser.isAdmin) {
-                displayObj.innerHTML = `👑 Lifetime <small>(Admin)</small>`;
-                heroDaysCount.innerHTML = `अमर्यादित`;
-                heroExpiryText.innerHTML = `Lifetime ॲडमिन ॲक्सेस`;
-                document.getElementById('adminLink').style.display = 'flex';
+            if (isAdmin) {
+                badgeText.innerText = "ॲडमिन (Lifetime)";
+                daysCount.innerText = "∞";
+                expDate.innerText = "अमर्यादित ॲक्सेस";
+            } else if (remaining > 0) {
+                badgeText.innerText = `${remaining} दिवस शिल्लक`;
+                daysCount.innerText = remaining;
+                expDate.innerText = user.expireDate || "Active";
+            } else {
+                badgeText.innerText = "मुदत संपली (० दिवस)";
+                badgeText.style.color = "var(--danger)";
+                dot.classList.add('expired');
+                daysCount.innerText = "0";
+                daysCount.style.color = "var(--danger)";
+                expDate.innerText = user.expireDate || "Expired";
+            }
+        });
+
+        // 🟢 सुधारित: कार्डवर क्लिक केल्यावर फक्त व्हॅलिडेशन होईल (कोणतीही फुकट लॉग एन्ट्री होणार नाही!)
+        function handleServiceRedirect(serviceName, targetUrl) {
+            const userStr = localStorage.getItem('quickid_user');
+            if (!userStr) {
+                window.location.replace("login.html");
                 return;
             }
 
-            // 👤 Normal User
-            if (remainingDays > 0) {
-                displayObj.innerHTML = `${remainingDays} दिवस <small>(${expireDate})</small>`;
-                heroDaysCount.innerHTML = `${remainingDays} <span style="font-size: 18px; font-weight: 600;">दिवस</span>`;
-                heroExpiryText.innerHTML = `प्लॅन मुदत: ${expireDate}`;
-            } else {
-                displayObj.innerHTML = `<span style="color:#ef4444; font-weight: 800;">मुदत संपली</span>`;
-                statusDot.classList.add('expired');
-                heroDaysCount.innerHTML = `० दिवस`;
-                heroDaysCount.style.color = '#f87171';
-                heroExpiryText.innerHTML = `कृपया सेवा सुरू करण्यासाठी रिचार्ज करा`;
-            }
-        };
+            const currentUser = JSON.parse(userStr);
+            const isUserAdmin = currentUser.role === 'admin' || currentUser.mobile === '9999999999';
 
-        // Handle Service Click with Validity Check
-        async function handleServiceRedirect(targetUrl, serviceName) {
-            const days = parseInt(currentUser.remainingDays) || 0;
-            const role = currentUser.role || (currentUser.isAdmin ? 'admin' : 'user');
-
-            // जर दिवस संपले असतील आणि ॲडमिन नसेल, तर रिचार्ज विचारणे
-            if (days <= 0 && role !== 'admin') {
-                const proceed = confirm(`⚠️ '${serviceName}' वापरण्यासाठी तुमचा सबस्क्रिप्शन प्लॅन ॲक्टिव्ह असणे आवश्यक आहे.\n\nतुम्हाला रिचार्ज पेजवर जायचे आहे का?`);
-                if (proceed) {
+            if (!isUserAdmin && currentUser.remainingDays <= 0) {
+                if (confirm(`तुमच्या खात्यातील प्लॅन संपला आहे (० दिवस बाकी).\n\nसर्व्हिस वापरण्यासाठी रिचार्ज करा!`)) {
                     window.location.href = "recharge.html";
                 }
                 return;
             }
 
-            // प्लॅन ॲक्टिव्ह असल्यास बॅकएंडला सर्व्हिस लॉग पाठवून पुढे जाणे
-            try {
-                const formData = new FormData();
-                formData.append('mobile', currentUser.mobile);
-                formData.append('serviceCategory', serviceName);
-                formData.append('serviceDetails', `${serviceName} साधन उघडले`);
-
-                fetch(`${BACKEND_URL}/api/log-service`, {
-                    method: 'POST',
-                    body: formData
-                });
-            } catch(e) {}
-
-            // टूलच्या पेजवर नेणे
+            // थेट पेजवर जाणे (लॉगिंग काढले आहे, फक्त डाऊनलोड वेळीच लॉग होईल)
             window.location.href = targetUrl;
         }
 
