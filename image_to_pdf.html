@@ -48,7 +48,7 @@
         }
 
         /* MAIN CONTAINER */
-        .container { max-width: 900px; width: 100%; margin: 25px auto; padding: 0 15px; flex-grow: 1; }
+        .container { max-width: 920px; width: 100%; margin: 25px auto; padding: 0 15px; flex-grow: 1; }
         .box {
             background: #fff; border-radius: 16px; padding: 25px;
             box-shadow: 0 8px 30px rgba(0,0,0,.06); border: 1px solid #e2e8f0;
@@ -60,7 +60,7 @@
 
         /* UPLOAD ZONE */
         .upload {
-            border: 2px dashed var(--primary); border-radius: 14px; padding: 32px 20px;
+            border: 2px dashed var(--primary); border-radius: 14px; padding: 30px 20px;
             text-align: center; background: #f7faff; cursor: pointer; display: block;
             transition: 0.2s; position: relative;
         }
@@ -97,43 +97,63 @@
             font-size: 13.5px; font-weight: 600; outline: none; background: white;
         }
 
-        /* PREVIEW GRID */
+        /* PREVIEW HEADER & DRAG TIP */
         .preview-header {
             display: none; align-items: center; justify-content: space-between;
             margin-top: 25px; margin-bottom: 12px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 8px;
         }
         .preview-header span { font-weight: 800; font-size: 14.5px; color: var(--slate-800); }
+        .drag-tip {
+            font-size: 12px; color: var(--primary); background: var(--primary-light);
+            padding: 3px 10px; border-radius: 20px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;
+        }
         .preview-count { background: #e2e8f0; color: var(--slate-800); padding: 2px 8px; border-radius: 12px; font-size: 12px; }
 
+        /* PREVIEW GRID */
         .preview {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
             gap: 15px;
         }
 
-        /* CARD */
+        /* DRAGGABLE CARD */
         .image-card {
-            background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px;
-            padding: 10px; overflow: hidden; position: relative; transition: 0.2s;
+            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px;
+            padding: 10px; overflow: hidden; position: relative; transition: all 0.2s ease;
+            cursor: grab; user-select: none;
         }
-        .image-card:hover { border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .image-card:active { cursor: grabbing; }
+        .image-card:hover { border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+        
+        /* Dragging States */
+        .image-card.dragging {
+            opacity: 0.35;
+            transform: scale(0.95);
+            border: 2px dashed var(--primary);
+            background: #eef4ff;
+        }
+        .image-card.drag-over {
+            border: 2px solid var(--primary);
+            background: #edf4ff;
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(24, 90, 189, 0.2);
+        }
 
-        .image-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-        .image-number { font-size: 12px; font-weight: 800; color: var(--slate-600); }
-        .card-reorder-btns { display: flex; gap: 4px; }
-        .btn-order {
-            background: white; border: 1px solid #cbd5e1; width: 22px; height: 22px;
-            border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: var(--slate-600);
+        /* Drag Handle Indicator */
+        .drag-handle-bar {
+            background: #f1f5f9; border-radius: 6px; padding: 4px 6px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 8px; font-size: 11.5px; color: var(--slate-500); font-weight: 700;
         }
-        .btn-order:hover { background: var(--primary-light); color: var(--primary); }
+        .drag-icon { color: var(--primary); font-size: 12px; }
 
         .image-box {
             height: 170px; background: #fff; border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden; border: 1px solid #f1f5f9;
+            overflow: hidden; border: 1px solid #f1f5f9; position: relative;
         }
         .image-box img {
             max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.25s ease;
+            pointer-events: none; /* Let drag event trigger on card */
         }
 
         .card-buttons { display: flex; gap: 6px; margin-top: 10px; }
@@ -146,7 +166,7 @@
         .remove { background: #fee2e2; color: var(--danger); }
         .remove:hover { background: #fecaca; }
 
-        /* PDF GENERATE BUTTON */
+        /* GENERATE BUTTON */
         .generate {
             width: 100%; margin-top: 24px; padding: 15px; border: 0; border-radius: 12px;
             background: var(--primary); color: white; font-size: 17px; font-weight: 800;
@@ -156,17 +176,66 @@
         .generate:hover { background: var(--primary-dark); transform: translateY(-1px); }
         .generate:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* PROGRESS / STATUS */
-        .status-box {
-            display: none; margin-top: 15px; padding: 12px; border-radius: 10px;
-            background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;
-            font-size: 13.5px; font-weight: 700; color: #166534;
-        }
-
         .empty {
             text-align: center; color: #94a3b8; padding: 40px 20px;
             border: 1px dashed #cbd5e1; border-radius: 12px; grid-column: 1 / -1;
         }
+
+        /* ==============================================================
+           🟢 PROCESSING MODAL (LASER SCANNER & PROGRESS ANIMATION)
+        ============================================================== */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
+            z-index: 100; padding: 15px;
+        }
+        .processing-box {
+            background: white; border-radius: 24px; max-width: 380px; width: 100%;
+            padding: 26px 22px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            position: relative; overflow: hidden; border: 1px solid #e2e8f0;
+        }
+
+        /* Laser Card Box */
+        .laser-container {
+            width: 190px; height: 125px; margin: 0 auto 16px; background: #f8fafc;
+            border-radius: 14px; border: 2px solid #bfdbfe; position: relative;
+            overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+        }
+        @keyframes laserScan {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 95%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
+        }
+        .laser-beam {
+            position: absolute; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #2563eb, #60a5fa, transparent);
+            box-shadow: 0 0 12px #3b82f6, 0 0 20px #2563eb;
+            animation: laserScan 1.8s infinite ease-in-out;
+            z-index: 10;
+        }
+        .doc-icon-pulse {
+            font-size: 42px; color: var(--primary);
+            animation: docPulse 2s infinite ease-in-out;
+        }
+        @keyframes docPulse {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+
+        .modal-title { font-size: 17px; font-weight: 800; color: var(--slate-800); margin-bottom: 4px; }
+        .modal-status { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 14px; min-height: 20px; }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%; background: #e2e8f0; height: 8px; border-radius: 20px;
+            overflow: hidden; margin-bottom: 8px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #2563eb, #1d4ed8); height: 100%;
+            width: 0%; border-radius: 20px; transition: width 0.25s ease;
+        }
+        .modal-subtext { font-size: 11.5px; color: var(--slate-500); }
 
         /* FOOTER */
         footer { text-align: center; padding: 18px; color: var(--slate-500); font-size: 12.5px; }
@@ -193,7 +262,7 @@
             </a>
             <div class="header-title">
                 <h1>Image to A4 PDF Converter</h1>
-                <p>हाय-स्पीड इमेज कन्व्हर्टर साधन</p>
+                <p>माऊसने ड्रॅग करून क्रम बदलण्याची सोय</p>
             </div>
         </div>
         <div>
@@ -209,7 +278,7 @@
 
             <div class="tool-header">
                 <h2><i class="fas fa-images"></i> Image → A4 PDF</h2>
-                <p>तुमच्या सर्व इमेजेस एका क्लिकवर आकर्षक A4 PDF मध्ये रूपांतरित करा</p>
+                <p>इमेजेस सिलेक्ट करा, माऊसने ड्रॅग करून क्रम लावा आणि हाय-क्वालिटी A4 PDF बनवा</p>
             </div>
 
             <!-- DRAG & DROP UPLOAD BOX -->
@@ -257,12 +326,18 @@
                 </div>
             </div>
 
-            <!-- PREVIEW SECTION -->
+            <!-- PREVIEW HEADER & DRAG TIP -->
             <div class="preview-header" id="previewHeader">
-                <span>निवडलेल्या इमेजेस:</span>
-                <span class="preview-count" id="imageCountBadge">० इमेजेस</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span>निवडलेल्या इमेजेस:</span>
+                    <span class="preview-count" id="imageCountBadge">० इमेजेस</span>
+                </div>
+                <div class="drag-tip">
+                    <i class="fas fa-arrows-up-down-left-right"></i> माऊसने ड्रॅग करून क्रम बदला
+                </div>
             </div>
 
+            <!-- IMAGE GRID (DRAGGABLE CARDS) -->
             <div id="preview" class="preview">
                 <div class="empty">
                     <i class="far fa-image" style="font-size: 28px; margin-bottom: 8px; display: block;"></i>
@@ -273,12 +348,36 @@
             <!-- GENERATE PDF BUTTON -->
             <button class="generate" id="btnGenerate" onclick="generatePDF()">
                 <i class="fas fa-file-pdf"></i>
-                <span id="btnGenText">📄 A4 PDF डाऊनलोड करा (Download PDF)</span>
+                <span id="btnGenText">📄 A4 PDF तयार करा आणि डाऊनलोड करा</span>
             </button>
 
-            <!-- STATUS BOX -->
-            <div class="status-box" id="statusBox"></div>
+        </div>
+    </div>
 
+    <!-- ================= PROCESSING MODAL (LASER SCANNER) ================= -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="processing-box">
+            
+            <!-- Graphic Laser Box -->
+            <div class="laser-container">
+                <div class="laser-beam"></div>
+                <div class="doc-icon-pulse">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <span style="position: absolute; bottom: 6px; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">
+                    A4 PDF Processing
+                </span>
+            </div>
+
+            <h3 class="modal-title">PDF तयार होत आहे...</h3>
+            <p class="modal-status" id="modalStatusText">१. इमेजेस तपासल्या जात आहेत...</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-track">
+                <div class="progress-fill" id="modalProgressBar"></div>
+            </div>
+
+            <p class="modal-subtext">कृपया थांबा, ३०० DPI क्लॅरिटीसह A4 शीट सेट केली जात आहे...</p>
         </div>
     </div>
 
@@ -287,20 +386,20 @@
         QuickIDPrint Center • 100% सुरक्षित क्लायंट-साईड टूल
     </footer>
 
-    <!-- ================= JAVASCRIPT LOGIC (100% FRONTEND) ================= -->
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         const { jsPDF } = window.jspdf;
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
-        // State Array to hold all images: { id, file, dataUrl, rotation, imgElement }
+        // Global State Array: { id, name, size, dataUrl, rotation, imgElement }
         let imageList = [];
         let nextId = 1;
+        let draggedIndex = null;
 
-        // 🟢 AUTH CHECK ON LOAD (QuickIDPrint User Check)
+        // 🟢 AUTH CHECK ON LOAD
         window.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('quickid_user');
             if (!userStr) {
-                // लॉगिन नसल्यास login.html वर रिडायरेक्ट
                 window.location.href = "login.html";
                 return;
             }
@@ -313,11 +412,11 @@
                 }
             } catch(e) {}
 
-            setupDragAndDrop();
+            setupDropArea();
         });
 
-        // 🟢 DRAG & DROP HANDLERS
-        function setupDragAndDrop() {
+        // 🟢 FILE UPLOAD & DROP SETUP
+        function setupDropArea() {
             const dropArea = document.getElementById('dropArea');
             ['dragenter', 'dragover'].forEach(name => {
                 dropArea.addEventListener(name, (e) => {
@@ -344,7 +443,7 @@
             document.getElementById('addInput').click();
         }
 
-        // 🟢 HANDLE UPLOADED FILES
+        // 🟢 HANDLE UPLOADED IMAGES
         async function handleFiles(files) {
             if (!files || files.length === 0) return;
 
@@ -365,10 +464,8 @@
                 });
             }
 
-            // Clear input values so re-selecting same files triggers change
             document.getElementById('imageInput').value = '';
             document.getElementById('addInput').value = '';
-
             renderGrid();
         }
 
@@ -388,7 +485,7 @@
             });
         }
 
-        // 🟢 RENDER GRID CARDS
+        // 🟢 RENDER GRID & SETUP MOUSE DRAG AND DROP
         function renderGrid() {
             const container = document.getElementById('preview');
             const btnGenerate = document.getElementById('btnGenerate');
@@ -419,26 +516,29 @@
             let html = '';
             imageList.forEach((item, index) => {
                 html += `
-                <div class="image-card" id="card-${item.id}">
-                    <div class="image-card-top">
-                        <span class="image-number">#${index + 1} पान</span>
-                        <div class="card-reorder-btns">
-                            <button type="button" class="btn-order" onclick="moveItem(${index}, -1)" title="पुढे घ्या" ${index === 0 ? 'disabled style="opacity:0.3"' : ''}>
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                            <button type="button" class="btn-order" onclick="moveItem(${index}, 1)" title="मागे घ्या" ${index === imageList.length - 1 ? 'disabled style="opacity:0.3"' : ''}>
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
+                <div class="image-card" 
+                     id="card-${item.id}"
+                     draggable="true"
+                     ondragstart="handleCardDragStart(event, ${index})"
+                     ondragover="handleCardDragOver(event, ${index})"
+                     ondragleave="handleCardDragLeave(event, ${index})"
+                     ondrop="handleCardDrop(event, ${index})"
+                     ondragend="handleCardDragEnd(event)">
+                    
+                    <div class="drag-handle-bar">
+                        <span>#${index + 1} पान</span>
+                        <span class="drag-icon"><i class="fas fa-grip-vertical"></i> ड्रॅग करा</span>
                     </div>
+
                     <div class="image-box">
                         <img id="img-elem-${item.id}" src="${item.dataUrl}" style="transform: rotate(${item.rotation}deg);" alt="Page ${index + 1}">
                     </div>
+
                     <div class="card-buttons">
-                        <button type="button" class="rotate" onclick="rotateImage(${item.id})">
+                        <button type="button" class="rotate" onclick="event.stopPropagation(); rotateImage(${item.id})">
                             <i class="fas fa-rotate"></i> फिरवा
                         </button>
-                        <button type="button" class="remove" onclick="removeImage(${item.id})">
+                        <button type="button" class="remove" onclick="event.stopPropagation(); removeImage(${item.id})">
                             <i class="fas fa-trash-can"></i> काढा
                         </button>
                     </div>
@@ -446,6 +546,58 @@
             });
 
             container.innerHTML = html;
+        }
+
+        // ==============================================================
+        // 🟢 MOUSE DRAG & DROP REORDERING LOGIC
+        // ==============================================================
+        function handleCardDragStart(e, index) {
+            draggedIndex = index;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', index);
+
+            setTimeout(() => {
+                const card = document.getElementById(`card-${imageList[index].id}`);
+                if (card) card.classList.add('dragging');
+            }, 0);
+        }
+
+        function handleCardDragOver(e, index) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+
+            if (draggedIndex !== null && draggedIndex !== index) {
+                const card = document.getElementById(`card-${imageList[index].id}`);
+                if (card) card.classList.add('drag-over');
+            }
+        }
+
+        function handleCardDragLeave(e, index) {
+            const card = document.getElementById(`card-${imageList[index].id}`);
+            if (card) card.classList.remove('drag-over');
+        }
+
+        function handleCardDrop(e, targetIndex) {
+            e.preventDefault();
+            const card = document.getElementById(`card-${imageList[targetIndex].id}`);
+            if (card) card.classList.remove('drag-over');
+
+            if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+            // री-ऑर्डर करणे: जुन्या ठिकाणाहून काढून नवीन ठिकाणी टाकणे
+            const [movedItem] = imageList.splice(draggedIndex, 1);
+            imageList.splice(targetIndex, 0, movedItem);
+
+            draggedIndex = null;
+            renderGrid();
+        }
+
+        function handleCardDragEnd(e) {
+            draggedIndex = null;
+            document.querySelectorAll('.image-card').forEach(c => {
+                c.classList.remove('dragging');
+                c.classList.remove('drag-over');
+            });
         }
 
         // 🟢 ROTATE IMAGE (90 Deg Clockwise)
@@ -466,23 +618,11 @@
             renderGrid();
         }
 
-        // 🟢 MOVE ITEM (CHANGE PAGE ORDER)
-        function moveItem(index, direction) {
-            const targetIndex = index + direction;
-            if (targetIndex < 0 || targetIndex >= imageList.length) return;
-
-            const temp = imageList[index];
-            imageList[index] = imageList[targetIndex];
-            imageList[targetIndex] = temp;
-            renderGrid();
-        }
-
-        // 🟢 CLEAR ALL
+        // 🟢 CLEAR ALL IMAGES
         function clearAllImages() {
             if (imageList.length > 0 && !confirm("सर्व इमेजेस काढून टाकायच्या आहेत का?")) return;
             imageList = [];
             renderGrid();
-            hideStatus();
         }
 
         // 🟢 HELPER: ROTATE DATA URL ON OFF-SCREEN CANVAS
@@ -509,39 +649,53 @@
             return canvas.toDataURL('image/jpeg', 0.95);
         }
 
-        // 🟢 GENERATE PDF (PURE JSDPF ENGINE)
+        // ==============================================================
+        // 🟢 GENERATE PDF WITH LASER SCANNER ANIMATION
+        // ==============================================================
         async function generatePDF() {
             if (imageList.length === 0) {
                 alert("कृपया आधी किमान एक इमेज निवडा!");
                 return;
             }
 
+            const modal = document.getElementById('processingModal');
+            const statusText = document.getElementById('modalStatusText');
+            const progressBar = document.getElementById('modalProgressBar');
             const btn = document.getElementById('btnGenerate');
-            const btnText = document.getElementById('btnGenText');
-            btn.disabled = true;
-            btnText.innerText = "⏳ PDF तयार होत आहे...";
 
-            showStatus("इमेजेस A4 पानांवर सेट केल्या जात आहेत...");
+            // ॲनिमेशन मोडल सुरू करा
+            modal.style.display = 'flex';
+            progressBar.style.width = '15%';
+            statusText.innerText = "१. इमेजेस तपासल्या जात आहेत...";
+            btn.disabled = true;
+
+            await new Promise(r => setTimeout(r, 400));
 
             try {
                 const orientationMode = document.getElementById('pdfOrientation').value;
                 const margin = parseFloat(document.getElementById('pdfMargin').value);
 
                 let doc = null;
+                const total = imageList.length;
 
-                for (let i = 0; i < imageList.length; i++) {
+                for (let i = 0; i < total; i++) {
                     const item = imageList[i];
-                    showStatus(`पान ${i + 1} पैकी ${imageList.length} जोडले जात आहे...`);
+                    
+                    // प्रोग्रेस बार अपडेट
+                    const pct = Math.round(20 + ((i + 1) / total) * 75);
+                    progressBar.style.width = `${pct}%`;
+                    statusText.innerText = `२. पान ${i + 1}/${total} प्रक्रिया होत आहे...`;
 
-                    // Rotate if necessary
+                    // स्मूथ ॲनिमेशनसाठी सूक्ष्म वेळ
+                    await new Promise(r => setTimeout(r, 80));
+
+                    // रोटेशन तपासा
                     const currentDataUrl = getRotatedDataUrl(item);
-
-                    // Load rotated image to get true rotated dimensions
                     const rotatedImg = await loadImage(currentDataUrl);
                     const imgW = rotatedImg.width;
                     const imgH = rotatedImg.height;
 
-                    // Determine orientation for this page
+                    // ओरिएंटेशन ठरवा
                     let orientation = 'portrait';
                     if (orientationMode === 'landscape') {
                         orientation = 'landscape';
@@ -553,7 +707,6 @@
                     const pageW = orientation === 'landscape' ? 297 : 210;
                     const pageH = orientation === 'landscape' ? 210 : 297;
 
-                    // Initialize doc on first page, or add page for next ones
                     if (i === 0) {
                         doc = new jsPDF({
                             orientation: orientation,
@@ -565,7 +718,7 @@
                         doc.addPage('a4', orientation);
                     }
 
-                    // Calculate fitting maintaining aspect ratio within margins
+                    // आस्पेक्ट रेशो सांभाळून A4 वर फिट करणे
                     const availW = pageW - (margin * 2);
                     const availH = pageH - (margin * 2);
 
@@ -579,30 +732,28 @@
                     doc.addImage(currentDataUrl, 'JPEG', posX, posY, finalW, finalH, undefined, 'FAST');
                 }
 
-                // Save PDF to browser
+                progressBar.style.width = '100%';
+                statusText.innerText = "३. हाय-क्वालिटी A4 PDF तयार झाली!";
+                await new Promise(r => setTimeout(r, 350));
+
+                // PDF सेव्ह करा
                 const timestamp = Date.now();
                 const fileName = `QuickIDPrint_Images_${timestamp}.pdf`;
                 doc.save(fileName);
 
-                showStatus("🎉 PDF डाऊनलोड सुरू झाले आहे!");
-                btnText.innerText = "✅ PDF डाऊनलोड झाली!";
-                btn.style.background = "#15803d";
-
-                // 🟢 अचूक Supabase लॉगिंग (केवळ डाऊनलोड केल्यावरच नोंद)
+                // 🟢 अचूक Supabase लॉगिंग (फक्त डाऊनलोड झाल्यावर)
                 logServiceDownload(imageList.length);
 
                 setTimeout(() => {
+                    modal.style.display = 'none';
                     btn.disabled = false;
-                    btnText.innerText = "📄 A4 PDF डाऊनलोड करा (Download PDF)";
-                    btn.style.background = "var(--primary)";
-                }, 2500);
+                }, 600);
 
             } catch (err) {
                 console.error("PDF Generation error:", err);
-                alert("PDF तयार करताना त्रुटी आली: " + err.message);
+                modal.style.display = 'none';
                 btn.disabled = false;
-                btnText.innerText = "📄 A4 PDF डाऊनलोड करा";
-                hideStatus();
+                alert("PDF तयार करताना त्रुटी आली: " + err.message);
             }
         }
 
@@ -623,16 +774,6 @@
                     })
                 }).catch(e => console.warn("Log service error:", e));
             } catch(e) {}
-        }
-
-        function showStatus(msg) {
-            const s = document.getElementById('statusBox');
-            s.style.display = 'block';
-            s.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> ${msg}`;
-        }
-
-        function hideStatus() {
-            document.getElementById('statusBox').style.display = 'none';
         }
     </script>
 </body>
