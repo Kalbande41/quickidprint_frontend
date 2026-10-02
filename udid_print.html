@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UDID Card Print | QuickIDPrint</title>
 
-    <!-- Fonts & Icons -->
+    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- PDF & Canvas Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <!-- Auth Guard & Config -->
     <script src="config.js"></script>
@@ -285,16 +281,15 @@
 
     <div class="container">
         
-        <!-- Helpful Notice -->
         <div class="info-alert">
             <i class="fas fa-wheelchair"></i>
-            <p><strong>नोंद:</strong> स्वावलंबन पोर्टलवरून (swavlambancard.gov.in) डाऊनलोड केलेली मूळ UDID PDF फाईल निवडा. फ्रंट व बॅक बाजू अचूक क्रॉप करून ४x६ फोटो शीटवर तयार केली जाईल.</p>
+            <p><strong>सुरक्षित प्रक्रिया:</strong> स्वावलंबन पोर्टलवरून डाऊनलोड केलेली UDID PDF निवडा. बॅकएंड सर्व्हरवर सुरक्षितपणे कार्ड ३०० DPI ४x६ किंवा A4 फॉरमॅटमध्ये तयार केले जाईल.</p>
         </div>
 
         <div class="service-card">
-            <span class="card-header-badge"><i class="fas fa-sparkles"></i> 4x6 / A4 शीट • प्रिंट</span>
+            <span class="card-header-badge"><i class="fas fa-shield-alt"></i> सुरक्षित क्लाउड प्रोसेसिंग • ३०० DPI</span>
             <h2 class="card-title"><i class="fas fa-id-card text-primary"></i> UDID दिव्यांग ओळखपत्र प्रिंट</h2>
-            <p class="card-subtitle">स्मार्ट AI द्वारे फ्रंट व बॅक बाजू कापून ४x६ किंवा A4 शीटवर सेट करा.</p>
+            <p class="card-subtitle">फ्रंट व बॅक बाजू कापून ४x६ किंवा A4 शीटवर डाऊनलोड करा.</p>
 
             <form id="udidForm" onsubmit="event.preventDefault(); startProcessing();">
                 
@@ -316,7 +311,7 @@
                     <input type="hidden" id="paperSize" value="4x6">
                 </div>
 
-                <!-- 2. PDF Upload Zone (No Password Field!) -->
+                <!-- 2. PDF Upload Zone (Zero Coordinates in Frontend!) -->
                 <div class="form-group">
                     <label>२. UDID कार्ड PDF फाईल निवडा:</label>
                     <div class="upload-area" id="uploadDropZone" onclick="document.getElementById('pdfInput').click()">
@@ -381,13 +376,9 @@
         </div>
     </div>
 
-    <!-- ==============================================================
-       🟢 PROCESSING MODAL (LASER SCANNER & PROGRESS BAR)
-    ============================================================== -->
+    <!-- Processing Modal -->
     <div class="modal-overlay" id="processingModal">
         <div class="processing-box">
-            
-            <!-- Graphic Laser Scanner -->
             <div class="scanner-card">
                 <div class="laser-beam"></div>
                 <div class="scanner-card-header">
@@ -405,30 +396,27 @@
                 </div>
             </div>
 
-            <h3 class="processing-title">UDID कार्ड प्रोसेस होत आहे...</h3>
-            <p class="processing-desc">कृपया काही सेकंद प्रतीक्षा करा, अचूक क्रॉपिंग सुरू आहे.</p>
+            <h3 class="processing-title">UDID कार्ड सर्व्हरवर प्रोसेस होत आहे...</h3>
+            <p class="processing-desc">कृपया प्रतीक्षा करा, अचूक AI क्रॉपिंग आणि HD सुधारणा सुरू आहे.</p>
 
-            <!-- Progress Bar -->
             <div class="progress-track">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
 
-            <!-- Steps Checklist -->
             <div class="step-list">
                 <div class="step-item" id="step1">
                     <span class="step-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
-                    <span>१. UDID PDF फाईल तपासली जात आहे...</span>
+                    <span>१. सुरक्षित बॅकएंड सर्व्हरशी कनेक्ट होत आहे...</span>
                 </div>
                 <div class="step-item" id="step2">
                     <span class="step-icon"><i class="far fa-circle"></i></span>
-                    <span>२. अचूक फ्रंट व बॅक स्मार्ट क्रॉपिंग...</span>
+                    <span>२. अचूक फ्रंट व बॅक स्मार्ट AI क्रॉपिंग...</span>
                 </div>
                 <div class="step-item" id="step3">
                     <span class="step-icon"><i class="far fa-circle"></i></span>
-                    <span>३. ३०० DPI ४x६ प्रिंट-रेडी PDF आणि PNG तयार होत आहे...</span>
+                    <span>३. ३०० DPI ४x६ प्रिंट-रेडी PDF आणि PNG तयार झाले!</span>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -437,18 +425,14 @@
     </footer>
 
     <!-- ==============================================================
-       🟢 JAVASCRIPT LOGIC (EXACT COORDINATES + 4x6 SHEET PNG & PDF)
+       🟢 PURE BACKEND CONNECT (NO EXPOSED COORDINATES!)
     ============================================================== -->
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        const { jsPDF } = window.jspdf;
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
         let selectedFile = null;
-        let generatedPdfDoc = null;
-        let generatedSheetPngUrl = null;
-        let generatedFrontDataUrl = null;
-        let generatedBackDataUrl = null;
+        let downloadedPdfBase64 = null;
+        let downloadedPngBase64 = null;
 
         function selectPaper(size, elem) {
             document.querySelectorAll('.paper-option').forEach(el => el.classList.remove('active'));
@@ -508,7 +492,7 @@
             el.querySelector('.step-icon').innerHTML = iconHtml;
         }
 
-        // 🟢 MAIN PROCESSING (LASER ANIMATION + EXACT UDID CROPPING)
+        // 🟢 MAIN BACKEND PROCESSING (Zero Coordinates in Frontend!)
         async function startProcessing() {
             if (!selectedFile) {
                 showError("कृपया आधी तुमची UDID कार्ड PDF फाईल निवडा.");
@@ -524,114 +508,45 @@
             setStep('step1', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
             setStep('step2', 'idle', '<i class="far fa-circle"></i>');
             setStep('step3', 'idle', '<i class="far fa-circle"></i>');
-            progressFill.style.width = '20%';
+            progressFill.style.width = '25%';
             modal.style.display = 'flex';
 
             try {
-                // STEP 1: Read PDF
-                await new Promise(r => setTimeout(r, 350));
-                const fileBytes = await selectedFile.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: fileBytes }).promise;
-                const page = await pdf.getPage(1);
+                const userStr = localStorage.getItem('quickid_user');
+                const user = userStr ? JSON.parse(userStr) : {};
+                const paperSize = document.getElementById('paperSize').value;
 
-                progressFill.style.width = '50%';
+                // Prepare FormData to send to Backend
+                const formData = new FormData();
+                formData.append('pdfFile', selectedFile);
+                formData.append('paperSize', paperSize);
+                formData.append('mobile', user.mobile || '');
+
+                // Step 1 done
+                await new Promise(r => setTimeout(r, 400));
+                progressFill.style.width = '55%';
                 setStep('step1', 'done', '<i class="fas fa-check-circle text-success"></i>');
                 setStep('step2', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
 
-                // Render page on Canvas at 2.5 Scale
-                const viewport = page.getViewport({ scale: 2.5 });
-                const mainCanvas = document.createElement('canvas');
-                const ctx = mainCanvas.getContext('2d');
-                mainCanvas.width = viewport.width;
-                mainCanvas.height = viewport.height;
-                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                // 🚀 Call Backend Server
+                const response = await fetch(`${BACKEND_URL}/api/services/process-udid`, {
+                    method: 'POST',
+                    body: formData
+                });
 
-                // 🟢 TUMHI DILELE EXACT UDID COORDINATES 🟢
-                const coords = {
-                    front_x: 192,
-                    front_y: 188,
-                    front_w: 1095,
-                    front_h: 705,
+                const data = await response.json();
 
-                    back_x: 192,
-                    back_y: 1115,
-                    back_w: 1095,
-                    back_h: 704,
-
-                    base_width: 2481,
-                    base_height: 3508,
-
-                    print_width_mm: 80,
-                    print_height_mm: 53
-                };
-
-                const sxFront = (coords.front_x / coords.base_width) * mainCanvas.width;
-                const syFront = (coords.front_y / coords.base_height) * mainCanvas.height;
-                const swFront = (coords.front_w / coords.base_width) * mainCanvas.width;
-                const shFront = (coords.front_h / coords.base_height) * mainCanvas.height;
-
-                const sxBack = (coords.back_x / coords.base_width) * mainCanvas.width;
-                const syBack = (coords.back_y / coords.base_height) * mainCanvas.height;
-                const swBack = (coords.back_w / coords.base_width) * mainCanvas.width;
-                const shBack = (coords.back_h / coords.base_height) * mainCanvas.height;
-
-                function processSide(sx, sy, sw, sh) {
-                    const c = document.createElement('canvas');
-                    c.width = Math.round(sw); c.height = Math.round(sh);
-                    const cCtx = c.getContext('2d');
-                    cCtx.drawImage(mainCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
-
-                    const finalC = document.createElement('canvas');
-                    finalC.width = Math.round(sw); finalC.height = Math.round(sh);
-                    const fCtx = finalC.getContext('2d');
-                    const rad = 25; // Smooth corners
-
-                    fCtx.beginPath();
-                    fCtx.moveTo(rad, 0); fCtx.lineTo(sw - rad, 0); fCtx.quadraticCurveTo(sw, 0, sw, rad);
-                    fCtx.lineTo(sw, sh - rad); fCtx.quadraticCurveTo(sw, sh, sw - rad, sh);
-                    fCtx.lineTo(rad, sh); fCtx.quadraticCurveTo(0, sh, 0, sh - rad);
-                    fCtx.lineTo(0, rad); fCtx.quadraticCurveTo(0, 0, rad, 0);
-                    fCtx.closePath();
-
-                    fCtx.clip();
-                    fCtx.drawImage(c, 0, 0);
-
-                    // 4px crisp border
-                    fCtx.lineWidth = 4;
-                    fCtx.strokeStyle = "#1e293b";
-                    fCtx.stroke();
-
-                    return finalC.toDataURL('image/jpeg', 0.98);
+                if (!response.ok || data.status !== 'success') {
+                    throw new Error(data.detail || data.message || "सर्व्हर एरर आली.");
                 }
 
-                generatedFrontDataUrl = processSide(sxFront, syFront, swFront, shFront);
-                generatedBackDataUrl = processSide(sxBack, syBack, swBack, shBack);
-
-                progressFill.style.width = '75%';
+                progressFill.style.width = '85%';
                 setStep('step2', 'done', '<i class="fas fa-check-circle text-success"></i>');
                 setStep('step3', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
 
-                // STEP 3: PDF and 4x6 / A4 Sheet PNG
-                await new Promise(r => setTimeout(r, 400));
-                const paperSize = document.getElementById('paperSize').value;
-                const cardW = coords.print_width_mm;
-                const cardH = coords.print_height_mm;
-
-                // 1. Generate PDF
-                if (paperSize === '4x6') {
-                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4] });
-                    const mX = (101.6 - cardW) / 2;
-                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 15, cardW, cardH);
-                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX, 15 + cardH + 10, cardW, cardH);
-                } else {
-                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    const mX = (210 - (cardW * 2 + 15)) / 2;
-                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 20, cardW, cardH);
-                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX + cardW + 15, 20, cardW, cardH);
-                }
-
-                // 2. Generate 4x6 / A4 Sheet PNG (1200 x 1800 px)
-                generatedSheetPngUrl = await buildExactSheetPng(paperSize, generatedFrontDataUrl, generatedBackDataUrl, cardW, cardH);
+                // Save downloaded base64 results in memory
+                downloadedPdfBase64 = data.pdf_base64;
+                downloadedPngBase64 = data.png_base64;
 
                 progressFill.style.width = '100%';
                 setStep('step3', 'done', '<i class="fas fa-check-circle text-success"></i>');
@@ -639,9 +554,9 @@
                 await new Promise(r => setTimeout(r, 400));
                 modal.style.display = 'none';
 
-                // Previews
-                document.getElementById('frontPreviewImg').src = generatedFrontDataUrl;
-                document.getElementById('backPreviewImg').src = generatedBackDataUrl;
+                // Display Live Previews returned by Backend
+                document.getElementById('frontPreviewImg').src = data.front_preview;
+                document.getElementById('backPreviewImg').src = data.back_preview;
                 document.getElementById('resultSection').style.display = 'block';
 
                 document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
@@ -649,66 +564,27 @@
             } catch (err) {
                 console.error(err);
                 modal.style.display = 'none';
-                showError("कार्ड प्रोसेस करताना त्रुटी आली: " + (err.message || err));
+                showError("त्रुटी आली: " + (err.message || err));
             } finally {
                 btn.disabled = false;
             }
         }
 
-        // 🟢 अचूक 4x6 (1200x1800) किंवा A4 (2480x3508) PNG शीट बनवणे
-        function buildExactSheetPng(paperSize, frontDataUrl, backDataUrl, cardW_mm, cardH_mm) {
-            return new Promise((resolve) => {
-                const imgF = new Image();
-                const imgB = new Image();
-                imgF.src = frontDataUrl;
-                imgF.onload = () => {
-                    imgB.src = backDataUrl;
-                    imgB.onload = () => {
-                        const DPI_SCALE = 300 / 25.4;
-                        const sheetCanvas = document.createElement('canvas');
-                        const sCtx = sheetCanvas.getContext('2d');
+        // Helper: Convert Base64 to Blob & Trigger Download
+        function downloadBase64File(base64Data, filename, contentType) {
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: contentType });
 
-                        sCtx.imageSmoothingEnabled = true;
-                        sCtx.imageSmoothingQuality = 'high';
-
-                        if (paperSize === '4x6') {
-                            // 🟢 4x6 Photo Paper at 300 DPI
-                            sheetCanvas.width = 1200;
-                            sheetCanvas.height = 1800;
-                            sCtx.fillStyle = '#ffffff';
-                            sCtx.fillRect(0, 0, 1200, 1800);
-
-                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
-                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
-                            const mX = Math.round((1200 - cardW_px) / 2);
-                            const topMargin = Math.round(15 * DPI_SCALE);
-                            const gap = Math.round(10 * DPI_SCALE);
-
-                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
-                            sCtx.drawImage(imgB, mX, topMargin + cardH_px + gap, cardW_px, cardH_px);
-
-                        } else {
-                            // 🟢 A4 Paper at 300 DPI
-                            sheetCanvas.width = 2480;
-                            sheetCanvas.height = 3508;
-                            sCtx.fillStyle = '#ffffff';
-                            sCtx.fillRect(0, 0, 2480, 3508);
-
-                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
-                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
-                            const gap = Math.round(15 * DPI_SCALE);
-                            const totalW = cardW_px * 2 + gap;
-                            const mX = Math.round((2480 - totalW) / 2);
-                            const topMargin = Math.round(20 * DPI_SCALE);
-
-                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
-                            sCtx.drawImage(imgB, mX + cardW_px + gap, topMargin, cardW_px, cardH_px);
-                        }
-
-                        resolve(sheetCanvas.toDataURL('image/png', 1.0));
-                    };
-                };
-            });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
         }
 
         // 🟢 सुरक्षित लॉगिंग: फक्त प्रत्यक्ष डाऊनलोड केल्यावरच Supabase ला नोंद
@@ -728,29 +604,25 @@
                     method: 'POST',
                     body: formData
                 }).catch(e => console.log('Audit log error:', e));
-            } catch(e) {
-                console.log(e);
-            }
+            } catch(e) {}
         }
 
         // 🟢 DOWNLOAD 1: PDF
         function downloadResultPdf() {
-            if (!generatedPdfDoc) return;
+            if (!downloadedPdfBase64) return;
             const paperSize = document.getElementById('paperSize').value;
             const filename = `QuickIDPrint_UDID_${paperSize.toUpperCase()}_${Date.now()}.pdf`;
-            generatedPdfDoc.save(filename);
+            downloadBase64File(downloadedPdfBase64, filename, 'application/pdf');
 
             logDownloadAction('PDF');
         }
 
-        // 🟢 DOWNLOAD 2: PNG (4x6 शीट)
+        // 🟢 DOWNLOAD 2: PNG (४x६ शीट)
         function downloadResultPng() {
-            if (!generatedSheetPngUrl) return;
+            if (!downloadedPngBase64) return;
             const paperSize = document.getElementById('paperSize').value;
-            const link = document.createElement('a');
-            link.download = `QuickIDPrint_UDID_${paperSize.toUpperCase()}_${Date.now()}.png`;
-            link.href = generatedSheetPngUrl;
-            link.click();
+            const filename = `QuickIDPrint_UDID_${paperSize.toUpperCase()}_${Date.now()}.png`;
+            downloadBase64File(downloadedPngBase64, filename, 'image/png');
 
             logDownloadAction('PNG');
         }
@@ -758,10 +630,8 @@
         // Reset
         function resetForm() {
             selectedFile = null;
-            generatedPdfDoc = null;
-            generatedSheetPngUrl = null;
-            generatedFrontDataUrl = null;
-            generatedBackDataUrl = null;
+            downloadedPdfBase64 = null;
+            downloadedPngBase64 = null;
             document.getElementById('pdfInput').value = '';
             document.getElementById('selectedFileName').style.display = 'none';
             document.getElementById('resultSection').style.display = 'none';
