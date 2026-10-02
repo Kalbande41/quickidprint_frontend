@@ -369,7 +369,7 @@
                         <i class="fas fa-file-pdf"></i> <span id="pdfBtnText">📄 डाऊनलोड PDF (4x6)</span>
                     </button>
                     <button class="btn-dl-png" id="btnDownloadPng" onclick="downloadResultPng()">
-                        <i class="fas fa-file-image"></i> <span id="pngBtnText">🖼️ डाऊनलोड PNG (4x6)</span>
+                        <i class="fas fa-file-image"></i> <span id="pngBtnText">🖼️ डाऊनलोड PNG (4x6 शीट)</span>
                     </button>
                 </div>
 
@@ -442,10 +442,11 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const { jsPDF } = window.jspdf;
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
         let selectedFile = null;
         let generatedPdfDoc = null;
-        let generatedSheetPngUrl = null; // Exact 4x6 or A4 PNG Sheet DataURL
+        let generatedSheetPngUrl = null;
         let generatedFrontDataUrl = null;
         let generatedBackDataUrl = null;
 
@@ -454,7 +455,6 @@
             elem.classList.add('active');
             document.getElementById('paperSize').value = size;
             
-            // Update labels
             const label = size === '4x6' ? '4x6' : 'A4';
             document.getElementById('pdfBtnText').innerText = `📄 डाऊनलोड PDF (${label})`;
             document.getElementById('pngBtnText').innerText = `🖼️ डाऊनलोड PNG (${label} शीट)`;
@@ -477,7 +477,6 @@
             }
         }
 
-        // Drag & Drop
         const dropZone = document.getElementById('uploadDropZone');
         ['dragenter', 'dragover'].forEach(name => {
             dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
@@ -509,7 +508,7 @@
             el.querySelector('.step-icon').innerHTML = iconHtml;
         }
 
-        // 🟢 MAIN PROCESSING WITH ANIMATION
+        // 🟢 MAIN PROCESSING (LASER ANIMATION + CROPPING)
         async function startProcessing() {
             if (!selectedFile) {
                 showError("कृपया आधी तुमची ABHA PDF फाईल निवडा.");
@@ -522,7 +521,6 @@
             const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
 
-            // Reset modal steps
             setStep('step1', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
             setStep('step2', 'idle', '<i class="far fa-circle"></i>');
             setStep('step3', 'idle', '<i class="far fa-circle"></i>');
@@ -540,7 +538,6 @@
                 setStep('step1', 'done', '<i class="fas fa-check-circle text-success"></i>');
                 setStep('step2', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
 
-                // Render page on Canvas at high DPI (Scale 2.5)
                 const viewport = page.getViewport({ scale: 2.5 });
                 const mainCanvas = document.createElement('canvas');
                 const ctx = mainCanvas.getContext('2d');
@@ -548,7 +545,7 @@
                 mainCanvas.height = viewport.height;
                 await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-                // STEP 2: Exact Coordinate Cropping (Front & Back)
+                // STEP 2: Exact Coordinates Crop
                 await new Promise(r => setTimeout(r, 350));
                 const coords = {
                     front_x: 40,
@@ -587,7 +584,7 @@
                     const finalC = document.createElement('canvas');
                     finalC.width = sw; finalC.height = sh;
                     const fCtx = finalC.getContext('2d');
-                    const rad = 25; // Rounded corners
+                    const rad = 25;
 
                     fCtx.beginPath();
                     fCtx.moveTo(rad, 0); fCtx.lineTo(sw - rad, 0); fCtx.quadraticCurveTo(sw, 0, sw, rad);
@@ -599,7 +596,6 @@
                     fCtx.clip();
                     fCtx.drawImage(c, 0, 0);
 
-                    // 4px dark border
                     fCtx.lineWidth = 4;
                     fCtx.strokeStyle = "#1e293b";
                     fCtx.stroke();
@@ -614,13 +610,12 @@
                 setStep('step2', 'done', '<i class="fas fa-check-circle text-success"></i>');
                 setStep('step3', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
 
-                // STEP 3: Generate Both 300 DPI PDF & 300 DPI 4x6 / A4 Sheet PNG
+                // STEP 3: PDF and Exact 4x6 Sheet PNG
                 await new Promise(r => setTimeout(r, 400));
                 const paperSize = document.getElementById('paperSize').value;
                 const cardW = coords.print_width_mm;
                 const cardH = coords.print_height_mm;
 
-                // 1. Generate PDF
                 if (paperSize === '4x6') {
                     generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4] });
                     const mX = (101.6 - cardW) / 2;
@@ -633,7 +628,6 @@
                     generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX + cardW + 10, 20, cardW, cardH);
                 }
 
-                // 2. 🟢 GENERATE EXACT 4x6 / A4 PNG SHEET (300 DPI - 1200 x 1800 px)
                 generatedSheetPngUrl = await buildExactSheetPng(paperSize, generatedFrontDataUrl, generatedBackDataUrl, cardW, cardH);
 
                 progressFill.style.width = '100%';
@@ -642,7 +636,6 @@
                 await new Promise(r => setTimeout(r, 400));
                 modal.style.display = 'none';
 
-                // Display Live Previews
                 document.getElementById('frontPreviewImg').src = generatedFrontDataUrl;
                 document.getElementById('backPreviewImg').src = generatedBackDataUrl;
                 document.getElementById('resultSection').style.display = 'block';
@@ -658,7 +651,7 @@
             }
         }
 
-        // 🟢 फंक्शन: हुबेहूब ४x६ (1200x1800 px) किंवा A4 (2480x3508 px) PNG शीट तयार करणे
+        // 🟢 अचूक 4x6 / A4 शीट PNG बनवणे
         function buildExactSheetPng(paperSize, frontDataUrl, backDataUrl, cardW_mm, cardH_mm) {
             return new Promise((resolve) => {
                 const imgF = new Image();
@@ -667,7 +660,7 @@
                 imgF.onload = () => {
                     imgB.src = backDataUrl;
                     imgB.onload = () => {
-                        const DPI_SCALE = 300 / 25.4; // 11.8110236 px per mm
+                        const DPI_SCALE = 300 / 25.4;
                         const sheetCanvas = document.createElement('canvas');
                         const sCtx = sheetCanvas.getContext('2d');
 
@@ -675,31 +668,23 @@
                         sCtx.imageSmoothingQuality = 'high';
 
                         if (paperSize === '4x6') {
-                            // 🟢 4x6 Photo Paper at 300 DPI = 1200 x 1800 Pixels
                             sheetCanvas.width = 1200;
                             sheetCanvas.height = 1800;
-
-                            // Clean White Canvas Background
                             sCtx.fillStyle = '#ffffff';
                             sCtx.fillRect(0, 0, 1200, 1800);
 
-                            const cardW_px = Math.round(cardW_mm * DPI_SCALE); // ~1011 px
-                            const cardH_px = Math.round(cardH_mm * DPI_SCALE); // ~638 px
-                            const mX = Math.round((1200 - cardW_px) / 2);      // Horizontally Centered
-                            const topMargin = Math.round(15 * DPI_SCALE);     // 15mm from top (~177 px)
-                            const gap = Math.round(10 * DPI_SCALE);           // 10mm gap (~118 px)
+                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
+                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
+                            const mX = Math.round((1200 - cardW_px) / 2);
+                            const topMargin = Math.round(15 * DPI_SCALE);
+                            const gap = Math.round(10 * DPI_SCALE);
 
-                            // 1. Front Card
                             sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
-
-                            // 2. Back Card (Exactly below Front Card)
                             sCtx.drawImage(imgB, mX, topMargin + cardH_px + gap, cardW_px, cardH_px);
 
                         } else {
-                            // 🟢 A4 Paper at 300 DPI = 2480 x 3508 Pixels
                             sheetCanvas.width = 2480;
                             sheetCanvas.height = 3508;
-
                             sCtx.fillStyle = '#ffffff';
                             sCtx.fillRect(0, 0, 2480, 3508);
 
@@ -710,7 +695,6 @@
                             const mX = Math.round((2480 - totalW) / 2);
                             const topMargin = Math.round(20 * DPI_SCALE);
 
-                            // Front and Back Side-by-side on A4
                             sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
                             sCtx.drawImage(imgB, mX + cardW_px + gap, topMargin, cardW_px, cardH_px);
                         }
@@ -721,15 +705,40 @@
             });
         }
 
-        // 🟢 DOWNLOAD 1: PDF (4x6 किंवा A4)
+        // 🟢 सुरक्षित लॉगिंग: फक्त डाऊनलोड झाल्यावरच Supabase ला नोंद पाठवणे
+        function logDownloadAction(serviceType) {
+            try {
+                const userStr = localStorage.getItem('quickid_user');
+                if (!userStr) return;
+                const user = JSON.parse(userStr);
+                const paperSize = document.getElementById('paperSize').value.toUpperCase();
+
+                const formData = new FormData();
+                formData.append('mobile', user.mobile || '');
+                formData.append('serviceCategory', 'आभा कार्ड प्रिंट');
+                formData.append('serviceDetails', `ABHA कार्ड ${serviceType} डाऊनलोड (${paperSize} शीट)`);
+
+                fetch(`${BACKEND_URL}/api/log-service`, {
+                    method: 'POST',
+                    body: formData
+                }).catch(e => console.log('Audit log error:', e));
+            } catch(e) {
+                console.log(e);
+            }
+        }
+
+        // 🟢 DOWNLOAD 1: PDF (डाऊनलोड झाल्यावरच लॉग सेव्ह होईल)
         function downloadResultPdf() {
             if (!generatedPdfDoc) return;
             const paperSize = document.getElementById('paperSize').value;
             const filename = `QuickIDPrint_ABHA_${paperSize.toUpperCase()}_${Date.now()}.pdf`;
             generatedPdfDoc.save(filename);
+
+            // 🎯 फक्त प्रत्यक्ष PDF डाऊनलोड झाल्यावर नोंद
+            logDownloadAction('PDF');
         }
 
-        // 🟢 DOWNLOAD 2: PNG (आता 100% 4x6 शीट स्वरूपात डाऊनलोड होईल)
+        // 🟢 DOWNLOAD 2: PNG (डाऊनलोड झाल्यावरच लॉग सेव्ह होईल)
         function downloadResultPng() {
             if (!generatedSheetPngUrl) return;
             const paperSize = document.getElementById('paperSize').value;
@@ -737,6 +746,9 @@
             link.download = `QuickIDPrint_ABHA_${paperSize.toUpperCase()}_${Date.now()}.png`;
             link.href = generatedSheetPngUrl;
             link.click();
+
+            // 🎯 फक्त प्रत्यक्ष PNG डाऊनलोड झाल्यावर नोंद
+            logDownloadAction('PNG');
         }
 
         // Reset
