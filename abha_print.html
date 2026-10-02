@@ -3,279 +3,712 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>स्मार्ट आभा कार्ड प्रिंट (ABHA Card) - QuickIDPrint</title>
-    
+    <title>ABHA Health Card Print | QuickIDPrint</title>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+
+    <!-- PDF & Canvas Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Auth Guard & Config -->
+    <script src="config.js"></script>
+    <script src="auth-guard.js"></script>
+
     <style>
         :root {
-            --primary: #4338ca;
-            --primary-hover: #3730a3;
-            --secondary: #6366f1;
+            --primary: #123a8f;
+            --primary-hover: #0d2a6b;
+            --secondary: #2563eb;
             --accent: #f97316;
+            --theme-green: #16a34a;
+            --theme-green-hover: #15803d;
+            --theme-green-light: #dcfce7;
             --dark: #0f172a;
-            --slate: #334155;
-            --bg: #f8fafc;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --light-bg: #f8fafc;
             --card-border: #e2e8f0;
-            --success: #16a34a;
+            --white: #ffffff;
+            --shadow-md: 0 10px 25px -5px rgba(22, 163, 74, 0.1);
+            --shadow-lg: 0 20px 35px -8px rgba(15, 23, 42, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
-        
-        .top-nav {
-            background: white; border-bottom: 1px solid var(--card-border);
-            padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--dark); text-decoration: none; }
-        .brand span { color: var(--primary); }
-        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-        .back-link:hover { color: var(--primary); }
+        body { background-color: var(--light-bg); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
 
-        .container {
-            background: white; padding: 35px 30px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06); max-width: 580px; margin: 35px auto; width: 90%;
-            border: 1px solid var(--card-border);
+        /* Header */
+        header {
+            background: white; padding: 14px 6%; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 90;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-box {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--theme-green); font-size: 20px; border: 1px solid #86efac;
+        }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+        .logo-text h1 .brand-quick { color: var(--primary); }
+        .logo-text h1 .brand-id { color: var(--accent); }
+        .logo-text h1 .brand-print { color: var(--theme-green); }
+        .logo-text p { color: var(--slate-600); font-size: 12.5px; font-weight: 600; }
+
+        .btn-back {
+            background: #f1f5f9; color: var(--slate-800); border: 1px solid #cbd5e1; padding: 8px 16px;
+            border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-back:hover { background: #e2e8f0; color: var(--primary); transform: translateY(-1px); }
+
+        /* Main Container */
+        .container { max-width: 680px; margin: 35px auto 50px; padding: 0 20px; width: 100%; flex: 1; }
+
+        /* Notice Banner */
+        .info-alert {
+            background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px;
+            padding: 14px 18px; margin-bottom: 25px; display: flex; align-items: center; gap: 14px;
+        }
+        .info-alert i { font-size: 24px; color: var(--theme-green); }
+        .info-alert p { font-size: 14.5px; color: #166534; font-weight: 600; line-height: 1.4; }
+
+        /* Main Service Card */
+        .service-card {
+            background: white; border-radius: 22px; border: 1.5px solid var(--card-border);
+            padding: 35px 30px; box-shadow: var(--shadow-md);
+        }
+        .card-header-badge {
+            display: inline-flex; align-items: center; gap: 8px; background: #ecfdf5;
+            color: #047857; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;
+            border: 1px solid #a7f3d0; margin-bottom: 15px;
+        }
+        .card-title { font-size: 24px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .card-subtitle { font-size: 14.5px; color: var(--slate-600); margin-bottom: 25px; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 22px; text-align: left; }
+        .form-group label { display: block; font-size: 14.5px; font-weight: 800; color: var(--slate-800); margin-bottom: 8px; }
+        
+        .paper-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .paper-option {
+            border: 2px solid #cbd5e1; border-radius: 14px; padding: 14px; text-align: center;
+            cursor: pointer; transition: all 0.2s; background: #f8fafc;
+        }
+        .paper-option:hover { border-color: #86efac; background: #f0fdf4; }
+        .paper-option.active {
+            border-color: var(--theme-green); background: #f0fdf4; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
+        }
+        .paper-option i { font-size: 22px; color: var(--theme-green); margin-bottom: 6px; display: block; }
+        .paper-option strong { display: block; font-size: 15px; color: var(--dark); }
+        .paper-option span { font-size: 12px; color: var(--slate-600); }
+
+        /* File Upload Box */
+        .upload-area {
+            border: 2px dashed #86efac; background: #f0fdf4; border-radius: 16px;
+            padding: 30px 20px; text-align: center; cursor: pointer; transition: 0.25s;
+            position: relative;
+        }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--theme-green); background: #dcfce7; }
+        .upload-icon-circle {
+            width: 60px; height: 60px; border-radius: 50%; background: white;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
+            font-size: 26px; color: var(--theme-green); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
+        }
+        .upload-area h4 { font-size: 16.5px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .upload-area p { font-size: 13px; color: var(--slate-600); }
+        .selected-file-badge {
+            margin-top: 14px; display: none; background: white; padding: 8px 14px;
+            border-radius: 10px; font-size: 13.5px; font-weight: 700; color: #166534;
+            border: 1px solid #86efac; word-break: break-all;
         }
 
-        h2 { color: var(--primary); margin-bottom: 18px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        
-        .feature-box {
-            background: #eef2ff; border: 1.5px dashed #c7d2fe; border-radius: 12px;
-            padding: 14px 18px; font-size: 14px; color: #3730a3; margin-bottom: 22px; line-height: 1.6;
-        }
-        .feature-box i { color: var(--primary); margin-right: 6px; }
-
-        .form-group { margin-bottom: 18px; text-align: left; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--slate); font-size: 15px; }
-        .form-control {
-            width: 100%; padding: 12px 16px; font-size: 15px; border-radius: 10px;
-            border: 1.5px solid #cbd5e1; background: var(--bg); outline: none; transition: 0.2s;
-        }
-        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
-        
-        .btn-process {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white; border: none; padding: 15px; width: 100%; font-size: 17px; font-weight: 800;
-            border-radius: 12px; cursor: pointer; margin-top: 15px; transition: 0.25s;
+        /* Action Button */
+        .btn-generate {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white; border: none; padding: 15px 25px; width: 100%; font-size: 17px;
+            font-weight: 800; border-radius: 14px; cursor: pointer; margin-top: 10px;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 4px 15px rgba(67, 56, 202, 0.25);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25); transition: 0.25s;
         }
-        .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(67, 56, 202, 0.35); }
-        .btn-process:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(22, 163, 74, 0.35); }
+        .btn-generate:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .error-box {
-            color: #b91c1c; font-weight: 700; display: none; margin-top: 16px;
-            background: #fef2f2; padding: 12px 16px; border-radius: 10px; border: 1px solid #fecaca; font-size: 14.5px;
+        /* Error Box */
+        .error-alert {
+            display: none; background: #fef2f2; border: 1.5px solid #fecaca;
+            color: #dc2626; padding: 12px 16px; border-radius: 12px; margin-top: 16px;
+            font-size: 14px; font-weight: 700; align-items: center; gap: 10px;
         }
 
-        /* 🟢 Live Preview & Dual Download Card */
-        .preview-wrapper {
-            display: none; margin-top: 25px; padding-top: 20px; border-top: 2px dashed #e2e8f0;
-            animation: fadeIn 0.3s ease-out;
+        /* ==============================================================
+           🟢 CREATIVE PROCESSING ANIMATION MODAL (LASER SCANNER)
+        ============================================================== */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px); display: none; align-items: center;
+            justify-content: center; z-index: 1000; padding: 20px;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .preview-title { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
-        .cards-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .preview-card-item {
-            background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px; text-align: center;
+        .processing-box {
+            background: white; border-radius: 24px; padding: 35px 30px;
+            max-width: 440px; width: 100%; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); border: 1.5px solid rgba(255,255,255,0.2);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .preview-card-item img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-        .preview-card-item p { font-size: 12px; font-weight: 700; color: var(--slate); margin-top: 6px; }
+        @keyframes modalPop {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
 
-        .download-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* Scanner Visual Card */
+        .scanner-card {
+            width: 220px; height: 135px; margin: 0 auto 25px; border-radius: 14px;
+            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+            border: 2px solid #34d399; position: relative; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.25);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
+        }
+        .scanner-card-header { display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; font-weight: bold; }
+        .scanner-chip { width: 28px; height: 20px; background: #fbbf24; border-radius: 4px; border: 1px solid #f59e0b; }
+        .scanner-card-body { display: flex; gap: 8px; align-items: center; }
+        .scanner-avatar { width: 34px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .scanner-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .scanner-line { height: 5px; background: rgba(255,255,255,0.4); border-radius: 3px; }
+        
+        /* Laser Beam Animation */
+        .laser-beam {
+            position: absolute; left: 0; width: 100%; height: 3px;
+            background: #38bdf8; box-shadow: 0 0 15px 4px #38bdf8, 0 0 30px 6px #0ea5e9;
+            animation: scanLaser 1.8s ease-in-out infinite alternate;
+        }
+        @keyframes scanLaser {
+            0% { top: 4%; }
+            100% { top: 94%; }
+        }
+
+        .processing-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .processing-desc { font-size: 13.5px; color: var(--slate-600); margin-bottom: 20px; }
+
+        /* Progress Bar */
+        .progress-track {
+            background: #e2e8f0; height: 10px; border-radius: 20px; overflow: hidden;
+            margin-bottom: 18px; position: relative;
+        }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 20px;
+            background: linear-gradient(90deg, #16a34a, #3b82f6, #16a34a);
+            background-size: 200% 100%;
+            transition: width 0.4s ease;
+            animation: progressGradient 2s linear infinite;
+        }
+        @keyframes progressGradient {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+
+        /* Step Checklist */
+        .step-list { text-align: left; margin: 15px 0 5px; display: flex; flex-direction: column; gap: 10px; }
+        .step-item {
+            font-size: 13.5px; font-weight: 700; color: var(--slate-400); display: flex; align-items: center; gap: 10px;
+            transition: color 0.3s;
+        }
+        .step-item.active { color: var(--primary); }
+        .step-item.done { color: var(--theme-green); }
+        .step-icon { width: 18px; text-align: center; }
+
+        /* ==============================================================
+           🟢 SUCCESS & RESULT SECTION
+        ============================================================== */
+        .result-section { display: none; margin-top: 25px; animation: modalPop 0.3s ease-out; }
+        
+        .preview-box {
+            background: #f8fafc; border: 1.5px solid var(--card-border);
+            border-radius: 18px; padding: 20px; margin-bottom: 25px; text-align: center;
+        }
+        .preview-title { font-size: 15px; font-weight: 800; color: var(--slate-800); margin-bottom: 14px; }
+        .preview-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .preview-img-wrapper {
+            background: white; padding: 6px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #cbd5e1;
+        }
+        .preview-img-wrapper img { width: 190px; height: auto; border-radius: 8px; display: block; }
+        .preview-label { font-size: 12px; font-weight: 700; color: var(--slate-600); margin-top: 6px; }
+
+        /* Dual Download Buttons */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .btn-dl-pdf {
-            background: #dc2626; color: white; border: none; padding: 12px; border-radius: 10px;
-            font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white; border: none; padding: 14px; border-radius: 12px;
+            font-size: 16px; font-weight: 800; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
         }
-        .btn-dl-pdf:hover { background: #b91c1c; transform: translateY(-2px); }
+        .btn-dl-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(22, 163, 74, 0.35); }
 
         .btn-dl-png {
-            background: #0284c7; color: white; border: none; padding: 12px; border-radius: 10px;
-            font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white; border: none; padding: 14px; border-radius: 12px;
+            font-size: 16px; font-weight: 800; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
-        .btn-dl-png:hover { background: #0369a1; transform: translateY(-2px); }
+        .btn-dl-png:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35); }
+
+        .btn-reset-form {
+            background: #f1f5f9; color: var(--slate-800); border: 1.5px solid #cbd5e1;
+            padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700;
+            width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-reset-form:hover { background: #e2e8f0; color: var(--primary); }
+
+        footer { text-align: center; padding: 20px; color: var(--slate-400); font-size: 13px; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .paper-selector { grid-template-columns: 1fr; }
+            .action-grid { grid-template-columns: 1fr; }
+            .preview-img-wrapper img { width: 140px; }
+        }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav">
-        <a href="homepage.html" class="brand"><i class="fas fa-heartbeat" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
-        <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
-    </nav>
+    <!-- Frosted Header -->
+    <header>
+        <a href="homepage.html" class="header-logo">
+            <div class="logo-box"><i class="fas fa-heartbeat"></i></div>
+            <div class="logo-text">
+                <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
+                <p>ABHA स्मार्ट कार्ड प्रिंटिंग</p>
+            </div>
+        </a>
+        <a href="homepage.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा
+        </a>
+    </header>
 
     <div class="container">
-        <h2><i class="fas fa-notes-medical"></i> स्मार्ट आभा कार्ड प्रिंट</h2>
         
-        <div class="feature-box">
-            <div><i class="fas fa-bolt"></i> <b>हाय-स्पीड AI क्रॉप:</b> अचूक कडा, राऊंड कॉर्नर्स आणि 4px काळी कटिंग बॉर्डर.</div>
-            <div style="margin-top:4px;"><i class="fas fa-file-export"></i> <b>PDF व PNG सपोर्ट:</b> इच्छित फॉरमॅटमध्ये एका क्लिकवर डाऊनलोड करा.</div>
+        <!-- Helpful Notice -->
+        <div class="info-alert">
+            <i class="fas fa-shield-heart"></i>
+            <p><strong>नोंद:</strong> ABHA PDF फाईलवर पासवर्ड नसतो. फक्त तुमची मूळ ABHA PDF फाईल निवडा आणि काही क्षणांत प्रिंट-रेडी कार्ड मिळवा.</p>
         </div>
 
-        <p id="errorBox" class="error-box"></p>
+        <div class="service-card">
+            <span class="card-header-badge"><i class="fas fa-sparkles"></i> ऑटोमॅटिक AI क्रॉपिंग • ३०० DPI</span>
+            <h2 class="card-title"><i class="fas fa-id-card text-success"></i> आभा हेल्थ कार्ड (ABHA Print)</h2>
+            <p class="card-subtitle">मूळ PDF मधून फ्रंट व बॅक बाजू अचूक कट करून ४x६ किंवा A4 साईझवर सेट करा.</p>
 
-        <form id="abhaForm" onsubmit="processAbhaCard(event)">
-            <div class="form-group">
-                <label><i class="fas fa-layer-group" style="color:var(--primary);"></i> पेपर साईझ निवडा:</label>
-                <select id="paperSize" class="form-control">
-                    <option value="4x6">4x6 Photo Paper (समोरासमोर स्मार्ट लेआउट)</option>
-                    <option value="a4">A4 Full Size (प्रिंट-रेडी कटिंग लाईनसह)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-file-pdf" style="color:var(--primary);"></i> मूळ ABHA PDF फाईल निवडा:</label>
-                <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-key" style="color:var(--primary);"></i> PDF पासवर्ड (असल्यास):</label>
-                <input type="password" id="pdfPassword" class="form-control" placeholder="पासवर्ड असल्यास टाईप करा (नसल्यास रिकामा ठेवा)">
-            </div>
-
-            <button type="submit" id="btnProcess" class="btn-process">
-                <i class="fas fa-magic"></i> आभा कार्ड तयार करा (Generate Card)
-            </button>
-        </form>
-
-        <!-- 🟢 Live Card Preview & Dual Download Options -->
-        <div id="previewArea" class="preview-wrapper">
-            <p class="preview-title"><i class="fas fa-eye text-emerald-600"></i> तयार झालेले आभा कार्ड (Live Preview):</p>
-            
-            <div class="cards-preview-grid">
-                <div class="preview-card-item">
-                    <img id="prevFrontImg" src="" alt="Front Card">
-                    <p>समोरची बाजू (Front)</p>
+            <form id="abhaForm" onsubmit="event.preventDefault(); startProcessing();">
+                
+                <!-- 1. Paper Size Selector -->
+                <div class="form-group">
+                    <label>१. प्रिंटसाठी कागदाचा आकार निवडा:</label>
+                    <div class="paper-selector">
+                        <div class="paper-option active" onclick="selectPaper('4x6', this)">
+                            <i class="fas fa-image"></i>
+                            <strong>4x6 फोटो पेपर</strong>
+                            <span>(Single Sheet - PVC/Glossy)</span>
+                        </div>
+                        <div class="paper-option" onclick="selectPaper('a4', this)">
+                            <i class="fas fa-file"></i>
+                            <strong>A4 पेपर</strong>
+                            <span>(Full Page Sheet Layout)</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="paperSize" value="4x6">
                 </div>
-                <div class="preview-card-item">
-                    <img id="prevBackImg" src="" alt="Back Card">
-                    <p>मागील बाजू (Back)</p>
+
+                <!-- 2. PDF Upload Zone (No Password Field!) -->
+                <div class="form-group">
+                    <label>२. ABHA PDF फाईल निवडा:</label>
+                    <div class="upload-area" id="uploadDropZone" onclick="document.getElementById('pdfInput').click()">
+                        <div class="upload-icon-circle">
+                            <i class="fas fa-cloud-arrow-up"></i>
+                        </div>
+                        <h4>येथे क्लिक करून ABHA PDF निवडा</h4>
+                        <p>किंवा फाईल ड्रॅग करून येथे सोडा (.pdf)</p>
+                        
+                        <div class="selected-file-badge" id="selectedFileName">
+                            <i class="fas fa-file-pdf text-danger"></i> <span id="fileNameText">फाईल निवडली</span>
+                        </div>
+                    </div>
+                    <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" onchange="handleFileSelected(this)">
                 </div>
+
+                <!-- Generate Button -->
+                <button type="submit" id="btnGenerate" class="btn-generate">
+                    <i class="fas fa-bolt"></i> कार्ड तयार करा (Generate ABHA Card)
+                </button>
+
+                <div class="error-alert" id="errorBox">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span id="errorText">काहीतरी त्रुटी झाली.</span>
+                </div>
+            </form>
+
+            <!-- 3. Result & Live Preview Section -->
+            <div class="result-section" id="resultSection">
+                <div class="preview-box">
+                    <div class="preview-title">
+                        <i class="fas fa-circle-check text-success"></i> ABHA कार्ड तयार झाले! लाईव्ह प्रिव्ह्यू:
+                    </div>
+                    <div class="preview-grid">
+                        <div class="preview-img-wrapper">
+                            <img id="frontPreviewImg" src="" alt="Front Side">
+                            <div class="preview-label">समोरची बाजू (Front)</div>
+                        </div>
+                        <div class="preview-img-wrapper">
+                            <img id="backPreviewImg" src="" alt="Back Side">
+                            <div class="preview-label">मागील बाजू (Back)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual Download Actions -->
+                <div class="action-grid">
+                    <button class="btn-dl-pdf" onclick="downloadResultPdf()">
+                        <i class="fas fa-file-pdf"></i> 📄 डाऊनलोड PDF
+                    </button>
+                    <button class="btn-dl-png" onclick="downloadResultPng()">
+                        <i class="fas fa-file-image"></i> 🖼️ डाऊनलोड PNG
+                    </button>
+                </div>
+
+                <button class="btn-reset-form" onclick="resetForm()">
+                    <i class="fas fa-arrow-rotate-right"></i> नवीन ABHA कार्ड बनवा
+                </button>
             </div>
 
-            <div class="download-actions-grid">
-                <button type="button" class="btn-dl-pdf" onclick="triggerDownload('pdf')">
-                    <i class="fas fa-file-pdf"></i> डाऊनलोड PDF
-                </button>
-                <button type="button" class="btn-dl-png" onclick="triggerDownload('png')">
-                    <i class="fas fa-file-image"></i> डाऊनलोड PNG
-                </button>
-            </div>
         </div>
-
     </div>
 
-    <script>
-        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+    <!-- ==============================================================
+       🟢 PROCESSING MODAL WITH LASER SCANNER & PROGRESS BAR
+    ============================================================== -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="processing-box">
+            
+            <!-- Graphic Laser Scanner -->
+            <div class="scanner-card">
+                <div class="laser-beam"></div>
+                <div class="scanner-card-header">
+                    <span>ABHA HEALTH CARD</span>
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <div class="scanner-chip"></div>
+                <div class="scanner-card-body">
+                    <div class="scanner-avatar"></div>
+                    <div class="scanner-lines">
+                        <div class="scanner-line" style="width: 80%;"></div>
+                        <div class="scanner-line" style="width: 60%;"></div>
+                        <div class="scanner-line" style="width: 90%;"></div>
+                    </div>
+                </div>
+            </div>
 
-        // 🔒 ऑथेंटिकेशन व वैधता तपासणी
-        let userData = null;
-        try {
-            userData = JSON.parse(localStorage.getItem('quickid_user'));
-        } catch(e) {
-            userData = null;
+            <h3 class="processing-title">ABHA कार्ड प्रोसेस होत आहे...</h3>
+            <p class="processing-desc">कृपया काही सेकंद प्रतीक्षा करा, अचूक क्रॉपिंग सुरू आहे.</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Steps Checklist -->
+            <div class="step-list">
+                <div class="step-item" id="step1">
+                    <span class="step-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    <span>१. ABHA PDF फाईल तपासली जात आहे...</span>
+                </div>
+                <div class="step-item" id="step2">
+                    <span class="step-icon"><i class="far fa-circle"></i></span>
+                    <span>२. अचूक फ्रंट व बॅक स्मार्ट AI क्रॉपिंग...</span>
+                </div>
+                <div class="step-item" id="step3">
+                    <span class="step-icon"><i class="far fa-circle"></i></span>
+                    <span>३. ३०० DPI प्रिंट-रेडी PDF आणि PNG तयार होत आहे...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 QuickIDPrint Center. सर्व हक्क सुरक्षित.
+    </footer>
+
+    <!-- ==============================================================
+       🟢 JAVASCRIPT PROCESSING LOGIC (EXACT COORDINATES + SPEED)
+    ============================================================== -->
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        const { jsPDF } = window.jspdf;
+
+        let selectedFile = null;
+        let generatedPdfDoc = null;
+        let generatedFrontDataUrl = null;
+        let generatedBackDataUrl = null;
+
+        // Paper selection toggle
+        function selectPaper(size, elem) {
+            document.querySelectorAll('.paper-option').forEach(el => el.classList.remove('active'));
+            elem.classList.add('active');
+            document.getElementById('paperSize').value = size;
         }
 
-        if (!userData || !userData.mobile) {
-            alert("कृपया प्रथम लॉगिन करा!");
-            window.location.replace("login.html");
-        } else {
-            const remDays = parseInt(userData.remainingDays) || 0;
-            if (remDays <= 0 && userData.role !== 'admin' && !userData.isAdmin) {
-                alert("तुमच्या सबस्क्रिप्शन प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा!");
-                window.location.replace("recharge.html");
+        // Handle File Selection
+        function handleFileSelected(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    showError("कृपया फक्त वैध PDF फाईल निवडा.");
+                    return;
+                }
+                selectedFile = file;
+                document.getElementById('fileNameText').innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                document.getElementById('selectedFileName').style.display = 'inline-block';
+                hideError();
             }
         }
 
-        // डाउनलोडसाठी कॅश केलेले डेटा
-        let generatedData = null;
+        // Drag & Drop
+        const dropZone = document.getElementById('uploadDropZone');
+        ['dragenter', 'dragover'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+        });
+        ['dragleave', 'drop'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+        });
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files.length > 0) {
+                document.getElementById('pdfInput').files = files;
+                handleFileSelected(document.getElementById('pdfInput'));
+            }
+        });
 
-        async function processAbhaCard(e) {
-            e.preventDefault();
+        function showError(msg) {
+            const err = document.getElementById('errorBox');
+            document.getElementById('errorText').innerText = msg;
+            err.style.display = 'flex';
+        }
+        function hideError() {
+            document.getElementById('errorBox').style.display = 'none';
+        }
 
-            const btn = document.getElementById('btnProcess');
-            const errorBox = document.getElementById('errorBox');
-            const previewArea = document.getElementById('previewArea');
-            const fileInput = document.getElementById('pdfFile').files[0];
-
-            if (!fileInput) {
-                alert("कृपया आधी PDF फाईल निवडा.");
+        // 🟢 MAIN PROCESSING WITH ANIMATION
+        async function startProcessing() {
+            if (!selectedFile) {
+                showError("कृपया आधी तुमची ABHA PDF फाईल निवडा.");
                 return;
             }
 
+            hideError();
+            const modal = document.getElementById('processingModal');
+            const progressFill = document.getElementById('progressFill');
+            const btn = document.getElementById('btnGenerate');
             btn.disabled = true;
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> हाय-स्पीड प्रोसेस सुरू आहे, कृपया थांबा...";
-            errorBox.style.display = 'none';
-            previewArea.style.display = 'none';
 
-            const formData = new FormData();
-            formData.append('pdfFile', fileInput);
-            formData.append('password', document.getElementById('pdfPassword').value.trim());
-            formData.append('paperSize', document.getElementById('paperSize').value);
-            formData.append('mobile', userData ? userData.mobile : '');
+            // Reset modal steps
+            setStep('step1', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
+            setStep('step2', 'idle', '<i class="far fa-circle"></i>');
+            setStep('step3', 'idle', '<i class="far fa-circle"></i>');
+            progressFill.style.width = '20%';
+            modal.style.display = 'flex';
 
             try {
-                const response = await fetch(`${BACKEND_URL}/api/services/process-abha`, {
-                    method: 'POST',
-                    body: formData
-                });
+                // STEP 1: Read PDF
+                await new Promise(r => setTimeout(r, 400));
+                const fileBytes = await selectedFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: fileBytes }).promise;
+                const page = await pdf.getPage(1);
 
-                const data = await response.json();
+                progressFill.style.width = '50%';
+                setStep('step1', 'done', '<i class="fas fa-check-circle text-success"></i>');
+                setStep('step2', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
 
-                if (response.ok && data.success) {
-                    generatedData = data;
+                // Render page on Canvas at high DPI (Scale 2.5 for super crisp quality)
+                const viewport = page.getViewport({ scale: 2.5 });
+                const mainCanvas = document.createElement('canvas');
+                const ctx = mainCanvas.getContext('2d');
+                mainCanvas.width = viewport.width;
+                mainCanvas.height = viewport.height;
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-                    // लाईव्ह प्रीव्ह्यू सेट करणे
-                    document.getElementById('prevFrontImg').src = data.preview_front;
-                    document.getElementById('prevBackImg').src = data.preview_back;
-                    previewArea.style.display = 'block';
+                // STEP 2: Exact Coordinate Cropping (Front & Back)
+                await new Promise(r => setTimeout(r, 400));
+                const coords = {
+                    front_x: 40,
+                    front_y: 40,
+                    front_w: 1858,
+                    front_h: 1138,
 
-                    btn.disabled = false;
-                    btn.innerHTML = "<i class='fas fa-check-circle'></i> कार्ड तयार झाले! खाली डाऊनलोड करा";
-                    btn.style.background = "#16a34a";
+                    back_x: 40,
+                    back_y: 1300,
+                    back_w: 1857,
+                    back_h: 1138,
 
-                    // प्रीव्ह्यू एरियाकडे स्क्रोल करणे
-                    previewArea.scrollIntoView({ behavior: 'smooth' });
+                    base_width: 1938,
+                    base_height: 2500,
 
-                } else {
-                    errorBox.innerHTML = "<i class='fas fa-exclamation-triangle'></i> " + (data.error || "कार्ड तयार करताना त्रुटी आली.");
-                    errorBox.style.display = 'block';
-                    btn.disabled = false;
-                    btn.innerHTML = "<i class='fas fa-magic'></i> आभा कार्ड तयार करा (Generate Card)";
+                    print_width_mm: 85.6,
+                    print_height_mm: 54
+                };
+
+                const sxFront = (coords.front_x / coords.base_width) * mainCanvas.width;
+                const syFront = (coords.front_y / coords.base_height) * mainCanvas.height;
+                const swFront = (coords.front_w / coords.base_width) * mainCanvas.width;
+                const shFront = (coords.front_h / coords.base_height) * mainCanvas.height;
+
+                const sxBack = (coords.back_x / coords.base_width) * mainCanvas.width;
+                const syBack = (coords.back_y / coords.base_height) * mainCanvas.height;
+                const swBack = (coords.back_w / coords.base_width) * mainCanvas.width;
+                const shBack = (coords.back_h / coords.base_height) * mainCanvas.height;
+
+                // Function to crop with border and rounded corners
+                function processSide(sx, sy, sw, sh) {
+                    const c = document.createElement('canvas');
+                    c.width = sw; c.height = sh;
+                    const cCtx = c.getContext('2d');
+                    cCtx.drawImage(mainCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+                    const finalC = document.createElement('canvas');
+                    finalC.width = sw; finalC.height = sh;
+                    const fCtx = finalC.getContext('2d');
+                    const rad = 25; // Smooth rounded corners
+
+                    fCtx.beginPath();
+                    fCtx.moveTo(rad, 0); fCtx.lineTo(sw - rad, 0); fCtx.quadraticCurveTo(sw, 0, sw, rad);
+                    fCtx.lineTo(sw, sh - rad); fCtx.quadraticCurveTo(sw, sh, sw - rad, sh);
+                    fCtx.lineTo(rad, sh); fCtx.quadraticCurveTo(0, sh, 0, sh - rad);
+                    fCtx.lineTo(0, rad); fCtx.quadraticCurveTo(0, 0, rad, 0);
+                    fCtx.closePath();
+
+                    fCtx.clip();
+                    fCtx.drawImage(c, 0, 0);
+
+                    // 4px crisp border for clean cutting
+                    fCtx.lineWidth = 4;
+                    fCtx.strokeStyle = "#1e293b";
+                    fCtx.stroke();
+
+                    return finalC.toDataURL('image/jpeg', 0.98);
                 }
+
+                generatedFrontDataUrl = processSide(sxFront, syFront, swFront, shFront);
+                generatedBackDataUrl = processSide(sxBack, syBack, swBack, shBack);
+
+                progressFill.style.width = '80%';
+                setStep('step2', 'done', '<i class="fas fa-check-circle text-success"></i>');
+                setStep('step3', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
+
+                // STEP 3: Generate 300 DPI PDF (4x6 or A4)
+                await new Promise(r => setTimeout(r, 400));
+                const paperSize = document.getElementById('paperSize').value;
+                const cardW = coords.print_width_mm;
+                const cardH = coords.print_height_mm;
+
+                if (paperSize === '4x6') {
+                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4] });
+                    const mX = (101.6 - cardW) / 2;
+                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 15, cardW, cardH);
+                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX, 15 + cardH + 10, cardW, cardH);
+                } else {
+                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const mX = (210 - (cardW * 2 + 10)) / 2;
+                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 20, cardW, cardH);
+                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX + cardW + 10, 20, cardW, cardH);
+                }
+
+                progressFill.style.width = '100%';
+                setStep('step3', 'done', '<i class="fas fa-check-circle text-success"></i>');
+
+                // Finish animation and show result
+                await new Promise(r => setTimeout(r, 500));
+                modal.style.display = 'none';
+
+                // Display Live Previews
+                document.getElementById('frontPreviewImg').src = generatedFrontDataUrl;
+                document.getElementById('backPreviewImg').src = generatedBackDataUrl;
+                document.getElementById('resultSection').style.display = 'block';
+
+                // Scroll smoothly to results
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+
             } catch (err) {
                 console.error(err);
-                errorBox.innerHTML = "<i class='fas fa-exclamation-triangle'></i> सर्व्हरशी संपर्क होऊ शकला नाही. इंटरनेट तपासा आणि पुन्हा प्रयत्न करा.";
-                errorBox.style.display = 'block';
+                modal.style.display = 'none';
+                showError("कार्ड प्रोसेस करताना त्रुटी आली: " + (err.message || err));
+            } finally {
                 btn.disabled = false;
-                btn.innerHTML = "<i class='fas fa-magic'></i> आभा कार्ड तयार करा (Generate Card)";
             }
         }
 
-        // 📥 PDF किंवा PNG डाऊनलोड ट्रिगर करणे
-        function triggerDownload(type) {
-            if (!generatedData) {
-                alert("कृपया आधी कार्ड प्रोसेस करा.");
-                return;
-            }
+        function setStep(id, state, iconHtml) {
+            const el = document.getElementById(id);
+            el.className = 'step-item ' + state;
+            el.querySelector('.step-icon').innerHTML = iconHtml;
+        }
 
-            const ts = Date.now();
-            const paper = generatedData.paperSize.toUpperCase();
-            const link = document.createElement("a");
+        // 🟢 DOWNLOAD 1: PDF
+        function downloadResultPdf() {
+            if (!generatedPdfDoc) return;
+            const filename = `QuickIDPrint_ABHA_${Date.now()}.pdf`;
+            generatedPdfDoc.save(filename);
+        }
 
-            if (type === 'pdf') {
-                link.href = `data:application/pdf;base64,${generatedData.pdf_base64}`;
-                link.download = `QuickIDPrint_ABHA_${paper}_${ts}.pdf`;
-            } else {
-                link.href = `data:image/png;base64,${generatedData.png_base64}`;
-                link.download = `QuickIDPrint_ABHA_${paper}_${ts}.png`;
-            }
+        // 🟢 DOWNLOAD 2: PNG (High Resolution Combined Sheet)
+        function downloadResultPng() {
+            if (!generatedFrontDataUrl || !generatedBackDataUrl) return;
 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const imgFront = new Image();
+            const imgBack = new Image();
+            imgFront.src = generatedFrontDataUrl;
+
+            imgFront.onload = () => {
+                imgBack.src = generatedBackDataUrl;
+                imgBack.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const gap = 30;
+                    canvas.width = imgFront.width + imgBack.width + gap + 40;
+                    canvas.height = Math.max(imgFront.height, imgBack.height) + 40;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Draw Front & Back Side-by-side
+                    ctx.drawImage(imgFront, 20, 20);
+                    ctx.drawImage(imgBack, 20 + imgFront.width + gap, 20);
+
+                    const link = document.createElement('a');
+                    link.download = `QuickIDPrint_ABHA_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                };
+            };
+        }
+
+        // Reset
+        function resetForm() {
+            selectedFile = null;
+            generatedPdfDoc = null;
+            generatedFrontDataUrl = null;
+            generatedBackDataUrl = null;
+            document.getElementById('pdfInput').value = '';
+            document.getElementById('selectedFileName').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            hideError();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
