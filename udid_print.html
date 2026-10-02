@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDID Card Print | QuickIDPrint</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- PDF & Canvas Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Auth Guard & Config -->
+    <script src="config.js"></script>
+    <script src="auth-guard.js"></script>
+
+    <style>
+        :root {
+            --primary: #123a8f;
+            --primary-hover: #0d2a6b;
+            --secondary: #2563eb;
+            --accent: #f97316;
+            --theme-udid: #4f46e5;
+            --theme-udid-hover: #4338ca;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --light-bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --white: #ffffff;
+            --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Header */
+        header {
+            background: white; padding: 14px 6%; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 90;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-box {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--theme-udid); font-size: 20px; border: 1px solid #a5b4fc;
+        }
+        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+        .logo-text h1 .brand-quick { color: var(--primary); }
+        .logo-text h1 .brand-id { color: var(--accent); }
+        .logo-text h1 .brand-print { color: var(--theme-udid); }
+        .logo-text p { color: var(--slate-600); font-size: 12.5px; font-weight: 600; }
+
+        .btn-back {
+            background: #f1f5f9; color: var(--slate-800); border: 1px solid #cbd5e1; padding: 8px 16px;
+            border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-back:hover { background: #e2e8f0; color: var(--primary); transform: translateY(-1px); }
+
+        /* Container */
+        .container { max-width: 680px; margin: 35px auto 50px; padding: 0 20px; width: 100%; flex: 1; }
+
+        /* Notice Banner */
+        .info-alert {
+            background: #eef2ff; border: 1.5px solid #c7d2fe; border-radius: 14px;
+            padding: 14px 18px; margin-bottom: 25px; display: flex; align-items: center; gap: 14px;
+        }
+        .info-alert i { font-size: 24px; color: var(--theme-udid); }
+        .info-alert p { font-size: 14.5px; color: #3730a3; font-weight: 600; line-height: 1.4; }
+
+        /* Service Card */
+        .service-card {
+            background: white; border-radius: 22px; border: 1.5px solid var(--card-border);
+            padding: 35px 30px; box-shadow: var(--shadow-md);
+        }
+        .card-header-badge {
+            display: inline-flex; align-items: center; gap: 8px; background: #e0e7ff;
+            color: #3730a3; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;
+            border: 1px solid #c7d2fe; margin-bottom: 15px;
+        }
+        .card-title { font-size: 24px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .card-subtitle { font-size: 14.5px; color: var(--slate-600); margin-bottom: 25px; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 22px; text-align: left; }
+        .form-group label { display: block; font-size: 14.5px; font-weight: 800; color: var(--slate-800); margin-bottom: 8px; }
+        
+        .paper-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .paper-option {
+            border: 2px solid #cbd5e1; border-radius: 14px; padding: 14px; text-align: center;
+            cursor: pointer; transition: all 0.2s; background: #f8fafc;
+        }
+        .paper-option:hover { border-color: #a5b4fc; background: #eef2ff; }
+        .paper-option.active {
+            border-color: var(--theme-udid); background: #eef2ff; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+        }
+        .paper-option i { font-size: 22px; color: var(--theme-udid); margin-bottom: 6px; display: block; }
+        .paper-option strong { display: block; font-size: 15px; color: var(--dark); }
+        .paper-option span { font-size: 12px; color: var(--slate-600); }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #a5b4fc; background: #eef2ff; border-radius: 16px;
+            padding: 30px 20px; text-align: center; cursor: pointer; transition: 0.25s;
+            position: relative;
+        }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--theme-udid); background: #e0e7ff; }
+        .upload-icon-circle {
+            width: 60px; height: 60px; border-radius: 50%; background: white;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
+            font-size: 26px; color: var(--theme-udid); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+        .upload-area h4 { font-size: 16.5px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .upload-area p { font-size: 13px; color: var(--slate-600); }
+        .selected-file-badge {
+            margin-top: 14px; display: none; background: white; padding: 8px 14px;
+            border-radius: 10px; font-size: 13.5px; font-weight: 700; color: #3730a3;
+            border: 1px solid #a5b4fc; word-break: break-all;
+        }
+
+        /* Action Button */
+        .btn-generate {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            color: white; border: none; padding: 15px 25px; width: 100%; font-size: 17px;
+            font-weight: 800; border-radius: 14px; cursor: pointer; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.25); transition: 0.25s;
+        }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(79, 70, 229, 0.35); }
+        .btn-generate:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .error-alert {
+            display: none; background: #fef2f2; border: 1.5px solid #fecaca;
+            color: #dc2626; padding: 12px 16px; border-radius: 12px; margin-top: 16px;
+            font-size: 14px; font-weight: 700; align-items: center; gap: 10px;
+        }
+
+        /* ==============================================================
+           🟢 PROCESSING ANIMATION MODAL (LASER SCANNER)
+        ============================================================== */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px); display: none; align-items: center;
+            justify-content: center; z-index: 1000; padding: 20px;
+        }
+        .processing-box {
+            background: white; border-radius: 24px; padding: 35px 30px;
+            max-width: 440px; width: 100%; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); border: 1.5px solid rgba(255,255,255,0.2);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .scanner-card {
+            width: 220px; height: 135px; margin: 0 auto 25px; border-radius: 14px;
+            background: linear-gradient(135deg, #4338ca 0%, #312e81 100%);
+            border: 2px solid #818cf8; position: relative; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(67, 56, 202, 0.25);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
+        }
+        .scanner-card-header { display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; font-weight: bold; }
+        .scanner-chip { width: 28px; height: 20px; background: #fbbf24; border-radius: 4px; border: 1px solid #f59e0b; }
+        .scanner-card-body { display: flex; gap: 8px; align-items: center; }
+        .scanner-avatar { width: 34px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .scanner-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .scanner-line { height: 5px; background: rgba(255,255,255,0.4); border-radius: 3px; }
+        
+        .laser-beam {
+            position: absolute; left: 0; width: 100%; height: 3px;
+            background: #38bdf8; box-shadow: 0 0 15px 4px #38bdf8, 0 0 30px 6px #0ea5e9;
+            animation: scanLaser 1.8s ease-in-out infinite alternate;
+        }
+        @keyframes scanLaser { 0% { top: 4%; } 100% { top: 94%; } }
+
+        .processing-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .processing-desc { font-size: 13.5px; color: var(--slate-600); margin-bottom: 20px; }
+
+        .progress-track {
+            background: #e2e8f0; height: 10px; border-radius: 20px; overflow: hidden;
+            margin-bottom: 18px;
+        }
+        .progress-fill {
+            height: 100%; width: 0%; border-radius: 20px;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4, #4f46e5);
+            background-size: 200% 100%;
+            transition: width 0.4s ease;
+            animation: progressGradient 2s linear infinite;
+        }
+        @keyframes progressGradient { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+        .step-list { text-align: left; margin: 15px 0 5px; display: flex; flex-direction: column; gap: 10px; }
+        .step-item {
+            font-size: 13.5px; font-weight: 700; color: var(--slate-400); display: flex; align-items: center; gap: 10px;
+        }
+        .step-item.active { color: var(--primary); }
+        .step-item.done { color: #16a34a; }
+        .step-icon { width: 18px; text-align: center; }
+
+        /* ==============================================================
+           🟢 RESULT & 4x6 PREVIEW SECTION
+        ============================================================== */
+        .result-section { display: none; margin-top: 25px; animation: modalPop 0.3s ease-out; }
+        
+        .preview-box {
+            background: #f8fafc; border: 1.5px solid var(--card-border);
+            border-radius: 18px; padding: 20px; margin-bottom: 22px; text-align: center;
+        }
+        .sheet-badge {
+            display: inline-block; background: #e0e7ff; color: #3730a3;
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px;
+        }
+        .preview-title { font-size: 16px; font-weight: 800; color: var(--slate-800); margin-bottom: 14px; }
+        .preview-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .preview-img-wrapper {
+            background: white; padding: 6px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #cbd5e1;
+        }
+        .preview-img-wrapper img { width: 180px; height: auto; border-radius: 8px; display: block; }
+        .preview-label { font-size: 12px; font-weight: 700; color: var(--slate-600); margin-top: 6px; }
+
+        /* Dual 4x6 Download Buttons */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 15px; }
+        .btn-dl-pdf {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white; border: none; padding: 15px; border-radius: 14px;
+            font-size: 15.5px; font-weight: 800; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+        }
+        .btn-dl-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(22, 163, 74, 0.35); }
+
+        .btn-dl-png {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            color: white; border: none; padding: 15px; border-radius: 14px;
+            font-size: 15.5px; font-weight: 800; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+        }
+        .btn-dl-png:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35); }
+
+        .btn-reset-form {
+            background: #f1f5f9; color: var(--slate-800); border: 1.5px solid #cbd5e1;
+            padding: 12px; border-radius: 12px; font-size: 14.5px; font-weight: 700;
+            width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-reset-form:hover { background: #e2e8f0; color: var(--primary); }
+
+        footer { text-align: center; padding: 20px; color: var(--slate-400); font-size: 13px; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .paper-selector { grid-template-columns: 1fr; }
+            .action-grid { grid-template-columns: 1fr; }
+            .preview-img-wrapper img { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Frosted Header -->
+    <header>
+        <a href="homepage.html" class="header-logo">
+            <div class="logo-box"><i class="fas fa-wheelchair"></i></div>
+            <div class="logo-text">
+                <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
+                <p>UDID दिव्यांग कार्ड प्रिंटिंग</p>
+            </div>
+        </a>
+        <a href="homepage.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा
+        </a>
+    </header>
+
+    <div class="container">
+        
+        <!-- Helpful Notice -->
+        <div class="info-alert">
+            <i class="fas fa-wheelchair"></i>
+            <p><strong>नोंद:</strong> स्वावलंबन पोर्टलवरून (swavlambancard.gov.in) डाऊनलोड केलेली मूळ UDID PDF फाईल निवडा. फ्रंट व बॅक बाजू अचूक क्रॉप करून ४x६ फोटो शीटवर तयार केली जाईल.</p>
+        </div>
+
+        <div class="service-card">
+            <span class="card-header-badge"><i class="fas fa-sparkles"></i> 4x6 / A4 शीट • प्रिंट</span>
+            <h2 class="card-title"><i class="fas fa-id-card text-primary"></i> UDID दिव्यांग ओळखपत्र प्रिंट</h2>
+            <p class="card-subtitle">स्मार्ट AI द्वारे फ्रंट व बॅक बाजू कापून ४x६ किंवा A4 शीटवर सेट करा.</p>
+
+            <form id="udidForm" onsubmit="event.preventDefault(); startProcessing();">
+                
+                <!-- 1. Paper Size Selector -->
+                <div class="form-group">
+                    <label>१. प्रिंटसाठी कागदाचा आकार निवडा:</label>
+                    <div class="paper-selector">
+                        <div class="paper-option active" onclick="selectPaper('4x6', this)">
+                            <i class="fas fa-image"></i>
+                            <strong>4x6 फोटो पेपर</strong>
+                            <span>(Single 4x6 Photo Sheet)</span>
+                        </div>
+                        <div class="paper-option" onclick="selectPaper('a4', this)">
+                            <i class="fas fa-file"></i>
+                            <strong>A4 पेपर</strong>
+                            <span>(Full Page Sheet Layout)</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="paperSize" value="4x6">
+                </div>
+
+                <!-- 2. PDF Upload Zone (No Password Field!) -->
+                <div class="form-group">
+                    <label>२. UDID कार्ड PDF फाईल निवडा:</label>
+                    <div class="upload-area" id="uploadDropZone" onclick="document.getElementById('pdfInput').click()">
+                        <div class="upload-icon-circle">
+                            <i class="fas fa-cloud-arrow-up"></i>
+                        </div>
+                        <h4>येथे क्लिक करून UDID PDF निवडा</h4>
+                        <p>किंवा फाईल ड्रॅग करून येथे सोडा (.pdf)</p>
+                        
+                        <div class="selected-file-badge" id="selectedFileName">
+                            <i class="fas fa-file-pdf text-danger"></i> <span id="fileNameText">फाईल निवडली</span>
+                        </div>
+                    </div>
+                    <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" onchange="handleFileSelected(this)">
+                </div>
+
+                <!-- Generate Button -->
+                <button type="submit" id="btnGenerate" class="btn-generate">
+                    <i class="fas fa-magic"></i> कार्ड तयार करा (Generate UDID Card)
+                </button>
+
+                <div class="error-alert" id="errorBox">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span id="errorText">त्रुटी आली.</span>
+                </div>
+            </form>
+
+            <!-- 3. Result Section -->
+            <div class="result-section" id="resultSection">
+                <div class="preview-box">
+                    <span class="sheet-badge" id="sheetBadgeText">४x६ फोटो पेपर शीट तयार झाली (१२०० x १८०० px)</span>
+                    <div class="preview-title">
+                        <i class="fas fa-circle-check text-success"></i> UDID कार्ड तयार झाले! लाईव्ह प्रिव्ह्यू:
+                    </div>
+                    <div class="preview-grid">
+                        <div class="preview-img-wrapper">
+                            <img id="frontPreviewImg" src="" alt="Front Side">
+                            <div class="preview-label">समोरची बाजू (Front)</div>
+                        </div>
+                        <div class="preview-img-wrapper">
+                            <img id="backPreviewImg" src="" alt="Back Side">
+                            <div class="preview-label">मागील बाजू (Back)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual Download Actions -->
+                <div class="action-grid">
+                    <button class="btn-dl-pdf" id="btnDownloadPdf" onclick="downloadResultPdf()">
+                        <i class="fas fa-file-pdf"></i> <span id="pdfBtnText">📄 डाऊनलोड PDF (4x6)</span>
+                    </button>
+                    <button class="btn-dl-png" id="btnDownloadPng" onclick="downloadResultPng()">
+                        <i class="fas fa-file-image"></i> <span id="pngBtnText">🖼️ डाऊनलोड PNG (4x6 शीट)</span>
+                    </button>
+                </div>
+
+                <button class="btn-reset-form" onclick="resetForm()">
+                    <i class="fas fa-arrow-rotate-right"></i> नवीन UDID कार्ड बनवा
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==============================================================
+       🟢 PROCESSING MODAL (LASER SCANNER & PROGRESS BAR)
+    ============================================================== -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="processing-box">
+            
+            <!-- Graphic Laser Scanner -->
+            <div class="scanner-card">
+                <div class="laser-beam"></div>
+                <div class="scanner-card-header">
+                    <span>UDID DISABILITY CARD</span>
+                    <i class="fas fa-wheelchair"></i>
+                </div>
+                <div class="scanner-chip"></div>
+                <div class="scanner-card-body">
+                    <div class="scanner-avatar"></div>
+                    <div class="scanner-lines">
+                        <div class="scanner-line" style="width: 80%;"></div>
+                        <div class="scanner-line" style="width: 60%;"></div>
+                        <div class="scanner-line" style="width: 90%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="processing-title">UDID कार्ड प्रोसेस होत आहे...</h3>
+            <p class="processing-desc">कृपया काही सेकंद प्रतीक्षा करा, अचूक क्रॉपिंग सुरू आहे.</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Steps Checklist -->
+            <div class="step-list">
+                <div class="step-item" id="step1">
+                    <span class="step-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    <span>१. UDID PDF फाईल तपासली जात आहे...</span>
+                </div>
+                <div class="step-item" id="step2">
+                    <span class="step-icon"><i class="far fa-circle"></i></span>
+                    <span>२. अचूक फ्रंट व बॅक स्मार्ट क्रॉपिंग...</span>
+                </div>
+                <div class="step-item" id="step3">
+                    <span class="step-icon"><i class="far fa-circle"></i></span>
+                    <span>३. ३०० DPI ४x६ प्रिंट-रेडी PDF आणि PNG तयार होत आहे...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        © 2026 QuickIDPrint Center. सर्व हक्क सुरक्षित.
+    </footer>
+
+    <!-- ==============================================================
+       🟢 JAVASCRIPT LOGIC (EXACT COORDINATES + 4x6 SHEET PNG & PDF)
+    ============================================================== -->
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        const { jsPDF } = window.jspdf;
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        let selectedFile = null;
+        let generatedPdfDoc = null;
+        let generatedSheetPngUrl = null;
+        let generatedFrontDataUrl = null;
+        let generatedBackDataUrl = null;
+
+        function selectPaper(size, elem) {
+            document.querySelectorAll('.paper-option').forEach(el => el.classList.remove('active'));
+            elem.classList.add('active');
+            document.getElementById('paperSize').value = size;
+            
+            const label = size === '4x6' ? '4x6' : 'A4';
+            document.getElementById('pdfBtnText').innerText = `📄 डाऊनलोड PDF (${label})`;
+            document.getElementById('pngBtnText').innerText = `🖼️ डाऊनलोड PNG (${label} शीट)`;
+            document.getElementById('sheetBadgeText').innerText = size === '4x6' 
+                ? '४x६ फोटो पेपर शीट तयार झाली (१२०० x १८०० px)' 
+                : 'A4 प्रिंट शीट तयार झाली (२४८० x ३५०८ px)';
+        }
+
+        function handleFileSelected(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    showError("कृपया फक्त वैध PDF फाईल निवडा.");
+                    return;
+                }
+                selectedFile = file;
+                document.getElementById('fileNameText').innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                document.getElementById('selectedFileName').style.display = 'inline-block';
+                hideError();
+            }
+        }
+
+        const dropZone = document.getElementById('uploadDropZone');
+        ['dragenter', 'dragover'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+        });
+        ['dragleave', 'drop'].forEach(name => {
+            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+        });
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files.length > 0) {
+                document.getElementById('pdfInput').files = files;
+                handleFileSelected(document.getElementById('pdfInput'));
+            }
+        });
+
+        function showError(msg) {
+            const err = document.getElementById('errorBox');
+            document.getElementById('errorText').innerText = msg;
+            err.style.display = 'flex';
+        }
+        function hideError() {
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
+        function setStep(id, state, iconHtml) {
+            const el = document.getElementById(id);
+            el.className = 'step-item ' + state;
+            el.querySelector('.step-icon').innerHTML = iconHtml;
+        }
+
+        // 🟢 MAIN PROCESSING (LASER ANIMATION + EXACT UDID CROPPING)
+        async function startProcessing() {
+            if (!selectedFile) {
+                showError("कृपया आधी तुमची UDID कार्ड PDF फाईल निवडा.");
+                return;
+            }
+
+            hideError();
+            const modal = document.getElementById('processingModal');
+            const progressFill = document.getElementById('progressFill');
+            const btn = document.getElementById('btnGenerate');
+            btn.disabled = true;
+
+            setStep('step1', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
+            setStep('step2', 'idle', '<i class="far fa-circle"></i>');
+            setStep('step3', 'idle', '<i class="far fa-circle"></i>');
+            progressFill.style.width = '20%';
+            modal.style.display = 'flex';
+
+            try {
+                // STEP 1: Read PDF
+                await new Promise(r => setTimeout(r, 350));
+                const fileBytes = await selectedFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: fileBytes }).promise;
+                const page = await pdf.getPage(1);
+
+                progressFill.style.width = '50%';
+                setStep('step1', 'done', '<i class="fas fa-check-circle text-success"></i>');
+                setStep('step2', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
+
+                // Render page on Canvas at 2.5 Scale
+                const viewport = page.getViewport({ scale: 2.5 });
+                const mainCanvas = document.createElement('canvas');
+                const ctx = mainCanvas.getContext('2d');
+                mainCanvas.width = viewport.width;
+                mainCanvas.height = viewport.height;
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+                // 🟢 TUMHI DILELE EXACT UDID COORDINATES 🟢
+                const coords = {
+                    front_x: 192,
+                    front_y: 188,
+                    front_w: 1095,
+                    front_h: 705,
+
+                    back_x: 192,
+                    back_y: 1115,
+                    back_w: 1095,
+                    back_h: 704,
+
+                    base_width: 2481,
+                    base_height: 3508,
+
+                    print_width_mm: 80,
+                    print_height_mm: 53
+                };
+
+                const sxFront = (coords.front_x / coords.base_width) * mainCanvas.width;
+                const syFront = (coords.front_y / coords.base_height) * mainCanvas.height;
+                const swFront = (coords.front_w / coords.base_width) * mainCanvas.width;
+                const shFront = (coords.front_h / coords.base_height) * mainCanvas.height;
+
+                const sxBack = (coords.back_x / coords.base_width) * mainCanvas.width;
+                const syBack = (coords.back_y / coords.base_height) * mainCanvas.height;
+                const swBack = (coords.back_w / coords.base_width) * mainCanvas.width;
+                const shBack = (coords.back_h / coords.base_height) * mainCanvas.height;
+
+                function processSide(sx, sy, sw, sh) {
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(sw); c.height = Math.round(sh);
+                    const cCtx = c.getContext('2d');
+                    cCtx.drawImage(mainCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+                    const finalC = document.createElement('canvas');
+                    finalC.width = Math.round(sw); finalC.height = Math.round(sh);
+                    const fCtx = finalC.getContext('2d');
+                    const rad = 25; // Smooth corners
+
+                    fCtx.beginPath();
+                    fCtx.moveTo(rad, 0); fCtx.lineTo(sw - rad, 0); fCtx.quadraticCurveTo(sw, 0, sw, rad);
+                    fCtx.lineTo(sw, sh - rad); fCtx.quadraticCurveTo(sw, sh, sw - rad, sh);
+                    fCtx.lineTo(rad, sh); fCtx.quadraticCurveTo(0, sh, 0, sh - rad);
+                    fCtx.lineTo(0, rad); fCtx.quadraticCurveTo(0, 0, rad, 0);
+                    fCtx.closePath();
+
+                    fCtx.clip();
+                    fCtx.drawImage(c, 0, 0);
+
+                    // 4px crisp border
+                    fCtx.lineWidth = 4;
+                    fCtx.strokeStyle = "#1e293b";
+                    fCtx.stroke();
+
+                    return finalC.toDataURL('image/jpeg', 0.98);
+                }
+
+                generatedFrontDataUrl = processSide(sxFront, syFront, swFront, shFront);
+                generatedBackDataUrl = processSide(sxBack, syBack, swBack, shBack);
+
+                progressFill.style.width = '75%';
+                setStep('step2', 'done', '<i class="fas fa-check-circle text-success"></i>');
+                setStep('step3', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
+
+                // STEP 3: PDF and 4x6 / A4 Sheet PNG
+                await new Promise(r => setTimeout(r, 400));
+                const paperSize = document.getElementById('paperSize').value;
+                const cardW = coords.print_width_mm;
+                const cardH = coords.print_height_mm;
+
+                // 1. Generate PDF
+                if (paperSize === '4x6') {
+                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4] });
+                    const mX = (101.6 - cardW) / 2;
+                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 15, cardW, cardH);
+                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX, 15 + cardH + 10, cardW, cardH);
+                } else {
+                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const mX = (210 - (cardW * 2 + 15)) / 2;
+                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 20, cardW, cardH);
+                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX + cardW + 15, 20, cardW, cardH);
+                }
+
+                // 2. Generate 4x6 / A4 Sheet PNG (1200 x 1800 px)
+                generatedSheetPngUrl = await buildExactSheetPng(paperSize, generatedFrontDataUrl, generatedBackDataUrl, cardW, cardH);
+
+                progressFill.style.width = '100%';
+                setStep('step3', 'done', '<i class="fas fa-check-circle text-success"></i>');
+
+                await new Promise(r => setTimeout(r, 400));
+                modal.style.display = 'none';
+
+                // Previews
+                document.getElementById('frontPreviewImg').src = generatedFrontDataUrl;
+                document.getElementById('backPreviewImg').src = generatedBackDataUrl;
+                document.getElementById('resultSection').style.display = 'block';
+
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (err) {
+                console.error(err);
+                modal.style.display = 'none';
+                showError("कार्ड प्रोसेस करताना त्रुटी आली: " + (err.message || err));
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // 🟢 अचूक 4x6 (1200x1800) किंवा A4 (2480x3508) PNG शीट बनवणे
+        function buildExactSheetPng(paperSize, frontDataUrl, backDataUrl, cardW_mm, cardH_mm) {
+            return new Promise((resolve) => {
+                const imgF = new Image();
+                const imgB = new Image();
+                imgF.src = frontDataUrl;
+                imgF.onload = () => {
+                    imgB.src = backDataUrl;
+                    imgB.onload = () => {
+                        const DPI_SCALE = 300 / 25.4;
+                        const sheetCanvas = document.createElement('canvas');
+                        const sCtx = sheetCanvas.getContext('2d');
+
+                        sCtx.imageSmoothingEnabled = true;
+                        sCtx.imageSmoothingQuality = 'high';
+
+                        if (paperSize === '4x6') {
+                            // 🟢 4x6 Photo Paper at 300 DPI
+                            sheetCanvas.width = 1200;
+                            sheetCanvas.height = 1800;
+                            sCtx.fillStyle = '#ffffff';
+                            sCtx.fillRect(0, 0, 1200, 1800);
+
+                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
+                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
+                            const mX = Math.round((1200 - cardW_px) / 2);
+                            const topMargin = Math.round(15 * DPI_SCALE);
+                            const gap = Math.round(10 * DPI_SCALE);
+
+                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
+                            sCtx.drawImage(imgB, mX, topMargin + cardH_px + gap, cardW_px, cardH_px);
+
+                        } else {
+                            // 🟢 A4 Paper at 300 DPI
+                            sheetCanvas.width = 2480;
+                            sheetCanvas.height = 3508;
+                            sCtx.fillStyle = '#ffffff';
+                            sCtx.fillRect(0, 0, 2480, 3508);
+
+                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
+                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
+                            const gap = Math.round(15 * DPI_SCALE);
+                            const totalW = cardW_px * 2 + gap;
+                            const mX = Math.round((2480 - totalW) / 2);
+                            const topMargin = Math.round(20 * DPI_SCALE);
+
+                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
+                            sCtx.drawImage(imgB, mX + cardW_px + gap, topMargin, cardW_px, cardH_px);
+                        }
+
+                        resolve(sheetCanvas.toDataURL('image/png', 1.0));
+                    };
+                };
+            });
+        }
+
+        // 🟢 सुरक्षित लॉगिंग: फक्त प्रत्यक्ष डाऊनलोड केल्यावरच Supabase ला नोंद
+        function logDownloadAction(serviceType) {
+            try {
+                const userStr = localStorage.getItem('quickid_user');
+                if (!userStr) return;
+                const user = JSON.parse(userStr);
+                const paperSize = document.getElementById('paperSize').value.toUpperCase();
+
+                const formData = new FormData();
+                formData.append('mobile', user.mobile || '');
+                formData.append('serviceCategory', 'UDID दिव्यांग ओळखपत्र');
+                formData.append('serviceDetails', `UDID कार्ड ${serviceType} डाऊनलोड (${paperSize} शीट)`);
+
+                fetch(`${BACKEND_URL}/api/log-service`, {
+                    method: 'POST',
+                    body: formData
+                }).catch(e => console.log('Audit log error:', e));
+            } catch(e) {
+                console.log(e);
+            }
+        }
+
+        // 🟢 DOWNLOAD 1: PDF
+        function downloadResultPdf() {
+            if (!generatedPdfDoc) return;
+            const paperSize = document.getElementById('paperSize').value;
+            const filename = `QuickIDPrint_UDID_${paperSize.toUpperCase()}_${Date.now()}.pdf`;
+            generatedPdfDoc.save(filename);
+
+            logDownloadAction('PDF');
+        }
+
+        // 🟢 DOWNLOAD 2: PNG (4x6 शीट)
+        function downloadResultPng() {
+            if (!generatedSheetPngUrl) return;
+            const paperSize = document.getElementById('paperSize').value;
+            const link = document.createElement('a');
+            link.download = `QuickIDPrint_UDID_${paperSize.toUpperCase()}_${Date.now()}.png`;
+            link.href = generatedSheetPngUrl;
+            link.click();
+
+            logDownloadAction('PNG');
+        }
+
+        // Reset
+        function resetForm() {
+            selectedFile = null;
+            generatedPdfDoc = null;
+            generatedSheetPngUrl = null;
+            generatedFrontDataUrl = null;
+            generatedBackDataUrl = null;
+            document.getElementById('pdfInput').value = '';
+            document.getElementById('selectedFileName').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            hideError();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
