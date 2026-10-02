@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्मार्ट आभा कार्ड प्रिंट (ABHA Card) - QuickIDPrint</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4338ca;
+            --primary-hover: #3730a3;
+            --secondary: #6366f1;
+            --accent: #f97316;
+            --dark: #0f172a;
+            --slate: #334155;
+            --bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --success: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: #f1f5f9; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .top-nav {
+            background: white; border-bottom: 1px solid var(--card-border);
+            padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--dark); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { color: var(--slate); text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { color: var(--primary); }
+
+        .container {
+            background: white; padding: 35px 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); max-width: 580px; margin: 35px auto; width: 90%;
+            border: 1px solid var(--card-border);
+        }
+
+        h2 { color: var(--primary); margin-bottom: 18px; font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .feature-box {
+            background: #eef2ff; border: 1.5px dashed #c7d2fe; border-radius: 12px;
+            padding: 14px 18px; font-size: 14px; color: #3730a3; margin-bottom: 22px; line-height: 1.6;
+        }
+        .feature-box i { color: var(--primary); margin-right: 6px; }
+
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--slate); font-size: 15px; }
+        .form-control {
+            width: 100%; padding: 12px 16px; font-size: 15px; border-radius: 10px;
+            border: 1.5px solid #cbd5e1; background: var(--bg); outline: none; transition: 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+        
+        .btn-process {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white; border: none; padding: 15px; width: 100%; font-size: 17px; font-weight: 800;
+            border-radius: 12px; cursor: pointer; margin-top: 15px; transition: 0.25s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 4px 15px rgba(67, 56, 202, 0.25);
+        }
+        .btn-process:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(67, 56, 202, 0.35); }
+        .btn-process:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .error-box {
+            color: #b91c1c; font-weight: 700; display: none; margin-top: 16px;
+            background: #fef2f2; padding: 12px 16px; border-radius: 10px; border: 1px solid #fecaca; font-size: 14.5px;
+        }
+
+        /* 🟢 Live Preview & Dual Download Card */
+        .preview-wrapper {
+            display: none; margin-top: 25px; padding-top: 20px; border-top: 2px dashed #e2e8f0;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .preview-title { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
+        .cards-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .preview-card-item {
+            background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px; text-align: center;
+        }
+        .preview-card-item img { width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .preview-card-item p { font-size: 12px; font-weight: 700; color: var(--slate); margin-top: 6px; }
+
+        .download-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-dl-pdf {
+            background: #dc2626; color: white; border: none; padding: 12px; border-radius: 10px;
+            font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-dl-pdf:hover { background: #b91c1c; transform: translateY(-2px); }
+
+        .btn-dl-png {
+            background: #0284c7; color: white; border: none; padding: 12px; border-radius: 10px;
+            font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-dl-png:hover { background: #0369a1; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="homepage.html" class="brand"><i class="fas fa-heartbeat" style="color:var(--primary);"></i> Quick<span>ID</span>Print</a>
+        <a href="homepage.html" class="back-link"><i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा</a>
+    </nav>
+
+    <div class="container">
+        <h2><i class="fas fa-notes-medical"></i> स्मार्ट आभा कार्ड प्रिंट</h2>
+        
+        <div class="feature-box">
+            <div><i class="fas fa-bolt"></i> <b>हाय-स्पीड AI क्रॉप:</b> अचूक कडा, राऊंड कॉर्नर्स आणि 4px काळी कटिंग बॉर्डर.</div>
+            <div style="margin-top:4px;"><i class="fas fa-file-export"></i> <b>PDF व PNG सपोर्ट:</b> इच्छित फॉरमॅटमध्ये एका क्लिकवर डाऊनलोड करा.</div>
+        </div>
+
+        <p id="errorBox" class="error-box"></p>
+
+        <form id="abhaForm" onsubmit="processAbhaCard(event)">
+            <div class="form-group">
+                <label><i class="fas fa-layer-group" style="color:var(--primary);"></i> पेपर साईझ निवडा:</label>
+                <select id="paperSize" class="form-control">
+                    <option value="4x6">4x6 Photo Paper (समोरासमोर स्मार्ट लेआउट)</option>
+                    <option value="a4">A4 Full Size (प्रिंट-रेडी कटिंग लाईनसह)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-file-pdf" style="color:var(--primary);"></i> मूळ ABHA PDF फाईल निवडा:</label>
+                <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-key" style="color:var(--primary);"></i> PDF पासवर्ड (असल्यास):</label>
+                <input type="password" id="pdfPassword" class="form-control" placeholder="पासवर्ड असल्यास टाईप करा (नसल्यास रिकामा ठेवा)">
+            </div>
+
+            <button type="submit" id="btnProcess" class="btn-process">
+                <i class="fas fa-magic"></i> आभा कार्ड तयार करा (Generate Card)
+            </button>
+        </form>
+
+        <!-- 🟢 Live Card Preview & Dual Download Options -->
+        <div id="previewArea" class="preview-wrapper">
+            <p class="preview-title"><i class="fas fa-eye text-emerald-600"></i> तयार झालेले आभा कार्ड (Live Preview):</p>
+            
+            <div class="cards-preview-grid">
+                <div class="preview-card-item">
+                    <img id="prevFrontImg" src="" alt="Front Card">
+                    <p>समोरची बाजू (Front)</p>
+                </div>
+                <div class="preview-card-item">
+                    <img id="prevBackImg" src="" alt="Back Card">
+                    <p>मागील बाजू (Back)</p>
+                </div>
+            </div>
+
+            <div class="download-actions-grid">
+                <button type="button" class="btn-dl-pdf" onclick="triggerDownload('pdf')">
+                    <i class="fas fa-file-pdf"></i> डाऊनलोड PDF
+                </button>
+                <button type="button" class="btn-dl-png" onclick="triggerDownload('png')">
+                    <i class="fas fa-file-image"></i> डाऊनलोड PNG
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+
+        // 🔒 ऑथेंटिकेशन व वैधता तपासणी
+        let userData = null;
+        try {
+            userData = JSON.parse(localStorage.getItem('quickid_user'));
+        } catch(e) {
+            userData = null;
+        }
+
+        if (!userData || !userData.mobile) {
+            alert("कृपया प्रथम लॉगिन करा!");
+            window.location.replace("login.html");
+        } else {
+            const remDays = parseInt(userData.remainingDays) || 0;
+            if (remDays <= 0 && userData.role !== 'admin' && !userData.isAdmin) {
+                alert("तुमच्या सबस्क्रिप्शन प्लॅनची मुदत संपली आहे. कृपया रिचार्ज करा!");
+                window.location.replace("recharge.html");
+            }
+        }
+
+        // डाउनलोडसाठी कॅश केलेले डेटा
+        let generatedData = null;
+
+        async function processAbhaCard(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnProcess');
+            const errorBox = document.getElementById('errorBox');
+            const previewArea = document.getElementById('previewArea');
+            const fileInput = document.getElementById('pdfFile').files[0];
+
+            if (!fileInput) {
+                alert("कृपया आधी PDF फाईल निवडा.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> हाय-स्पीड प्रोसेस सुरू आहे, कृपया थांबा...";
+            errorBox.style.display = 'none';
+            previewArea.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('pdfFile', fileInput);
+            formData.append('password', document.getElementById('pdfPassword').value.trim());
+            formData.append('paperSize', document.getElementById('paperSize').value);
+            formData.append('mobile', userData ? userData.mobile : '');
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/services/process-abha`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    generatedData = data;
+
+                    // लाईव्ह प्रीव्ह्यू सेट करणे
+                    document.getElementById('prevFrontImg').src = data.preview_front;
+                    document.getElementById('prevBackImg').src = data.preview_back;
+                    previewArea.style.display = 'block';
+
+                    btn.disabled = false;
+                    btn.innerHTML = "<i class='fas fa-check-circle'></i> कार्ड तयार झाले! खाली डाऊनलोड करा";
+                    btn.style.background = "#16a34a";
+
+                    // प्रीव्ह्यू एरियाकडे स्क्रोल करणे
+                    previewArea.scrollIntoView({ behavior: 'smooth' });
+
+                } else {
+                    errorBox.innerHTML = "<i class='fas fa-exclamation-triangle'></i> " + (data.error || "कार्ड तयार करताना त्रुटी आली.");
+                    errorBox.style.display = 'block';
+                    btn.disabled = false;
+                    btn.innerHTML = "<i class='fas fa-magic'></i> आभा कार्ड तयार करा (Generate Card)";
+                }
+            } catch (err) {
+                console.error(err);
+                errorBox.innerHTML = "<i class='fas fa-exclamation-triangle'></i> सर्व्हरशी संपर्क होऊ शकला नाही. इंटरनेट तपासा आणि पुन्हा प्रयत्न करा.";
+                errorBox.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = "<i class='fas fa-magic'></i> आभा कार्ड तयार करा (Generate Card)";
+            }
+        }
+
+        // 📥 PDF किंवा PNG डाऊनलोड ट्रिगर करणे
+        function triggerDownload(type) {
+            if (!generatedData) {
+                alert("कृपया आधी कार्ड प्रोसेस करा.");
+                return;
+            }
+
+            const ts = Date.now();
+            const paper = generatedData.paperSize.toUpperCase();
+            const link = document.createElement("a");
+
+            if (type === 'pdf') {
+                link.href = `data:application/pdf;base64,${generatedData.pdf_base64}`;
+                link.download = `QuickIDPrint_ABHA_${paper}_${ts}.pdf`;
+            } else {
+                link.href = `data:image/png;base64,${generatedData.png_base64}`;
+                link.download = `QuickIDPrint_ABHA_${paper}_${ts}.png`;
+            }
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
