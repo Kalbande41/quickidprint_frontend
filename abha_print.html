@@ -3,765 +3,519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABHA Health Card Print | QuickIDPrint</title>
+    <title>ABHA Health Card Print - QuickIDPrint</title>
 
-    <!-- Google Fonts & FontAwesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- PDF & Canvas Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <!-- Auth Guard & Config -->
-    <script src="config.js"></script>
-    <script src="auth-guard.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --primary: #123a8f;
-            --primary-hover: #0d2a6b;
-            --secondary: #2563eb;
-            --accent: #f97316;
-            --theme-green: #16a34a;
-            --theme-green-hover: #15803d;
-            --dark: #0f172a;
-            --slate-800: #1e293b;
-            --slate-600: #475569;
-            --slate-400: #94a3b8;
-            --light-bg: #f8fafc;
-            --card-border: #e2e8f0;
-            --white: #ffffff;
-            --shadow-md: 0 10px 25px -5px rgba(22, 163, 74, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--light-bg); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* Header */
-        header {
-            background: white; padding: 14px 6%; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 90;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-        }
-        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-box {
-            width: 42px; height: 42px; border-radius: 12px;
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--theme-green); font-size: 20px; border: 1px solid #86efac;
-        }
-        .logo-text h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
-        .logo-text h1 .brand-quick { color: var(--primary); }
-        .logo-text h1 .brand-id { color: var(--accent); }
-        .logo-text h1 .brand-print { color: var(--theme-green); }
-        .logo-text p { color: var(--slate-600); font-size: 12.5px; font-weight: 600; }
-
-        .btn-back {
-            background: #f1f5f9; color: var(--slate-800); border: 1px solid #cbd5e1; padding: 8px 16px;
-            border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none;
-            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
-        }
-        .btn-back:hover { background: #e2e8f0; color: var(--primary); transform: translateY(-1px); }
-
-        /* Main Container */
-        .container { max-width: 680px; margin: 35px auto 50px; padding: 0 20px; width: 100%; flex: 1; }
-
-        /* Notice Banner */
-        .info-alert {
-            background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px;
-            padding: 14px 18px; margin-bottom: 25px; display: flex; align-items: center; gap: 14px;
-        }
-        .info-alert i { font-size: 24px; color: var(--theme-green); }
-        .info-alert p { font-size: 14.5px; color: #166534; font-weight: 600; line-height: 1.4; }
-
-        /* Service Card */
-        .service-card {
-            background: white; border-radius: 22px; border: 1.5px solid var(--card-border);
-            padding: 35px 30px; box-shadow: var(--shadow-md);
-        }
-        .card-header-badge {
-            display: inline-flex; align-items: center; gap: 8px; background: #ecfdf5;
-            color: #047857; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;
-            border: 1px solid #a7f3d0; margin-bottom: 15px;
-        }
-        .card-title { font-size: 24px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-        .card-subtitle { font-size: 14.5px; color: var(--slate-600); margin-bottom: 25px; }
-
-        /* Form Controls */
-        .form-group { margin-bottom: 22px; text-align: left; }
-        .form-group label { display: block; font-size: 14.5px; font-weight: 800; color: var(--slate-800); margin-bottom: 8px; }
+        * { font-family: 'Mukta', sans-serif; }
         
-        .paper-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .paper-option {
-            border: 2px solid #cbd5e1; border-radius: 14px; padding: 14px; text-align: center;
-            cursor: pointer; transition: all 0.2s; background: #f8fafc;
+        /* Laser Scanner Animation */
+        @keyframes laserMove {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 96%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
         }
-        .paper-option:hover { border-color: #86efac; background: #f0fdf4; }
-        .paper-option.active {
-            border-color: var(--theme-green); background: #f0fdf4; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
-        }
-        .paper-option i { font-size: 22px; color: var(--theme-green); margin-bottom: 6px; display: block; }
-        .paper-option strong { display: block; font-size: 15px; color: var(--dark); }
-        .paper-option span { font-size: 12px; color: var(--slate-600); }
-
-        /* File Upload Box (No Password) */
-        .upload-area {
-            border: 2px dashed #86efac; background: #f0fdf4; border-radius: 16px;
-            padding: 30px 20px; text-align: center; cursor: pointer; transition: 0.25s;
-            position: relative;
-        }
-        .upload-area:hover, .upload-area.dragover { border-color: var(--theme-green); background: #dcfce7; }
-        .upload-icon-circle {
-            width: 60px; height: 60px; border-radius: 50%; background: white;
-            display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
-            font-size: 26px; color: var(--theme-green); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
-        }
-        .upload-area h4 { font-size: 16.5px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
-        .upload-area p { font-size: 13px; color: var(--slate-600); }
-        .selected-file-badge {
-            margin-top: 14px; display: none; background: white; padding: 8px 14px;
-            border-radius: 10px; font-size: 13.5px; font-weight: 700; color: #166534;
-            border: 1px solid #86efac; word-break: break-all;
+        .laser-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #10b981, #059669, #34d399, transparent);
+            box-shadow: 0 0 15px #10b981, 0 0 25px #059669;
+            animation: laserMove 2s infinite ease-in-out;
+            z-index: 20;
         }
 
-        /* Action Button */
-        .btn-generate {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: white; border: none; padding: 15px 25px; width: 100%; font-size: 17px;
-            font-weight: 800; border-radius: 14px; cursor: pointer; margin-top: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25); transition: 0.25s;
+        /* Pulse glow */
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.04); opacity: 1; }
         }
-        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(22, 163, 74, 0.35); }
-        .btn-generate:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        .error-alert {
-            display: none; background: #fef2f2; border: 1.5px solid #fecaca;
-            color: #dc2626; padding: 12px 16px; border-radius: 12px; margin-top: 16px;
-            font-size: 14px; font-weight: 700; align-items: center; gap: 10px;
-        }
-
-        /* ==============================================================
-           🟢 PROCESSING ANIMATION (LASER SCANNER & PROGRESS)
-        ============================================================== */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px); display: none; align-items: center;
-            justify-content: center; z-index: 1000; padding: 20px;
-        }
-        .processing-box {
-            background: white; border-radius: 24px; padding: 35px 30px;
-            max-width: 440px; width: 100%; text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); border: 1.5px solid rgba(255,255,255,0.2);
-            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes modalPop {
-            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .scanner-card {
-            width: 220px; height: 135px; margin: 0 auto 25px; border-radius: 14px;
-            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
-            border: 2px solid #34d399; position: relative; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.25);
-            display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
-        }
-        .scanner-card-header { display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; font-weight: bold; }
-        .scanner-chip { width: 28px; height: 20px; background: #fbbf24; border-radius: 4px; border: 1px solid #f59e0b; }
-        .scanner-card-body { display: flex; gap: 8px; align-items: center; }
-        .scanner-avatar { width: 34px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 4px; }
-        .scanner-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .scanner-line { height: 5px; background: rgba(255,255,255,0.4); border-radius: 3px; }
-        
-        .laser-beam {
-            position: absolute; left: 0; width: 100%; height: 3px;
-            background: #38bdf8; box-shadow: 0 0 15px 4px #38bdf8, 0 0 30px 6px #0ea5e9;
-            animation: scanLaser 1.8s ease-in-out infinite alternate;
-        }
-        @keyframes scanLaser { 0% { top: 4%; } 100% { top: 94%; } }
-
-        .processing-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
-        .processing-desc { font-size: 13.5px; color: var(--slate-600); margin-bottom: 20px; }
-
-        .progress-track {
-            background: #e2e8f0; height: 10px; border-radius: 20px; overflow: hidden;
-            margin-bottom: 18px;
-        }
-        .progress-fill {
-            height: 100%; width: 0%; border-radius: 20px;
-            background: linear-gradient(90deg, #16a34a, #3b82f6, #16a34a);
-            background-size: 200% 100%;
-            transition: width 0.4s ease;
-            animation: progressGradient 2s linear infinite;
-        }
-        @keyframes progressGradient { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-
-        .step-list { text-align: left; margin: 15px 0 5px; display: flex; flex-direction: column; gap: 10px; }
-        .step-item {
-            font-size: 13.5px; font-weight: 700; color: var(--slate-400); display: flex; align-items: center; gap: 10px;
-        }
-        .step-item.active { color: var(--primary); }
-        .step-item.done { color: var(--theme-green); }
-        .step-icon { width: 18px; text-align: center; }
-
-        /* ==============================================================
-           🟢 RESULT & 4x6 PREVIEW SECTION
-        ============================================================== */
-        .result-section { display: none; margin-top: 25px; animation: modalPop 0.3s ease-out; }
-        
-        .preview-box {
-            background: #f8fafc; border: 1.5px solid var(--card-border);
-            border-radius: 18px; padding: 20px; margin-bottom: 22px; text-align: center;
-        }
-        .sheet-badge {
-            display: inline-block; background: #e0f2fe; color: #0369a1;
-            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px;
-        }
-        .preview-title { font-size: 16px; font-weight: 800; color: var(--slate-800); margin-bottom: 14px; }
-        .preview-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .preview-img-wrapper {
-            background: white; padding: 6px; border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #cbd5e1;
-        }
-        .preview-img-wrapper img { width: 180px; height: auto; border-radius: 8px; display: block; }
-        .preview-label { font-size: 12px; font-weight: 700; color: var(--slate-600); margin-top: 6px; }
-
-        /* Dual 4x6 Download Buttons */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 15px; }
-        .btn-dl-pdf {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: white; border: none; padding: 15px; border-radius: 14px;
-            font-size: 15.5px; font-weight: 800; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
-            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
-        }
-        .btn-dl-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(22, 163, 74, 0.35); }
-
-        .btn-dl-png {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white; border: none; padding: 15px; border-radius: 14px;
-            font-size: 15.5px; font-weight: 800; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-        }
-        .btn-dl-png:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35); }
-
-        .btn-reset-form {
-            background: #f1f5f9; color: var(--slate-800); border: 1.5px solid #cbd5e1;
-            padding: 12px; border-radius: 12px; font-size: 14.5px; font-weight: 700;
-            width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.2s;
-        }
-        .btn-reset-form:hover { background: #e2e8f0; color: var(--primary); }
-
-        footer { text-align: center; padding: 20px; color: var(--slate-400); font-size: 13px; font-weight: 600; }
-
-        @media (max-width: 600px) {
-            .paper-selector { grid-template-columns: 1fr; }
-            .action-grid { grid-template-columns: 1fr; }
-            .preview-img-wrapper img { width: 140px; }
+        .pulse-card {
+            animation: pulseGlow 2.5s infinite ease-in-out;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Frosted Header -->
-    <header>
-        <a href="homepage.html" class="header-logo">
-            <div class="logo-box"><i class="fas fa-heartbeat"></i></div>
-            <div class="logo-text">
-                <h1><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h1>
-                <p>ABHA हेल्थ कार्ड जनरेटर</p>
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="homepage.html" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                        <i class="fas fa-heart-pulse"></i>
+                    </span>
+                    <div>
+                        <h1 class="text-base font-bold text-slate-900 leading-tight">आभा कार्ड प्रिंट (ABHA Card)</h1>
+                        <p class="text-xs text-slate-500">स्मार्ट ३०० DPI फ्रंट व बॅक ऑटो कटिंग साधन</p>
+                    </div>
+                </div>
             </div>
-        </a>
-        <a href="homepage.html" class="btn-back">
-            <i class="fas fa-arrow-left"></i> डॅशबोर्डवर जा
-        </a>
+
+            <!-- User Status Badge -->
+            <div class="flex items-center gap-2">
+                <div class="hidden sm:flex flex-col text-right">
+                    <span id="navUserName" class="text-xs font-bold text-slate-700">ऑपरेटर</span>
+                    <span class="text-2xs text-emerald-600 font-semibold flex items-center gap-1 justify-end">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> सक्रिय खाते
+                    </span>
+                </div>
+                <div id="navDaysBadge" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-xl text-xs font-bold">
+                    <span id="navDaysLeft">--</span> दिवस शिल्लक
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        
-        <!-- Helpful Notice -->
-        <div class="info-alert">
-            <i class="fas fa-shield-heart"></i>
-            <p><strong>टीप:</strong> ABHA PDF वर पासवर्ड नसतो. फक्त तुमची फाईल निवडा; PDF आणि PNG दोन्ही अचूक 4x6 / A4 फॉरमॅटमध्ये डाऊनलोड होतील.</p>
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- Error Alert Box -->
+        <div id="errorAlert" class="hidden mb-4 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-3">
+            <i class="fas fa-triangle-exclamation text-rose-500 text-lg mt-0.5"></i>
+            <div class="flex-grow">
+                <h4 class="font-bold">त्रुटी आली!</h4>
+                <p id="errorMessage" class="text-xs mt-0.5 text-rose-700"></p>
+            </div>
+            <button onclick="hideError()" class="text-rose-400 hover:text-rose-700">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
-        <div class="service-card">
-            <span class="card-header-badge"><i class="fas fa-sparkles"></i> 4x6 / A4 शीट • ३०० DPI प्रिंट</span>
-            <h2 class="card-title"><i class="fas fa-id-card text-success"></i> आभा कार्ड (ABHA Print)</h2>
-            <p class="card-subtitle">स्मार्ट AI क्रॉपिंग द्वारे फ्रंट व बॅक बाजू कापून ४x६ किंवा A4 शीटवर सेट करा.</p>
+        <!-- 1. UPLOAD & OPTIONS CARD -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-5">
+                <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs">
+                        <i class="fas fa-sliders"></i>
+                    </span>
+                    <span>प्रिंटिंग पर्याय आणि PDF निवडा</span>
+                </h2>
+                <span class="text-2xs bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-full border border-emerald-200">
+                    <i class="fas fa-shield-halved"></i> 100% सुरक्षित प्रक्रिया
+                </span>
+            </div>
 
-            <form id="abhaForm" onsubmit="event.preventDefault(); startProcessing();">
+            <!-- Paper Size Selection -->
+            <div class="mb-5">
+                <label class="block text-xs font-bold text-slate-700 mb-2">प्रिंट पेपर साईझ निवडा:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer has-checked:border-emerald-600 has-checked:bg-emerald-50/40 transition">
+                        <input type="radio" name="paperSize" value="4x6" checked class="accent-emerald-600 w-4 h-4">
+                        <div>
+                            <span class="font-bold text-xs sm:text-sm text-slate-800 block">४ x ६ फोटो पेपर (4x6 Photo Sheet)</span>
+                            <span class="text-2xs text-slate-500">एका खाली एक दोन्ही बाजू (CSC ऑपरेटर पसंती)</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer has-checked:border-emerald-600 has-checked:bg-emerald-50/40 transition">
+                        <input type="radio" name="paperSize" value="a4" class="accent-emerald-600 w-4 h-4">
+                        <div>
+                            <span class="font-bold text-xs sm:text-sm text-slate-800 block">A4 संपूर्ण पान (A4 Sheet)</span>
+                            <span class="text-2xs text-slate-500">शेजारी-शेजारी (Side by Side) दोन्ही बाजू</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Drag & Drop Upload Zone -->
+            <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50/60 hover:bg-emerald-50/30 rounded-2xl p-6 sm:p-8 text-center transition cursor-pointer flex flex-col items-center justify-center">
+                <input type="file" id="pdfInput" accept="application/pdf" class="hidden" onchange="handleFileSelected(this.files)">
                 
-                <!-- 1. Paper Size Selector -->
-                <div class="form-group">
-                    <label>१. प्रिंटसाठी कागदाचा आकार निवडा:</label>
-                    <div class="paper-selector">
-                        <div class="paper-option active" onclick="selectPaper('4x6', this)">
-                            <i class="fas fa-image"></i>
-                            <strong>4x6 फोटो पेपर</strong>
-                            <span>(Single 4x6 Photo Sheet)</span>
-                        </div>
-                        <div class="paper-option" onclick="selectPaper('a4', this)">
-                            <i class="fas fa-file"></i>
-                            <strong>A4 पेपर</strong>
-                            <span>(Full Page Sheet Layout)</span>
-                        </div>
-                    </div>
-                    <input type="hidden" id="paperSize" value="4x6">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-3 shadow-xs">
+                    <i class="fas fa-file-medical"></i>
                 </div>
-
-                <!-- 2. PDF Upload Zone (Password Completely Removed) -->
-                <div class="form-group">
-                    <label>२. ABHA PDF फाईल निवडा:</label>
-                    <div class="upload-area" id="uploadDropZone" onclick="document.getElementById('pdfInput').click()">
-                        <div class="upload-icon-circle">
-                            <i class="fas fa-cloud-arrow-up"></i>
-                        </div>
-                        <h4>येथे क्लिक करून ABHA PDF निवडा</h4>
-                        <p>किंवा फाईल ड्रॅग करून येथे सोडा (.pdf)</p>
-                        
-                        <div class="selected-file-badge" id="selectedFileName">
-                            <i class="fas fa-file-pdf text-danger"></i> <span id="fileNameText">फाईल निवडली</span>
-                        </div>
-                    </div>
-                    <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" onchange="handleFileSelected(this)">
+                
+                <h3 class="font-bold text-sm sm:text-base text-slate-800">येथे ओरिजनल आभा (ABHA) कार्ड PDF फाईल अपलोड करा</h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm">फाईल ड्रॅग करून येथे टाका किंवा कॉम्प्युटरमधून निवडण्यासाठी क्लिक करा</p>
+                
+                <div class="mt-4 flex items-center gap-2 text-2xs text-slate-400 bg-white border border-slate-200 px-3 py-1 rounded-full">
+                    <i class="fas fa-circle-info text-emerald-500"></i> पासवर्डची गरज नाही • 100% ओरिजनल क्लॅरिटी
                 </div>
+            </div>
 
-                <!-- Generate Button -->
-                <button type="submit" id="btnGenerate" class="btn-generate">
-                    <i class="fas fa-bolt"></i> कार्ड तयार करा (Generate ABHA Card)
-                </button>
-
-                <div class="error-alert" id="errorBox">
-                    <i class="fas fa-circle-exclamation"></i>
-                    <span id="errorText">त्रुटी आली.</span>
-                </div>
-            </form>
-
-            <!-- 3. Result Section -->
-            <div class="result-section" id="resultSection">
-                <div class="preview-box">
-                    <span class="sheet-badge" id="sheetBadgeText">४x६ फोटो पेपर शीट तयार झाली (१२०० x १८०० px)</span>
-                    <div class="preview-title">
-                        <i class="fas fa-circle-check text-success"></i> ABHA कार्ड तयार झाले! लाईव्ह प्रिव्ह्यू:
-                    </div>
-                    <div class="preview-grid">
-                        <div class="preview-img-wrapper">
-                            <img id="frontPreviewImg" src="" alt="Front Side">
-                            <div class="preview-label">समोरची बाजू (Front)</div>
-                        </div>
-                        <div class="preview-img-wrapper">
-                            <img id="backPreviewImg" src="" alt="Back Side">
-                            <div class="preview-label">मागील बाजू (Back)</div>
-                        </div>
+            <!-- Selected File Info (Hidden by default) -->
+            <div id="selectedFileInfo" class="hidden mt-4 p-3.5 bg-emerald-50/80 border border-emerald-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-sm shrink-0">
+                        <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <div class="truncate">
+                        <p id="selectedFileName" class="text-xs font-bold text-slate-800 truncate">abha_card.pdf</p>
+                        <p id="selectedFileSize" class="text-2xs text-slate-500">120 KB</p>
                     </div>
                 </div>
-
-                <!-- Dual Download Actions -->
-                <div class="action-grid">
-                    <button class="btn-dl-pdf" id="btnDownloadPdf" onclick="downloadResultPdf()">
-                        <i class="fas fa-file-pdf"></i> <span id="pdfBtnText">📄 डाऊनलोड PDF (4x6)</span>
-                    </button>
-                    <button class="btn-dl-png" id="btnDownloadPng" onclick="downloadResultPng()">
-                        <i class="fas fa-file-image"></i> <span id="pngBtnText">🖼️ डाऊनलोड PNG (4x6 शीट)</span>
-                    </button>
-                </div>
-
-                <button class="btn-reset-form" onclick="resetForm()">
-                    <i class="fas fa-arrow-rotate-right"></i> नवीन ABHA कार्ड बनवा
+                <button onclick="clearSelectedFile()" class="text-slate-400 hover:text-rose-600 p-1.5 transition" title="रद्द करा">
+                    <i class="fas fa-trash-can"></i>
                 </button>
             </div>
 
+            <!-- Action Button -->
+            <button id="btnProcess" onclick="startProcessingCard()" disabled class="w-full mt-5 py-3.5 px-4 rounded-xl font-bold text-sm sm:text-base text-white bg-slate-300 cursor-not-allowed transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fas fa-wand-magic-sparkles"></i>
+                <span>आभा कार्ड तयार करा (Generate Card)</span>
+            </button>
         </div>
-    </div>
 
-    <!-- ==============================================================
-       🟢 PROCESSING MODAL (LASER SCANNER & PROGRESS BAR)
-    ============================================================== -->
-    <div class="modal-overlay" id="processingModal">
-        <div class="processing-box">
-            
-            <!-- Graphic Laser Scanner -->
-            <div class="scanner-card">
-                <div class="laser-beam"></div>
-                <div class="scanner-card-header">
-                    <span>ABHA HEALTH CARD</span>
-                    <i class="fas fa-wifi"></i>
+        <!-- 2. RESULT SECTION (Hidden until processed) -->
+        <div id="resultSection" class="hidden bg-white rounded-2xl shadow-sm border border-emerald-200 p-5 sm:p-6 mb-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-5">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-md bg-emerald-600 text-white flex items-center justify-center text-xs">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <h3 class="font-bold text-sm sm:text-base text-slate-900">तुमचे आभा कार्ड तयार झाले आहे!</h3>
                 </div>
-                <div class="scanner-chip"></div>
-                <div class="scanner-card-body">
-                    <div class="scanner-avatar"></div>
-                    <div class="scanner-lines">
-                        <div class="scanner-line" style="width: 80%;"></div>
-                        <div class="scanner-line" style="width: 60%;"></div>
-                        <div class="scanner-line" style="width: 90%;"></div>
+                <span id="resultPaperBadge" class="text-2xs font-bold bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">
+                    ४x६ फोटो पेपर
+                </span>
+            </div>
+
+            <!-- Card Previews Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Front Side Preview -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                    <span class="text-xs font-bold text-slate-600 mb-2 block flex items-center justify-center gap-1.5">
+                        <i class="fas fa-address-card text-emerald-600"></i> पुढील बाजू (Front Side)
+                    </span>
+                    <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs inline-block max-w-full">
+                        <img id="previewFront" src="" alt="Front Preview" class="rounded max-h-56 mx-auto object-contain">
+                    </div>
+                </div>
+
+                <!-- Back Side Preview -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                    <span class="text-xs font-bold text-slate-600 mb-2 block flex items-center justify-center gap-1.5">
+                        <i class="fas fa-qrcode text-emerald-600"></i> मागील बाजू (Back Side)
+                    </span>
+                    <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs inline-block max-w-full">
+                        <img id="previewBack" src="" alt="Back Preview" class="rounded max-h-56 mx-auto object-contain">
                     </div>
                 </div>
             </div>
 
-            <h3 class="processing-title">ABHA कार्ड प्रोसेस होत आहे...</h3>
-            <p class="processing-desc">कृपया काही सेकंद प्रतीक्षा करा, अचूक क्रॉपिंग सुरू आहे.</p>
+            <!-- Download Buttons (Both PDF & 4x6 PNG) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- PDF Download -->
+                <button onclick="downloadResult('pdf')" class="py-3.5 px-4 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 active:scale-98 transition flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fas fa-file-pdf text-base"></i>
+                    <span>📄 डाऊनलोड PDF (300 DPI प्रिंट)</span>
+                </button>
+
+                <!-- PNG Sheet Download -->
+                <button onclick="downloadResult('png')" class="py-3.5 px-4 rounded-xl font-bold text-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 active:scale-98 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-image text-base"></i>
+                    <span id="pngBtnText">🖼️ डाऊनलोड PNG (4x6 फोटो शीट)</span>
+                </button>
+            </div>
+
+            <!-- Print Instructions Notice -->
+            <div class="mt-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+                <i class="fas fa-lightbulb text-amber-600 text-base mt-0.5 shrink-0"></i>
+                <div>
+                    <p class="font-bold">प्रिंटिंग सूचना:</p>
+                    <p class="text-amber-800 mt-0.5">प्रिंटर सेटिंग्जमध्ये <strong>'Actual Size (100%)'</strong> निवडा. 4x6 फोटो पेपरवर ग्लॉसी किंवा लॅमिनेशन शीट वापरल्यास हुबेहूब ओरिजनल पीव्हीसी कार्डसारखा लूक मिळतो.</p>
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="text-center mt-5">
+                <button onclick="resetTool()" class="text-xs text-slate-500 hover:text-slate-800 font-bold underline">
+                    <i class="fas fa-rotate-right"></i> नवीन आभा कार्ड तयार करा
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= SCANNING MODAL ================= -->
+    <div id="scanModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative overflow-hidden border border-slate-100">
+            
+            <!-- Graphic with Laser Line -->
+            <div class="w-48 h-32 mx-auto mb-4 bg-slate-100 rounded-2xl relative overflow-hidden border-2 border-emerald-400 flex items-center justify-center shadow-inner">
+                <div class="laser-line"></div>
+                <div class="text-emerald-600 text-4xl pulse-card">
+                    <i class="fas fa-heart-pulse"></i>
+                </div>
+                <span class="absolute bottom-2 text-2xs font-bold text-slate-400 tracking-wider uppercase font-mono">
+                    AI ABHA Crop v2.0
+                </span>
+            </div>
+
+            <h3 class="text-base font-extrabold text-slate-900 mb-1">आभा कार्ड प्रोसेस होत आहे</h3>
+            <p id="scanStatusText" class="text-xs text-emerald-600 font-bold mb-4">१. ABHA PDF फाईल सर्व्हरवर पाठवत आहे...</p>
 
             <!-- Progress Bar -->
-            <div class="progress-track">
-                <div class="progress-fill" id="progressFill"></div>
+            <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                <div id="scanProgressBar" class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
             </div>
-
-            <!-- Steps Checklist -->
-            <div class="step-list">
-                <div class="step-item" id="step1">
-                    <span class="step-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
-                    <span>१. ABHA PDF फाईल तपासली जात आहे...</span>
-                </div>
-                <div class="step-item" id="step2">
-                    <span class="step-icon"><i class="far fa-circle"></i></span>
-                    <span>२. अचूक फ्रंट व बॅक स्मार्ट AI क्रॉपिंग...</span>
-                </div>
-                <div class="step-item" id="step3">
-                    <span class="step-icon"><i class="far fa-circle"></i></span>
-                    <span>३. ३०० DPI ४x६ प्रिंट-रेडी PDF आणि PNG तयार होत आहे...</span>
-                </div>
-            </div>
-
+            <p class="text-2xs text-slate-400">कृपया प्रतीक्षा करा, उच्च गुणवत्तेचे ३०० DPI कटिंग सुरू आहे...</p>
         </div>
     </div>
 
-    <footer>
-        © 2026 QuickIDPrint Center. सर्व हक्क सुरक्षित.
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>QuickIDPrint • हाय-स्पीड सुरक्षित आयडी कार्ड प्रिंटिंग पोर्टल</p>
     </footer>
 
-    <!-- ==============================================================
-       🟢 JAVASCRIPT LOGIC (EXACT 4x6 / A4 SHEET PNG & PDF)
-    ============================================================== -->
+    <!-- ================= JAVASCRIPT LOGIC (100% ZERO COORDINATES) ================= -->
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        const { jsPDF } = window.jspdf;
+        // 🟢 BACKEND CONFIGURATION
         const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
-        let selectedFile = null;
-        let generatedPdfDoc = null;
-        let generatedSheetPngUrl = null;
-        let generatedFrontDataUrl = null;
-        let generatedBackDataUrl = null;
+        // Global State
+        let currentUser = null;
+        let selectedPdfFile = null;
+        let processedData = null; // Holds pdf_base64, png_base64, previews
 
-        function selectPaper(size, elem) {
-            document.querySelectorAll('.paper-option').forEach(el => el.classList.remove('active'));
-            elem.classList.add('active');
-            document.getElementById('paperSize').value = size;
-            
-            const label = size === '4x6' ? '4x6' : 'A4';
-            document.getElementById('pdfBtnText').innerText = `📄 डाऊनलोड PDF (${label})`;
-            document.getElementById('pngBtnText').innerText = `🖼️ डाऊनलोड PNG (${label} शीट)`;
-            document.getElementById('sheetBadgeText').innerText = size === '4x6' 
-                ? '४x६ फोटो पेपर शीट तयार झाली (१२०० x १८०० px)' 
-                : 'A4 प्रिंट शीट तयार झाली (२४८० x ३५०८ px)';
-        }
-
-        function handleFileSelected(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-                    showError("कृपया फक्त वैध PDF फाईल निवडा.");
-                    return;
-                }
-                selectedFile = file;
-                document.getElementById('fileNameText').innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                document.getElementById('selectedFileName').style.display = 'inline-block';
-                hideError();
-            }
-        }
-
-        const dropZone = document.getElementById('uploadDropZone');
-        ['dragenter', 'dragover'].forEach(name => {
-            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
-        });
-        ['dragleave', 'drop'].forEach(name => {
-            dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
-        });
-        dropZone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files && files.length > 0) {
-                document.getElementById('pdfInput').files = files;
-                handleFileSelected(document.getElementById('pdfInput'));
-            }
-        });
-
-        function showError(msg) {
-            const err = document.getElementById('errorBox');
-            document.getElementById('errorText').innerText = msg;
-            err.style.display = 'flex';
-        }
-        function hideError() {
-            document.getElementById('errorBox').style.display = 'none';
-        }
-
-        function setStep(id, state, iconHtml) {
-            const el = document.getElementById(id);
-            el.className = 'step-item ' + state;
-            el.querySelector('.step-icon').innerHTML = iconHtml;
-        }
-
-        // 🟢 MAIN PROCESSING (LASER ANIMATION + CROPPING)
-        async function startProcessing() {
-            if (!selectedFile) {
-                showError("कृपया आधी तुमची ABHA PDF फाईल निवडा.");
+        // 🟢 1. AUTH GUARD ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedUser = localStorage.getItem('quickid_user');
+            if (!storedUser) {
+                window.location.href = "login.html";
                 return;
             }
 
-            hideError();
-            const modal = document.getElementById('processingModal');
-            const progressFill = document.getElementById('progressFill');
-            const btn = document.getElementById('btnGenerate');
-            btn.disabled = true;
-
-            setStep('step1', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
-            setStep('step2', 'idle', '<i class="far fa-circle"></i>');
-            setStep('step3', 'idle', '<i class="far fa-circle"></i>');
-            progressFill.style.width = '20%';
-            modal.style.display = 'flex';
-
             try {
-                // STEP 1: Read PDF
-                await new Promise(r => setTimeout(r, 350));
-                const fileBytes = await selectedFile.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: fileBytes }).promise;
-                const page = await pdf.getPage(1);
-
-                progressFill.style.width = '50%';
-                setStep('step1', 'done', '<i class="fas fa-check-circle text-success"></i>');
-                setStep('step2', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
-
-                const viewport = page.getViewport({ scale: 2.5 });
-                const mainCanvas = document.createElement('canvas');
-                const ctx = mainCanvas.getContext('2d');
-                mainCanvas.width = viewport.width;
-                mainCanvas.height = viewport.height;
-                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-                // STEP 2: Exact Coordinates Crop
-                await new Promise(r => setTimeout(r, 350));
-                const coords = {
-                    front_x: 40,
-                    front_y: 40,
-                    front_w: 1858,
-                    front_h: 1138,
-
-                    back_x: 40,
-                    back_y: 1300,
-                    back_w: 1857,
-                    back_h: 1138,
-
-                    base_width: 1938,
-                    base_height: 2500,
-
-                    print_width_mm: 85.6,
-                    print_height_mm: 54
-                };
-
-                const sxFront = (coords.front_x / coords.base_width) * mainCanvas.width;
-                const syFront = (coords.front_y / coords.base_height) * mainCanvas.height;
-                const swFront = (coords.front_w / coords.base_width) * mainCanvas.width;
-                const shFront = (coords.front_h / coords.base_height) * mainCanvas.height;
-
-                const sxBack = (coords.back_x / coords.base_width) * mainCanvas.width;
-                const syBack = (coords.back_y / coords.base_height) * mainCanvas.height;
-                const swBack = (coords.back_w / coords.base_width) * mainCanvas.width;
-                const shBack = (coords.back_h / coords.base_height) * mainCanvas.height;
-
-                function processSide(sx, sy, sw, sh) {
-                    const c = document.createElement('canvas');
-                    c.width = sw; c.height = sh;
-                    const cCtx = c.getContext('2d');
-                    cCtx.drawImage(mainCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
-
-                    const finalC = document.createElement('canvas');
-                    finalC.width = sw; finalC.height = sh;
-                    const fCtx = finalC.getContext('2d');
-                    const rad = 25;
-
-                    fCtx.beginPath();
-                    fCtx.moveTo(rad, 0); fCtx.lineTo(sw - rad, 0); fCtx.quadraticCurveTo(sw, 0, sw, rad);
-                    fCtx.lineTo(sw, sh - rad); fCtx.quadraticCurveTo(sw, sh, sw - rad, sh);
-                    fCtx.lineTo(rad, sh); fCtx.quadraticCurveTo(0, sh, 0, sh - rad);
-                    fCtx.lineTo(0, rad); fCtx.quadraticCurveTo(0, 0, rad, 0);
-                    fCtx.closePath();
-
-                    fCtx.clip();
-                    fCtx.drawImage(c, 0, 0);
-
-                    fCtx.lineWidth = 4;
-                    fCtx.strokeStyle = "#1e293b";
-                    fCtx.stroke();
-
-                    return finalC.toDataURL('image/jpeg', 0.98);
+                currentUser = JSON.parse(storedUser);
+                document.getElementById('navUserName').innerText = currentUser.name || "ऑपरेटर";
+                
+                const remaining = parseInt(currentUser.remainingDays || 0);
+                document.getElementById('navDaysLeft').innerText = remaining;
+                
+                if (remaining <= 0) {
+                    showError("तुमचा रिचार्ज संपला आहे! कृपया सेवा वापरण्यासाठी रिचार्ज करा.");
+                    document.getElementById('btnProcess').disabled = true;
                 }
-
-                generatedFrontDataUrl = processSide(sxFront, syFront, swFront, shFront);
-                generatedBackDataUrl = processSide(sxBack, syBack, swBack, shBack);
-
-                progressFill.style.width = '75%';
-                setStep('step2', 'done', '<i class="fas fa-check-circle text-success"></i>');
-                setStep('step3', 'active', '<i class="fas fa-circle-notch fa-spin"></i>');
-
-                // STEP 3: PDF and Exact 4x6 Sheet PNG
-                await new Promise(r => setTimeout(r, 400));
-                const paperSize = document.getElementById('paperSize').value;
-                const cardW = coords.print_width_mm;
-                const cardH = coords.print_height_mm;
-
-                if (paperSize === '4x6') {
-                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4] });
-                    const mX = (101.6 - cardW) / 2;
-                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 15, cardW, cardH);
-                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX, 15 + cardH + 10, cardW, cardH);
-                } else {
-                    generatedPdfDoc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    const mX = (210 - (cardW * 2 + 10)) / 2;
-                    generatedPdfDoc.addImage(generatedFrontDataUrl, 'JPEG', mX, 20, cardW, cardH);
-                    generatedPdfDoc.addImage(generatedBackDataUrl, 'JPEG', mX + cardW + 10, 20, cardW, cardH);
-                }
-
-                generatedSheetPngUrl = await buildExactSheetPng(paperSize, generatedFrontDataUrl, generatedBackDataUrl, cardW, cardH);
-
-                progressFill.style.width = '100%';
-                setStep('step3', 'done', '<i class="fas fa-check-circle text-success"></i>');
-
-                await new Promise(r => setTimeout(r, 400));
-                modal.style.display = 'none';
-
-                document.getElementById('frontPreviewImg').src = generatedFrontDataUrl;
-                document.getElementById('backPreviewImg').src = generatedBackDataUrl;
-                document.getElementById('resultSection').style.display = 'block';
-
-                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-
-            } catch (err) {
-                console.error(err);
-                modal.style.display = 'none';
-                showError("कार्ड प्रोसेस करताना त्रुटी आली: " + (err.message || err));
-            } finally {
-                btn.disabled = false;
+            } catch (e) {
+                window.location.href = "login.html";
             }
-        }
 
-        // 🟢 अचूक 4x6 / A4 शीट PNG बनवणे
-        function buildExactSheetPng(paperSize, frontDataUrl, backDataUrl, cardW_mm, cardH_mm) {
-            return new Promise((resolve) => {
-                const imgF = new Image();
-                const imgB = new Image();
-                imgF.src = frontDataUrl;
-                imgF.onload = () => {
-                    imgB.src = backDataUrl;
-                    imgB.onload = () => {
-                        const DPI_SCALE = 300 / 25.4;
-                        const sheetCanvas = document.createElement('canvas');
-                        const sCtx = sheetCanvas.getContext('2d');
+            setupDropZone();
+        });
 
-                        sCtx.imageSmoothingEnabled = true;
-                        sCtx.imageSmoothingQuality = 'high';
+        // 🟢 2. DRAG & DROP SETUP
+        function setupDropZone() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('pdfInput');
 
-                        if (paperSize === '4x6') {
-                            sheetCanvas.width = 1200;
-                            sheetCanvas.height = 1800;
-                            sCtx.fillStyle = '#ffffff';
-                            sCtx.fillRect(0, 0, 1200, 1800);
+            dropZone.addEventListener('click', () => fileInput.click());
 
-                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
-                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
-                            const mX = Math.round((1200 - cardW_px) / 2);
-                            const topMargin = Math.round(15 * DPI_SCALE);
-                            const gap = Math.round(10 * DPI_SCALE);
+            ['dragenter', 'dragover'].forEach(event => {
+                dropZone.addEventListener(event, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-emerald-500', 'bg-emerald-50/40');
+                });
+            });
 
-                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
-                            sCtx.drawImage(imgB, mX, topMargin + cardH_px + gap, cardW_px, cardH_px);
+            ['dragleave', 'drop'].forEach(event => {
+                dropZone.addEventListener(event, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-emerald-500', 'bg-emerald-50/40');
+                });
+            });
 
-                        } else {
-                            sheetCanvas.width = 2480;
-                            sheetCanvas.height = 3508;
-                            sCtx.fillStyle = '#ffffff';
-                            sCtx.fillRect(0, 0, 2480, 3508);
-
-                            const cardW_px = Math.round(cardW_mm * DPI_SCALE);
-                            const cardH_px = Math.round(cardH_mm * DPI_SCALE);
-                            const gap = Math.round(10 * DPI_SCALE);
-                            const totalW = cardW_px * 2 + gap;
-                            const mX = Math.round((2480 - totalW) / 2);
-                            const topMargin = Math.round(20 * DPI_SCALE);
-
-                            sCtx.drawImage(imgF, mX, topMargin, cardW_px, cardH_px);
-                            sCtx.drawImage(imgB, mX + cardW_px + gap, topMargin, cardW_px, cardH_px);
-                        }
-
-                        resolve(sheetCanvas.toDataURL('image/png', 1.0));
-                    };
-                };
+            dropZone.addEventListener('drop', (e) => {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handleFileSelected(e.dataTransfer.files);
+                }
             });
         }
 
-        // 🟢 सुरक्षित लॉगिंग: फक्त डाऊनलोड झाल्यावरच Supabase ला नोंद पाठवणे
-        function logDownloadAction(serviceType) {
+        // 🟢 3. FILE SELECTION HANDLER
+        function handleFileSelected(files) {
+            hideError();
+            if (!files || files.length === 0) return;
+            const file = files[0];
+
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                showError("कृपया फक्त वैध PDF फाईल (.pdf) निवडा!");
+                return;
+            }
+
+            if (file.size > 15 * 1024 * 1024) {
+                showError("PDF फाईलचा आकार १५ MB पेक्षा कमी असावा!");
+                return;
+            }
+
+            selectedPdfFile = file;
+            document.getElementById('selectedFileName').innerText = file.name;
+            document.getElementById('selectedFileSize').innerText = (file.size / 1024).toFixed(1) + " KB";
+            
+            document.getElementById('selectedFileInfo').classList.remove('hidden');
+            
+            const btn = document.getElementById('btnProcess');
+            btn.disabled = false;
+            btn.classList.remove('bg-slate-300', 'cursor-not-allowed');
+            btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'cursor-pointer');
+        }
+
+        function clearSelectedFile() {
+            selectedPdfFile = null;
+            document.getElementById('pdfInput').value = '';
+            document.getElementById('selectedFileInfo').classList.add('hidden');
+            
+            const btn = document.getElementById('btnProcess');
+            btn.disabled = true;
+            btn.classList.add('bg-slate-300', 'cursor-not-allowed');
+            btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'cursor-pointer');
+        }
+
+        // 🟢 4. SEND FILE TO BACKEND FOR CROPPING
+        async function startProcessingCard() {
+            if (!selectedPdfFile) {
+                showError("कृपया आधी आभा PDF फाईल निवडा!");
+                return;
+            }
+
+            const paperSize = document.querySelector('input[name="paperSize"]:checked').value;
+            const mobile = currentUser ? currentUser.mobile : "";
+
+            // Show Scanning Modal
+            const modal = document.getElementById('scanModal');
+            const statusText = document.getElementById('scanStatusText');
+            const progressBar = document.getElementById('scanProgressBar');
+            
+            modal.classList.remove('hidden');
+            statusText.innerText = "१. ABHA PDF फाईल तपासली जात आहे...";
+            progressBar.style.width = "25%";
+
+            // Progress text animation
+            const timer1 = setTimeout(() => {
+                statusText.innerText = "२. AI तंत्रज्ञानाने अचूक कटिंग सुरू आहे...";
+                progressBar.style.width = "60%";
+            }, 800);
+
+            const timer2 = setTimeout(() => {
+                statusText.innerText = "३. ३०० DPI हाय-क्लॅरिटी शीट तयार होत आहे...";
+                progressBar.style.width = "85%";
+            }, 1800);
+
             try {
-                const userStr = localStorage.getItem('quickid_user');
-                if (!userStr) return;
-                const user = JSON.parse(userStr);
-                const paperSize = document.getElementById('paperSize').value.toUpperCase();
-
+                // Build FormData
                 const formData = new FormData();
-                formData.append('mobile', user.mobile || '');
-                formData.append('serviceCategory', 'आभा कार्ड प्रिंट');
-                formData.append('serviceDetails', `ABHA कार्ड ${serviceType} डाऊनलोड (${paperSize} शीट)`);
+                formData.append('pdfFile', selectedPdfFile);
+                formData.append('paperSize', paperSize);
+                formData.append('mobile', mobile);
 
-                fetch(`${BACKEND_URL}/api/log-service`, {
+                // Call Render Python Backend
+                const response = await fetch(`${BACKEND_URL}/api/services/process-abha`, {
                     method: 'POST',
                     body: formData
-                }).catch(e => console.log('Audit log error:', e));
-            } catch(e) {
-                console.log(e);
+                });
+
+                clearTimeout(timer1);
+                clearTimeout(timer2);
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.detail || "सर्व्हरवरून प्रक्रिया करताना त्रुटी आली.");
+                }
+
+                processedData = await response.json();
+                progressBar.style.width = "100%";
+                statusText.innerText = "✅ आभा कार्ड यशस्वीरीत्या तयार झाले!";
+
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    displayResults(paperSize);
+                }, 500);
+
+            } catch (err) {
+                clearTimeout(timer1);
+                clearTimeout(timer2);
+                modal.classList.add('hidden');
+                console.error("Processing Error:", err);
+                showError(err.message || "आभा कार्ड प्रोसेस करताना त्रुटी आली. कृपया फाईल तपासा.");
             }
         }
 
-        // 🟢 DOWNLOAD 1: PDF (डाऊनलोड झाल्यावरच लॉग सेव्ह होईल)
-        function downloadResultPdf() {
-            if (!generatedPdfDoc) return;
-            const paperSize = document.getElementById('paperSize').value;
-            const filename = `QuickIDPrint_ABHA_${paperSize.toUpperCase()}_${Date.now()}.pdf`;
-            generatedPdfDoc.save(filename);
+        // 🟢 5. DISPLAY RESULTS
+        function displayResults(paperSize) {
+            if (!processedData) return;
 
-            // 🎯 फक्त प्रत्यक्ष PDF डाऊनलोड झाल्यावर नोंद
-            logDownloadAction('PDF');
+            document.getElementById('previewFront').src = processedData.front_preview;
+            document.getElementById('previewBack').src = processedData.back_preview;
+
+            document.getElementById('resultPaperBadge').innerText = (paperSize === '4x6') ? "४x६ फोटो पेपर" : "A4 संपूर्ण पान";
+            document.getElementById('pngBtnText').innerText = (paperSize === '4x6') ? "🖼️ डाऊनलोड PNG (4x6 फोटो शीट)" : "🖼️ डाऊनलोड PNG (A4 शीट)";
+
+            const resultSec = document.getElementById('resultSection');
+            resultSec.classList.remove('hidden');
+            resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // 🟢 DOWNLOAD 2: PNG (डाऊनलोड झाल्यावरच लॉग सेव्ह होईल)
-        function downloadResultPng() {
-            if (!generatedSheetPngUrl) return;
-            const paperSize = document.getElementById('paperSize').value;
-            const link = document.createElement('a');
-            link.download = `QuickIDPrint_ABHA_${paperSize.toUpperCase()}_${Date.now()}.png`;
-            link.href = generatedSheetPngUrl;
-            link.click();
+        // 🟢 6. DOWNLOAD HANDLER (PDF & PNG) + ONLY DOWNLOAD LOGGING
+        async function downloadResult(type) {
+            if (!processedData) return;
 
-            // 🎯 फक्त प्रत्यक्ष PNG डाऊनलोड झाल्यावर नोंद
-            logDownloadAction('PNG');
+            const paperSize = document.querySelector('input[name="paperSize"]:checked').value;
+            const timestamp = Date.now();
+
+            if (type === 'pdf') {
+                const linkSource = `data:application/pdf;base64,${processedData.pdf_base64}`;
+                const downloadLink = document.createElement('a');
+                downloadLink.href = linkSource;
+                downloadLink.download = `QuickIDPrint_ABHA_${paperSize}_${timestamp}.pdf`;
+                downloadLink.click();
+
+                // 🟢 अचूक Supabase लॉगिंग: फक्त डाऊनलोड केल्यावरच नोंद होईल
+                logServiceUsage("आभा कार्ड (ABHA Card) प्रिंट", `PDF Download (${paperSize})`);
+            } else if (type === 'png') {
+                const linkSource = `data:image/png;base64,${processedData.png_base64}`;
+                const downloadLink = document.createElement('a');
+                downloadLink.href = linkSource;
+                downloadLink.download = `QuickIDPrint_ABHA_${paperSize}_${timestamp}.png`;
+                downloadLink.click();
+
+                // 🟢 अचूक Supabase लॉगिंग: फक्त डाऊनलोड केल्यावरच नोंद होईल
+                logServiceUsage("आभा कार्ड (ABHA Card) प्रिंट", `PNG Download (${paperSize})`);
+            }
         }
 
-        // Reset
-        function resetForm() {
-            selectedFile = null;
-            generatedPdfDoc = null;
-            generatedSheetPngUrl = null;
-            generatedFrontDataUrl = null;
-            generatedBackDataUrl = null;
-            document.getElementById('pdfInput').value = '';
-            document.getElementById('selectedFileName').style.display = 'none';
-            document.getElementById('resultSection').style.display = 'none';
-            hideError();
+        // 🟢 7. LOG SERVICE USAGE TO SUPABASE
+        async function logServiceUsage(serviceName, details) {
+            try {
+                if (!currentUser || !currentUser.mobile) return;
+                await fetch(`${BACKEND_URL}/api/log-service`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        mobile: currentUser.mobile,
+                        service_name: serviceName,
+                        details: details
+                    })
+                });
+            } catch (e) {
+                console.warn("Log service error:", e);
+            }
+        }
+
+        // 🟢 8. HELPER FUNCTIONS
+        function showError(msg) {
+            const alertBox = document.getElementById('errorAlert');
+            document.getElementById('errorMessage').innerText = msg;
+            alertBox.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideError() {
+            document.getElementById('errorAlert').classList.add('hidden');
+        }
+
+        function resetTool() {
+            clearSelectedFile();
+            processedData = null;
+            document.getElementById('resultSection').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
