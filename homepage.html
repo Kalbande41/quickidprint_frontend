@@ -32,7 +32,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--light-bg); color: var(--dark); padding-bottom: 90px; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--light-bg); color: var(--dark); -webkit-font-smoothing: antialiased; }
 
         /* ---------- Modern Frosted Navbar ---------- */
         .navbar {
@@ -103,8 +103,7 @@
             min-width: 210px; box-shadow: var(--shadow-lg); border-radius: 14px; overflow: hidden;
             border: 1px solid var(--card-border); z-index: 1000; animation: dropAnim 0.2s ease-out;
         }
-        @keyframes dropAnim { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        .dropdown-menu.active { display: block; }
+        @keyframes dropAnim { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }\n        .dropdown-menu.active { display: block; }
         .dropdown-menu a {
             display: flex; align-items: center; gap: 10px; padding: 12px 18px; text-decoration: none;
             color: var(--slate-800); font-size: 14px; font-weight: 700; border-bottom: 1px solid #f1f5f9; transition: 0.2s;
@@ -112,7 +111,7 @@
         .dropdown-menu a:hover { background: #eff6ff; color: var(--secondary); }
 
         /* ---------- Main Content Container ---------- */
-        .container { max-width: 1240px; margin: 30px auto; padding: 0 5%; width: 100%; }
+        .container { max-width: 1240px; margin: 30px auto 0; padding: 0 5%; width: 100%; }
 
         /* ---------- Modern SaaS Hero Banner ---------- */
         .dashboard-hero {
@@ -230,11 +229,26 @@
         .color-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .color-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); }
 
+        /* ---------- 🟢 Footer (Index Page प्रमाणे हुबेहूब) ---------- */
+        footer {
+            background: #0b1329; color: var(--white);
+            padding: 50px 6% 25px; margin-top: 60px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 30px; margin-bottom: 20px;
+        }
+        .footer-grid h3 { font-size: 22px; font-weight: 800; color: #ffffff; }
+        .footer-grid h4 { font-size: 17px; font-weight: 700; color: #ffffff; }
+        .footer-bottom { text-align: center; color: #64748b; font-size: 14px; }
+
         @media (max-width: 900px) {
             .dashboard-hero { flex-direction: column; text-align: center; }
             .hero-right-card { width: 100%; }
             .quick-access-box { grid-template-columns: 1fr; }
             .hero-tags { justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr; gap: 25px; }
         }
     </style>
 </head>
@@ -295,7 +309,7 @@
                     <span class="hero-pill"><i class="fas fa-shield-alt text-emerald-400"></i> १००% सुरक्षित क्लाउड सिस्टीम</span>
                     <span class="hero-pill"><i class="fas fa-bolt text-amber-400"></i> अल्ट्रा-फास्ट एचडी प्रोसेसिंग</span>
                 </div>
-                <h1 style="margin-top: 14px;">नमस्कार, <span id="heroWelcomeName">ऑपरेटर</span>!</h1>
+                <h1 style="margin-top: 14px;">नमस्कार, <span id=\"heroWelcomeName\">ऑपरेटर</span>!</h1>
                 <p>तुमच्या सेतू व सीएससी केंद्रावरील सर्व आयडी कार्ड्स, शासकीय स्वयंघोषणापत्रे आणि डॉक्युमेंट टूल्स एकाच डॅशबोर्डवरून जलद प्रिंट करा.</p>
             </div>
 
@@ -484,6 +498,25 @@
         </div>
 
     </div>
+
+    <!-- ================= 🟢 Footer (Index प्रमाणे जोडलेला) ================= -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>QuickIDPrint</h3>
+                <p style="color: #94a3b8; margin-top: 8px;">ऑनलाईन स्मार्ट आयडी आणि घोषणापत्र सेवा.</p>
+            </div>
+            <div>
+                <h4>सम्पर्क</h4>
+                <p style="color: #cbd5e1; margin-top: 8px;"><i class="fas fa-phone-alt"></i> +91 9403901395</p>
+            </div>
+            <div>
+                <h4>WhatsApp</h4>
+                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; text-decoration: none; font-size: 24px;"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 QuickIDPrint. सर्व हक्क सुरक्षित.</div>
+    </footer>
 
     <!-- Back-Button Trap & Session Security -->
     <script>
