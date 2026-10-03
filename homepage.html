@@ -103,7 +103,8 @@
             min-width: 210px; box-shadow: var(--shadow-lg); border-radius: 14px; overflow: hidden;
             border: 1px solid var(--card-border); z-index: 1000; animation: dropAnim 0.2s ease-out;
         }
-        @keyframes dropAnim { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }\n        .dropdown-menu.active { display: block; }
+        @keyframes dropAnim { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-menu.active { display: block; }
         .dropdown-menu a {
             display: flex; align-items: center; gap: 10px; padding: 12px 18px; text-decoration: none;
             color: var(--slate-800); font-size: 14px; font-weight: 700; border-bottom: 1px solid #f1f5f9; transition: 0.2s;
@@ -229,19 +230,35 @@
         .color-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .color-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); }
 
-        /* ---------- 🟢 Footer (Index Page प्रमाणे हुबेहूब) ---------- */
+        /* ---------- 🟢 Footer (Terms, Privacy & Contact सह) ---------- */
         footer {
             background: #0b1329; color: var(--white);
             padding: 50px 6% 25px; margin-top: 60px;
         }
         .footer-grid {
-            display: grid; grid-template-columns: 2fr 1fr 1fr;
-            gap: 40px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: grid; grid-template-columns: 2fr 1.3fr 1.3fr 1fr;
+            gap: 35px; border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 30px; margin-bottom: 20px;
         }
         .footer-grid h3 { font-size: 22px; font-weight: 800; color: #ffffff; }
-        .footer-grid h4 { font-size: 17px; font-weight: 700; color: #ffffff; }
-        .footer-bottom { text-align: center; color: #64748b; font-size: 14px; }
+        .footer-grid h4 { font-size: 16.5px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+        
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 9px; }
+        .footer-links a {
+            color: #94a3b8; text-decoration: none; font-size: 14px;
+            font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px;
+        }
+        .footer-links a:hover { color: #38bdf8; transform: translateX(3px); }
+
+        .footer-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px; color: #64748b; font-size: 13.5px;
+        }
+        .footer-bottom-links a {
+            color: #94a3b8; text-decoration: none; margin-left: 14px; font-weight: 600; transition: 0.2s;
+        }
+        .footer-bottom-links a:hover { color: #ffffff; text-decoration: underline; }
 
         @media (max-width: 900px) {
             .dashboard-hero { flex-direction: column; text-align: center; }
@@ -249,6 +266,9 @@
             .quick-access-box { grid-template-columns: 1fr; }
             .hero-tags { justify-content: center; }
             .footer-grid { grid-template-columns: 1fr; gap: 25px; }
+            .footer-bottom { justify-content: center; text-align: center; }
+            .footer-bottom-links { margin-top: 8px; width: 100%; }
+            .footer-bottom-links a { margin: 0 8px; }
         }
     </style>
 </head>
@@ -309,7 +329,7 @@
                     <span class="hero-pill"><i class="fas fa-shield-alt text-emerald-400"></i> १००% सुरक्षित क्लाउड सिस्टीम</span>
                     <span class="hero-pill"><i class="fas fa-bolt text-amber-400"></i> अल्ट्रा-फास्ट एचडी प्रोसेसिंग</span>
                 </div>
-                <h1 style="margin-top: 14px;">नमस्कार, <span id=\"heroWelcomeName\">ऑपरेटर</span>!</h1>
+                <h1 style="margin-top: 14px;">नमस्कार, <span id="heroWelcomeName">ऑपरेटर</span>!</h1>
                 <p>तुमच्या सेतू व सीएससी केंद्रावरील सर्व आयडी कार्ड्स, शासकीय स्वयंघोषणापत्रे आणि डॉक्युमेंट टूल्स एकाच डॅशबोर्डवरून जलद प्रिंट करा.</p>
             </div>
 
@@ -499,23 +519,72 @@
 
     </div>
 
-    <!-- ================= 🟢 Footer (Index प्रमाणे जोडलेला) ================= -->
+    <!-- ================= 🟢 Footer (Terms & Privacy सह परिपूर्ण) ================= -->
     <footer>
         <div class="footer-grid">
+            <!-- 1. Brand Info -->
             <div>
                 <h3>QuickIDPrint</h3>
-                <p style="color: #94a3b8; margin-top: 8px;">ऑनलाईन स्मार्ट आयडी आणि घोषणापत्र सेवा.</p>
+                <p style="color: #94a3b8; margin-top: 8px; font-size: 14px; line-height: 1.5;">
+                    महाराष्ट्रातील सेतू व सीएससी केंद्र चालकांसाठी स्मार्ट आयडी आणि शासकीय घोषणापत्र सेवा.
+                </p>
+                <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); padding: 5px 12px; border-radius: 20px; font-size: 12px; color: #38bdf8;">
+                    <i class="fas fa-shield-check"></i> 100% सुरक्षित आणि जलद पोर्टल
+                </div>
             </div>
+
+            <!-- 2. 🟢 कायदेशीर लिंक्स (Terms & Privacy) -->
+            <div>
+                <h4>कायदेशीर व धोरणे</h4>
+                <ul class="footer-links">
+                    <li>
+                        <a href="terms.html">
+                            <i class="fas fa-file-contract"></i> नियम आणि अटी (Terms)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="privacy.html">
+                            <i class="fas fa-user-shield"></i> गोपनीयता धोरण (Privacy)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="QuickIDPrint_User_Manual.pdf" target="_blank">
+                            <i class="fas fa-book-open"></i> युझर मॅन्युअल (Guide)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. संपर्काची माहिती -->
             <div>
                 <h4>सम्पर्क</h4>
-                <p style="color: #cbd5e1; margin-top: 8px;"><i class="fas fa-phone-alt"></i> +91 9403901395</p>
+                <p style="color: #cbd5e1; margin-top: 8px; font-size: 14px;">
+                    <i class="fas fa-phone-alt text-primary" style="color: #38bdf8; margin-right: 6px;"></i> +91 9403901395
+                </p>
+                <p style="color: #94a3b8; font-size: 12px; margin-top: 6px;">
+                    <i class="far fa-clock" style="margin-right: 4px;"></i> वेळ: सकाळी ९ ते रात्री ९
+                </p>
             </div>
+
+            <!-- 4. WhatsApp Support -->
             <div>
-                <h4>WhatsApp</h4>
-                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; text-decoration: none; font-size: 24px;"><i class="fab fa-whatsapp"></i></a>
+                <h4>WhatsApp मदत</h4>
+                <p style="color: #94a3b8; font-size: 12.5px; margin-bottom: 10px;">थेट चॅट सपोर्ट मिळवा:</p>
+                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; text-decoration: none; font-size: 28px; display: inline-block;">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
             </div>
         </div>
-        <div class="footer-bottom">&copy; 2026 QuickIDPrint. सर्व हक्क सुरक्षित.</div>
+
+        <!-- 🟢 Footer Bottom Copyright & Quick Policy Links -->
+        <div class="footer-bottom">
+            <div>&copy; 2026 QuickIDPrint Center. सर्व हक्क सुरक्षित.</div>
+            <div class="footer-bottom-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <span style="color: #475569;">•</span>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
     </footer>
 
     <!-- Back-Button Trap & Session Security -->
