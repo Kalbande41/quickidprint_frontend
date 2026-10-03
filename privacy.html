@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>गोपनीयता धोरण (Privacy Policy) - QuickIDPrint</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #123a8f;
+            --primary-hover: #0c2a68;
+            --secondary: #2563eb;
+            --accent: #f97316;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --light-bg: #f8fafc;
+            --card-border: #e2e8f0;
+            --white: #ffffff;
+            --success: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+
+        /* Navbar */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px);
+            padding: 14px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-fallback {
+            width: 40px; height: 40px; border-radius: 10px; background: #eff6ff;
+            color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .logo-text h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+        .brand-quick { color: var(--primary); }
+        .brand-id { color: var(--accent); }
+        .brand-print { color: var(--primary); }
+
+        .btn-back {
+            background: #eff6ff; color: var(--secondary); border: 1px solid #bfdbfe;
+            padding: 8px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-back:hover { background: var(--secondary); color: white; transform: translateY(-1px); }
+
+        /* Hero Banner */
+        .policy-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #172554 100%);
+            color: white; padding: 45px 6% 40px; text-align: center;
+        }
+        .policy-hero-tag {
+            background: rgba(255,255,255,0.12); color: #93c5fd; padding: 4px 14px;
+            border-radius: 20px; font-size: 12.5px; font-weight: 800; text-transform: uppercase;
+            display: inline-block; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .policy-hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+        .policy-hero p { color: #cbd5e1; font-size: 15px; max-width: 650px; margin: 0 auto; }
+
+        /* Trust Badges Bar */
+        .trust-grid {
+            max-width: 960px; margin: -25px auto 40px; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+        }
+        .trust-card {
+            background: white; border-radius: 16px; padding: 18px 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid var(--card-border);
+            display: flex; align-items: center; gap: 14px;
+        }
+        .trust-icon {
+            width: 44px; height: 44px; border-radius: 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 20px; shrink-0;
+        }
+        .icon-green { background: #dcfce7; color: #15803d; }
+        .icon-blue { background: #eff6ff; color: #2563eb; }
+        .icon-orange { background: #fff7ed; color: #c2410c; }
+        .trust-text h4 { font-size: 14px; font-weight: 800; color: var(--slate-800); }
+        .trust-text p { font-size: 11.5px; color: var(--slate-600); }
+
+        /* Main Content Container */
+        .policy-container {
+            max-width: 960px; margin: 0 auto 60px; padding: 0 20px;
+        }
+        .policy-card {
+            background: white; border-radius: 20px; padding: 35px 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1.5px solid var(--card-border);
+        }
+
+        .policy-section {
+            margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid #f1f5f9;
+        }
+        .policy-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        
+        .policy-title {
+            font-size: 20px; font-weight: 800; color: var(--slate-800);
+            display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        }
+        .policy-title i { color: var(--secondary); font-size: 19px; }
+
+        .policy-card p {
+            color: #334155; font-size: 15px; margin-bottom: 12px; text-align: justify;
+        }
+        .policy-card ul {
+            padding-left: 20px; margin-bottom: 14px; color: #334155; font-size: 14.5px;
+        }
+        .policy-card li { margin-bottom: 8px; }
+
+        .highlight-notice {
+            background: #f0fdf4; border-left: 4px solid var(--success);
+            padding: 14px 18px; border-radius: 0 12px 12px 0; margin: 15px 0;
+            color: #166534; font-size: 14px; font-weight: 600;
+        }
+
+        .update-pill {
+            display: inline-block; background: #f1f5f9; color: var(--slate-600);
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background: #0b1329; color: var(--white);
+            padding: 50px 6% 25px; margin-top: 60px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1.3fr 1.3fr 1fr;
+            gap: 35px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 30px; margin-bottom: 20px;
+        }
+        .footer-grid h3 { font-size: 22px; font-weight: 800; color: #ffffff; }
+        .footer-grid h4 { font-size: 16.5px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 9px; }
+        .footer-links a {
+            color: #94a3b8; text-decoration: none; font-size: 14px;
+            font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px;
+        }
+        .footer-links a:hover { color: #38bdf8; transform: translateX(3px); }
+        .footer-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px; color: #64748b; font-size: 13.5px;
+        }
+        .footer-bottom-links a {
+            color: #94a3b8; text-decoration: none; margin-left: 14px; font-weight: 600;
+        }
+        .footer-bottom-links a:hover { color: #ffffff; text-decoration: underline; }
+
+        @media (max-width: 900px) {
+            .trust-grid { grid-template-columns: 1fr; margin-top: 15px; }
+            .policy-hero h1 { font-size: 26px; }
+            .policy-card { padding: 25px 20px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 25px; }
+            .footer-bottom { justify-content: center; text-align: center; }
+            .footer-bottom-links { margin-top: 8px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header>
+        <a href="homepage.html" class="logo-area">
+            <div class="logo-fallback"><i class="fas fa-id-card"></i></div>
+            <div class="logo-text">
+                <h2><span class="brand-quick">Quick</span><span class="brand-id">ID</span><span class="brand-print">Print</span></h2>
+            </div>
+        </a>
+
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="fas fa-arrow-left"></i> मागे जा
+        </a>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="policy-hero">
+        <span class="policy-hero-tag"><i class="fas fa-shield-halved"></i> Privacy & Trust</span>
+        <h1>गोपनीयता धोरण (Privacy Policy)</h1>
+        <p>QuickIDPrint पोर्टलवर तुमची आणि तुमच्या ग्राहकांची वैयक्तिक माहिती १००% सुरक्षित व गोपनीय ठेवणे हे आमचे सर्वोच्च प्राधान्य आहे.</p>
+    </section>
+
+    <!-- 3 Core Trust Badges -->
+    <div class="trust-grid">
+        <div class="trust-card">
+            <div class="trust-icon icon-green"><i class="fas fa-file-excel"></i></div>
+            <div class="trust-text">
+                <h4>झिरो डॉक्युमेंट स्टोरेज</h4>
+                <p>कोणतीही ग्राहक PDF सर्व्हरवर सेव्ह होत नाही</p>
+            </div>
+        </div>
+        <div class="trust-card">
+            <div class="trust-icon icon-blue"><i class="fas fa-lock"></i></div>
+            <div class="trust-text">
+                <h4>२५६-बिट SSL सुरक्षितता</h4>
+                <p>सर्व डेटा ट्रान्सफर पूर्णपणे एन्क्रिप्टेड</p>
+            </div>
+        </div>
+        <div class="trust-card">
+            <div class="trust-icon icon-orange"><i class="fas fa-user-shield"></i></div>
+            <div class="trust-text">
+                <h4>डेटा विक्री नाही</h4>
+                <p>माहिती तृतीय पक्षासोबत कधीही शेअर होत नाही</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Legal Content -->
+    <main class="policy-container">
+        <div class="policy-card">
+
+            <div class="update-pill">
+                <i class="far fa-clock"></i> शेवटचे अद्ययावत: ऑक्टोबर २०२६
+            </div>
+
+            <!-- १. प्रस्तावना -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-info-circle"></i> १. प्रस्तावना व व्याप्ती</h3>
+                <p>
+                    <strong>QuickIDPrint ("आम्ही", "आमचे" किंवा "पोर्टल")</strong> हे महाराष्ट्रातील सेतू, सीएससी (CSC) आणि महा-ई-सेवा केंद्र चालकांसाठी स्मार्ट आयडी कार्ड प्रिंटिंग आणि स्वयंघोषणापत्रे तयार करण्यासाठी विकसित केलेले एक स्वतंत्र सॉफ्टवेअर प्लॅटफॉर्म आहे.
+                </p>
+                <p>
+                    जेव्हा तुम्ही आमचे पोर्टल वापरता, तेव्हा तुम्ही या धोरणातील सर्व अटींशी सहमत असता. हे धोरण आम्ही तुमची कोणती माहिती गोळा करतो, ती कशी वापरली जाते आणि तुमच्या नागरिकांचा डेटा कसा सुरक्षित ठेवला जातो हे पारदर्शकपणे स्पष्ट करते.
+                </p>
+            </div>
+
+            <!-- २. डॉक्युमेंट प्रायव्हसी (सर्वात महत्त्वाचा मुद्दा) -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-shield-cat"></i> २. डॉक्युमेंट प्रोसेसिंग व शून्य साठवणूक हमी (Zero Retention Policy)</h3>
+                <p>
+                    आमच्या पोर्टलवर प्रोसेस केली जाणारी ओळखपत्रे (उदा. आधार कार्ड, मतदान कार्ड, पॅन कार्ड, आभा कार्ड, UDID इत्यादी) अतिशय संवेदनशील असतात याची आम्हाला पूर्ण जाणीव आहे.
+                </p>
+                <div class="highlight-notice">
+                    <i class="fas fa-check-circle" style="color: #16a34a; font-size: 16px; margin-right: 6px;"></i>
+                    <strong>महत्त्वाची हमी:</strong> तुम्ही अपलोड केलेली कोणतीही PDF फाईल, फोटो किंवा क्रॉप केलेले कार्ड आमच्या सर्व्हरवर किंवा डेटाबेसमध्ये कायमस्वरूपी सेव्ह (Store) केले जात नाही.
+                </div>
+                <ul>
+                    <li><strong>तात्पुरती प्रक्रिया (In-Memory Processing):</strong> तुमची फाईल केवळ ब्राउझरच्या किंवा सर्व्हरच्या रॅम (RAM) मेमरीमध्ये आवश्यक तेवढ्याच सेकंदांसाठी प्रोसेस केली जाते.</li>
+                    <li><strong>स्वयंचलित नष्टीकरण (Auto Cleanup):</strong> कार्ड तयार होऊन डाऊनलोड होताच, मेमरीमधील सर्व तात्पुरते डॉक्युमेंट बाईट्स त्वरित पूर्णपणे नष्ट (Garbage Collected) केले जातात.</li>
+                    <li><strong>बायोमेट्रिक डेटा नाही:</strong> आम्ही नागरिकांचे कोणतेही बायोमेट्रिक किंवा आधार क्रमांक आमच्या रेकॉर्डमध्ये ठेवत नाही.</li>
+                </ul>
+            </div>
+
+            <!-- ३. आम्ही कोणती माहिती गोळा करतो -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-database"></i> ३. आम्ही गोळा करत असलेली ऑपरेटर माहिती</h3>
+                <p>पोर्टलवरील सेवा आणि सबस्क्रिप्शन व्यवस्थित चालवण्यासाठी आम्ही केवळ अधिकृत नोंदणीकृत ऑपरेटरची खालील मर्यादित माहिती गोळा करतो:</p>
+                <ul>
+                    <li><strong>नोंदणी माहिती:</strong> ऑपरेटरचे नाव, सेतू/शॉपचे नाव, पत्ता, मोबाईल नंबर आणि ईमेल आयडी.</li>
+                    <li><strong>खाते ओळखपत्रे:</strong> सुरक्षितपणे लॉगिन करण्यासाठी एनक्रिप्टेड पासवर्ड.</li>
+                    <li><strong>खाते स्थिती व मुदत:</strong> सबस्क्रिप्शन प्लॅन, एक्सपायरी दिनांक, शिल्लक दिवस आणि रिचार्ज इतिहास.</li>
+                    <li><strong>सेवा संख्या नोंदी (Usage Counter):</strong> खात्याच्या ऑडिटसाठी युझरने कोणत्या दिवशी कोणत्या टूलचा वापर करून डाऊनलोड केले याची फक्त संख्यात्मक नोंद (उदा. 'UDID कार्ड डाऊनलोड - ४x६'). यात ग्राहकाचा कोणताही वैयक्तिक डेटा नसतो.</li>
+                </ul>
+            </div>
+
+            <!-- ४. माहितीचा वापर -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-cogs"></i> ४. माहितीचा वापर कसा केला जातो?</h3>
+                <p>गोळा केलेली माहिती केवळ खालील कारणांसाठी वापरली जाते:</p>
+                <ul>
+                    <li>ऑपरेटर खात्याचे ऑथेंटिकेशन आणि सुरक्षित लॉगिन पडताळणीसाठी.</li>
+                    <li>प्लॅन मुदत संपल्यावर किंवा रिचार्ज झाल्यावर खाते अद्ययावत ठेवण्यासाठी.</li>
+                    <li>तांत्रिक अडचण आल्यास WhatsApp किंवा फोनद्वारे थेट मदत (Support) देण्यासाठी.</li>
+                    <li>पोर्टलचा वेग आणि कार्यक्षमता सुधारण्यासाठी.</li>
+                </ul>
+            </div>
+
+            <!-- ५. डेटा सुरक्षा -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-user-lock"></i> ५. डेटा सुरक्षा (Data Security)</h3>
+                <p>
+                    आम्ही उद्योग-मानक सुरक्षा उपाययोजना अंमलात आणल्या आहेत:
+                </p>
+                <ul>
+                    <li><strong>SSL / TLS एन्क्रिप्शन:</strong> तुमच्या ब्राउझरपासून आमच्या सर्व्हरपर्यंत पाठवला जाणारा सर्व डेटा २५६-बिट आधुनिक SSL एन्क्रिप्शनने सुरक्षित असतो.</li>
+                    <li><strong>क्लाउड डेटाबेस सुरक्षा:</strong> ऑपरेटर प्रोफाईल डेटा अत्यंत सुरक्षित Supabase PostgreSQL क्लाउड इन्फ्रास्ट्रक्चरवर सुरक्षित ठेवला जातो.</li>
+                    <li><strong>नो डेटा शेअरिंग:</strong> आम्ही ऑपरेटरचा मोबाईल नंबर, ईमेल किंवा इतर कोणतीही माहिती कोणत्याही जाहिरातदार किंवा तिसऱ्या पक्षाला विकत नाही.</li>
+                </ul>
+            </div>
+
+            <!-- ६. कुकीज आणि लोकल स्टोरेज -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-cookie-bite"></i> ६. ब्राऊझर लोकल स्टोरेज (Local Storage)</h3>
+                <p>
+                    तुम्हाला प्रत्येक पानावर पुन्हा पुन्हा लॉगिन करावे लागू नये म्हणून तुमचे सत्र (Session) चालू ठेवण्यासाठी ब्राउझरच्या `localStorage` चा वापर केला जातो. तुम्ही लॉगआऊट करताच हे स्थानिक सत्र लगेच क्लिअर होते.
+                </p>
+            </div>
+
+            <!-- ७. संपर्क आणि तक्रार निवारण -->
+            <div class="policy-section">
+                <h3 class="policy-title"><i class="fas fa-headset"></i> ७. संपर्क आणि तक्रार निवारण</h3>
+                <p>
+                    या गोपनीयता धोरणाबद्दल किंवा तुमच्या डेटाबद्दल काही प्रश्न, शंका किंवा तक्रार असल्यास तुम्ही थेट आमच्या प्रशासकीय टीमशी संपर्क साधू शकता:
+                </p>
+                <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-top: 10px;">
+                    <p style="margin-bottom: 6px;"><strong>QuickIDPrint Support Team</strong></p>
+                    <p style="margin-bottom: 6px;"><i class="fas fa-phone-alt text-primary" style="margin-right: 8px;"></i> फोन: +91 9403901395</p>
+                    <p style="margin-bottom: 6px;"><i class="fab fa-whatsapp text-success" style="margin-right: 8px;"></i> WhatsApp: +91 9403901395</p>
+                    <p style="margin-bottom: 0;"><i class="fas fa-location-dot text-danger" style="margin-right: 8px;"></i> महाराष्ट्र, भारत.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>QuickIDPrint</h3>
+                <p style="color: #94a3b8; margin-top: 8px; font-size: 14px; line-height: 1.5;">
+                    महाराष्ट्रातील सेतू व सीएससी केंद्र चालकांसाठी स्मार्ट आयडी आणि शासकीय घोषणापत्र सेवा.
+                </p>
+            </div>
+            <div>
+                <h4>कायदेशीर व धोरणे</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html"><i class="fas fa-file-contract"></i> नियम आणि अटी (Terms)</a></li>
+                    <li><a href="privacy.html"><i class="fas fa-user-shield"></i> गोपनीयता धोरण (Privacy)</a></li>
+                    <li><a href="QuickIDPrint_User_Manual.pdf" target="_blank"><i class="fas fa-book-open"></i> युझर मॅन्युअल</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>सम्पर्क</h4>
+                <p style="color: #cbd5e1; margin-top: 8px; font-size: 14px;"><i class="fas fa-phone-alt text-primary" style="color: #38bdf8; margin-right: 6px;"></i> +91 9403901395</p>
+                <p style="color: #94a3b8; font-size: 12px; margin-top: 6px;"><i class="far fa-clock" style="margin-right: 4px;"></i> वेळ: सकाळी ९ ते रात्री ९</p>
+            </div>
+            <div>
+                <h4>WhatsApp मदत</h4>
+                <a href="https://wa.me/919403901395" target="_blank" style="color: #22c55e; text-decoration: none; font-size: 28px; display: inline-block; margin-top: 6px;">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 QuickIDPrint Center. सर्व हक्क सुरक्षित.</div>
+            <div class="footer-bottom-links">
+                <a href="terms.html">Terms & Conditions</a>
+                <span style="color: #475569;">•</span>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
