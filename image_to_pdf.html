@@ -36,7 +36,7 @@
         .btn-back {
             width: 36px; height: 36px; border-radius: 10px; background: var(--slate-100);
             display: flex; align-items: center; justify-content: center; color: var(--slate-600);
-            text-decoration: none; transition: 0.2s;
+            text-decoration: none; transition: 0.2s; cursor: pointer;
         }
         .btn-back:hover { background: #e2e8f0; color: var(--primary); }
         .header-title h1 { font-size: 16px; font-weight: 800; color: var(--slate-800); line-height: 1.2; }
@@ -153,7 +153,7 @@
         }
         .image-box img {
             max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.25s ease;
-            pointer-events: none; /* Let drag event trigger on card */
+            pointer-events: none;
         }
 
         .card-buttons { display: flex; gap: 6px; margin-top: 10px; }
@@ -181,9 +181,7 @@
             border: 1px dashed #cbd5e1; border-radius: 12px; grid-column: 1 / -1;
         }
 
-        /* ==============================================================
-           🟢 PROCESSING MODAL (LASER SCANNER & PROGRESS ANIMATION)
-        ============================================================== */
+        /* PROCESSING MODAL */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
@@ -195,7 +193,6 @@
             position: relative; overflow: hidden; border: 1px solid #e2e8f0;
         }
 
-        /* Laser Card Box */
         .laser-container {
             width: 190px; height: 125px; margin: 0 auto 16px; background: #f8fafc;
             border-radius: 14px; border: 2px solid #bfdbfe; position: relative;
@@ -226,7 +223,6 @@
         .modal-title { font-size: 17px; font-weight: 800; color: var(--slate-800); margin-bottom: 4px; }
         .modal-status { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 14px; min-height: 20px; }
 
-        /* Progress Bar */
         .progress-track {
             width: 100%; background: #e2e8f0; height: 8px; border-radius: 20px;
             overflow: hidden; margin-bottom: 8px;
@@ -240,7 +236,6 @@
         /* FOOTER */
         footer { text-align: center; padding: 18px; color: var(--slate-500); font-size: 12.5px; }
 
-        /* MOBILE RESPONSIVE */
         @media(max-width: 600px){
             .container { padding: 0 10px; margin: 12px auto; }
             .box { padding: 16px; border-radius: 14px; }
@@ -257,7 +252,8 @@
     <!-- ================= NAVBAR ================= -->
     <header>
         <div class="header-left">
-            <a href="homepage.html" class="btn-back" title="होमपेजवर जा">
+            <!-- 🟢 स्मार्ट बॅक बटण (लॉगिन असल्यास homepage वर, व्हिजिटर असल्यास index वर) -->
+            <a href="javascript:void(0)" onclick="goBack()" class="btn-back" title="मागे जा">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <div class="header-title">
@@ -267,7 +263,7 @@
         </div>
         <div>
             <span class="user-badge" id="navDaysBadge">
-                <i class="fas fa-bolt text-warning"></i> जलद साधन (Instant)
+                <i class="fas fa-gift text-success"></i> १००% मोफत टूल
             </span>
         </div>
     </header>
@@ -358,7 +354,6 @@
     <div class="modal-overlay" id="processingModal">
         <div class="processing-box">
             
-            <!-- Graphic Laser Box -->
             <div class="laser-container">
                 <div class="laser-beam"></div>
                 <div class="doc-icon-pulse">
@@ -372,7 +367,6 @@
             <h3 class="modal-title">PDF तयार होत आहे...</h3>
             <p class="modal-status" id="modalStatusText">१. इमेजेस तपासल्या जात आहेत...</p>
 
-            <!-- Progress Bar -->
             <div class="progress-track">
                 <div class="progress-fill" id="modalProgressBar"></div>
             </div>
@@ -383,7 +377,7 @@
 
     <!-- ================= FOOTER ================= -->
     <footer>
-        QuickIDPrint Center • 100% सुरक्षित क्लायंट-साईड टूल
+        QuickIDPrint Center • 100% सुरक्षित मोफत क्लायंट-साईड टूल
     </footer>
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
@@ -396,21 +390,32 @@
         let nextId = 1;
         let draggedIndex = null;
 
-        // 🟢 AUTH CHECK ON LOAD
+        // 🟢 स्मार्ट बॅक नेव्हिगेशन
+        function goBack() {
+            if (localStorage.getItem('quickid_user')) {
+                window.location.href = "homepage.html";
+            } else {
+                window.location.href = "index.html";
+            }
+        }
+
+        // 🟢 मोफत वापरासाठी लॉगिन तपासणी ऐच्छिक (NO REDIRECT!)
         window.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('quickid_user');
-            if (!userStr) {
-                window.location.href = "login.html";
-                return;
-            }
-            try {
-                const user = JSON.parse(userStr);
-                const remaining = parseInt(user.remainingDays || 0);
-                if (remaining <= 0) {
-                    alert("तुमचा रिचार्ज संपला आहे! कृपया रिचार्ज करा.");
-                    window.location.href = "homepage.html";
+            const navBadge = document.getElementById('navDaysBadge');
+
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    if (navBadge && user.name) {
+                        navBadge.innerHTML = `<i class="fas fa-user-check text-success"></i> ${user.name}`;
+                    }
+                } catch(e) {}
+            } else {
+                if (navBadge) {
+                    navBadge.innerHTML = `<i class="fas fa-gift text-success"></i> १००% मोफत टूल`;
                 }
-            } catch(e) {}
+            }
 
             setupDropArea();
         });
@@ -584,7 +589,6 @@
 
             if (draggedIndex === null || draggedIndex === targetIndex) return;
 
-            // री-ऑर्डर करणे: जुन्या ठिकाणाहून काढून नवीन ठिकाणी टाकणे
             const [movedItem] = imageList.splice(draggedIndex, 1);
             imageList.splice(targetIndex, 0, movedItem);
 
@@ -625,7 +629,6 @@
             renderGrid();
         }
 
-        // 🟢 HELPER: ROTATE DATA URL ON OFF-SCREEN CANVAS
         function getRotatedDataUrl(item) {
             const rot = item.rotation % 360;
             if (rot === 0) return item.dataUrl;
@@ -663,7 +666,6 @@
             const progressBar = document.getElementById('modalProgressBar');
             const btn = document.getElementById('btnGenerate');
 
-            // ॲनिमेशन मोडल सुरू करा
             modal.style.display = 'flex';
             progressBar.style.width = '15%';
             statusText.innerText = "१. इमेजेस तपासल्या जात आहेत...";
@@ -681,21 +683,17 @@
                 for (let i = 0; i < total; i++) {
                     const item = imageList[i];
                     
-                    // प्रोग्रेस बार अपडेट
                     const pct = Math.round(20 + ((i + 1) / total) * 75);
                     progressBar.style.width = `${pct}%`;
                     statusText.innerText = `२. पान ${i + 1}/${total} प्रक्रिया होत आहे...`;
 
-                    // स्मूथ ॲनिमेशनसाठी सूक्ष्म वेळ
                     await new Promise(r => setTimeout(r, 80));
 
-                    // रोटेशन तपासा
                     const currentDataUrl = getRotatedDataUrl(item);
                     const rotatedImg = await loadImage(currentDataUrl);
                     const imgW = rotatedImg.width;
                     const imgH = rotatedImg.height;
 
-                    // ओरिएंटेशन ठरवा
                     let orientation = 'portrait';
                     if (orientationMode === 'landscape') {
                         orientation = 'landscape';
@@ -703,7 +701,6 @@
                         orientation = imgW > imgH ? 'landscape' : 'portrait';
                     }
 
-                    // A4 Dimensions in mm
                     const pageW = orientation === 'landscape' ? 297 : 210;
                     const pageH = orientation === 'landscape' ? 210 : 297;
 
@@ -718,7 +715,6 @@
                         doc.addPage('a4', orientation);
                     }
 
-                    // आस्पेक्ट रेशो सांभाळून A4 वर फिट करणे
                     const availW = pageW - (margin * 2);
                     const availH = pageH - (margin * 2);
 
@@ -736,12 +732,10 @@
                 statusText.innerText = "३. हाय-क्वालिटी A4 PDF तयार झाली!";
                 await new Promise(r => setTimeout(r, 350));
 
-                // PDF सेव्ह करा
                 const timestamp = Date.now();
                 const fileName = `QuickIDPrint_Images_${timestamp}.pdf`;
                 doc.save(fileName);
 
-                // 🟢 अचूक Supabase लॉगिंग (फक्त डाऊनलोड झाल्यावर)
                 logServiceDownload(imageList.length);
 
                 setTimeout(() => {
@@ -757,11 +751,11 @@
             }
         }
 
-        // 🟢 LOG DOWNLOAD ACTION TO SUPABASE
+        // 🟢 LOG DOWNLOAD ACTION TO SUPABASE (फक्त युझर लॉगिन असल्यास)
         function logServiceDownload(imageCount) {
             try {
                 const userStr = localStorage.getItem('quickid_user');
-                if (!userStr) return;
+                if (!userStr) return; // व्हिजिटर असल्यास लॉग न करता दुर्लक्ष करा
                 const user = JSON.parse(userStr);
 
                 fetch(`${BACKEND_URL}/api/log-service`, {
