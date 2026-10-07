@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photo Resizer & Optimizer Tool | QuickIDPrint</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS CDN for sleek, responsive styling -->
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Google Fonts: Mukta -->
   <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- पोर्टल सुरक्षा (Auth Guard) -->
-  <script src="auth-guard.js"></script>
+  <!-- टीप: auth-guard.js काढून टाकली आहे जेणेकरून हे टूल विना-लॉगिन मोफत चालेल -->
 
   <style>
     body {
@@ -36,11 +35,12 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="homepage.html" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition">
+        <!-- 🟢 स्मार्ट बॅक बटण (लॉगिन असल्यास homepage वर, व्हिजिटर असल्यास index वर) -->
+        <a href="javascript:void(0)" onclick="goBack()" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition cursor-pointer">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
-          <span class="text-xs sm:text-sm font-semibold">होमवर परत जा</span>
+          <span class="text-xs sm:text-sm font-semibold">मागे जा</span>
         </a>
         <span class="text-slate-300">|</span>
         <h1 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -49,7 +49,7 @@
         </h1>
       </div>
 
-      <!-- Auth Guard Nav Info -->
+      <!-- Header Nav User Badge -->
       <div class="flex items-center gap-2 text-xs">
         <span id="navUserName" class="font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">User</span>
         <span id="navRemainingDays" class="font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">Active</span>
@@ -67,7 +67,7 @@
         <p class="text-indigo-700 mt-0.5">पिक्सेल (px), सेंटीमीटर (cm) किंवा इंच (inch) मध्ये फोटो रिसाईझ करा. गुणवत्तेचे नुकसान न होता थेट डाऊनलोड करा.</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
-        <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-600 border border-indigo-200 shadow-2xs">100% मोफत, जलद व सुरक्षित</span>
+        <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-600 border border-indigo-200 shadow-2xs">100% मोफत व जलद</span>
       </div>
     </div>
 
@@ -262,31 +262,54 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 mt-8">
-    <p>QuickIDPrint • शासकीय व डिजिटल सेवा पोर्टल • सुरक्षित आणि स्वतंत्र टूल</p>
+    <p>QuickIDPrint • शासकीय व डिजिटल सेवा पोर्टल • १००% मोफत आणि सुरक्षित टूल</p>
   </footer>
 
   <!-- ================= JAVASCRIPT ENGINE ================= -->
   <script>
     const BACKEND_URL = "https://quickidprint-backend.onrender.com";
 
-    // 🟢 AUTH GUARD & HEADER DATA LOGIC (QuickIDPrint Standard)
+    // 🟢 स्मार्ट बॅक नेव्हिगेशन
+    function goBack() {
+      if (localStorage.getItem('quickid_user')) {
+        window.location.href = "homepage.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    }
+
+    // 🟢 मोफत वापरासाठी लॉगिन तपासणी ऐच्छिक (NO REDIRECT!)
     window.onload = function() {
-        const userName = sessionStorage.getItem('userFullName') || sessionStorage.getItem('username') || 'User';
-        const remainingDays = sessionStorage.getItem('remainingDays');
+      const userStr = localStorage.getItem('quickid_user');
+      const nameEl = document.getElementById('navUserName');
+      const daysBadge = document.getElementById('navRemainingDays');
 
-        document.getElementById('navUserName').innerText = userName;
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const userName = user.name || user.shop_name || sessionStorage.getItem('userFullName') || 'User';
+          const remainingDays = user.remainingDays !== undefined ? user.remainingDays : sessionStorage.getItem('remainingDays');
 
-        const daysBadge = document.getElementById('navRemainingDays');
-        if (remainingDays !== null && remainingDays !== undefined) {
+          nameEl.innerText = userName;
+
+          if (remainingDays !== null && remainingDays !== undefined) {
             if (parseInt(remainingDays) >= 0) {
-                daysBadge.innerText = `${remainingDays} दिवस बाकी`;
+              daysBadge.innerText = `${remainingDays} दिवस बाकी`;
+              daysBadge.className = "font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200";
             } else {
-                daysBadge.innerText = `प्लॅन संपला`;
-                daysBadge.className = "font-medium text-rose-700 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200";
+              daysBadge.innerText = `प्लॅन संपला`;
+              daysBadge.className = "font-medium text-rose-700 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200";
             }
-        } else {
+          } else {
             daysBadge.innerText = "Active";
-        }
+          }
+        } catch(e) {}
+      } else {
+        // व्हिजिटरसाठी १००% मोफत टॅग
+        nameEl.style.display = 'none';
+        daysBadge.innerText = "🎁 १००% मोफत टूल (No Login)";
+        daysBadge.className = "font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md border border-emerald-200 text-xs";
+      }
     };
 
     // Global State
@@ -523,17 +546,16 @@
       document.getElementById('statPhysical').innerText = `${cmW} x ${cmH} cm`;
     }
 
-    // 🟢 Download AND Log via Render Backend to Supabase
+    // 🟢 Download Action (Client-Side + Optional Backend Log)
     function downloadResizedImage() {
       const previewImg = document.getElementById('previewImage');
       if (!previewImg || !previewImg.src) return;
 
       const format = document.querySelector('input[name="exportFormat"]:checked').value;
       const ext = format === 'image/png' ? 'png' : 'jpg';
-      const presetKey = document.getElementById('presetSelect').value;
       const filename = `${originalFileName}_resized_${document.getElementById('inputWidth').value}x${document.getElementById('inputHeight').value}.${ext}`;
 
-      // 1. Download Action (थेट ब्राऊझरमधून डाऊनलोड)
+      // थेट ब्राऊझरमधून डाऊनलोड
       const a = document.createElement('a');
       a.href = previewImg.src;
       a.download = filename;
@@ -541,28 +563,24 @@
       a.click();
       document.body.removeChild(a);
 
-      // 2. Render Backend कडे फक्त १ ओळीचा ऑडिट लॉग पाठवणे
+      // जर युझर लॉगिन असेल तरच Render बॅकएंडला ऑडिट लॉग पाठवा
       let userMobile = '';
       try {
           const u = JSON.parse(localStorage.getItem('quickid_user'));
           if (u && u.mobile) userMobile = u.mobile;
       } catch(e) {}
-      if (!userMobile) userMobile = sessionStorage.getItem('username') || sessionStorage.getItem('userMobile') || 'User';
 
-      const presetText = (presetKey !== 'custom') ? presetKey : `${document.getElementById('inputWidth').value}x${document.getElementById('inputHeight').value} ${currentUnit}`;
-      const actionType = `${presetText} (${ext.toUpperCase()})`;
-
-      const formData = new FormData();
-      formData.append('mobile', userMobile);
-      formData.append('actionType', actionType);
-
-      fetch(`${BACKEND_URL}/api/services/log-photo-resize`, { 
-          method: 'POST', 
-          body: formData 
-      })
-      .then(res => res.json())
-      .then(data => console.log("Log Success:", data))
-      .catch(err => console.log("Log Notice:", err));
+      if (userMobile) {
+          fetch(`${BACKEND_URL}/api/log-service`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  mobile: userMobile,
+                  service_name: 'Photo Resizer टूल',
+                  details: `Photo Resized: ${document.getElementById('inputWidth').value}x${document.getElementById('inputHeight').value} (${format})`
+              })
+          }).catch(e => console.warn("Log Notice:", e));
+      }
     }
 
     function formatBytes(bytes) {
