@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
+    <!-- Config File -->
+    <script src="config.js"></script>
+
     <style>
         :root {
             --primary: #ea580c;
@@ -198,7 +201,7 @@
         
         <div class="feature-box">
             <div><i class="fas fa-shield-halved"></i> <b>१००% सुरक्षित व जलद:</b> आयुष्मान भारत (PM-JAY) कार्ड सुरक्षित क्लाउड प्रणालीद्वारे प्रोसेस होते.</div>
-            <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फोटो व मजकूर आपोआप क्लिअर होऊन काळी कटिंग बॉर्डर व अचूक स्मार्ट कार्ड साईझ लागू होईल.</div>
+            <div style="margin-top:4px;"><i class="fas fa-wand-magic-sparkles"></i> फ्रंट व बॅक अचूक क्रॉप होऊन काळी कटिंग बॉर्डर व ३००+ DPI स्मार्ट कार्ड साईझ लागू होईल.</div>
         </div>
 
         <form id="cardForm" onsubmit="handleAyushmanSubmit(event)">
@@ -213,11 +216,6 @@
             <div class="form-group">
                 <label><i class="fas fa-file-pdf" style="color:var(--primary);"></i> आयुष्मान कार्डची PDF फाईल निवडा:</label>
                 <input type="file" id="pdfFile" class="form-control" accept="application/pdf" required>
-            </div>
-
-            <div class="form-group" style="display:none;" id="pwdBox">
-                <label><i class="fas fa-key" style="color:var(--primary);"></i> PDF पासवर्ड (असल्यास):</label>
-                <input type="password" id="pdfPassword" class="form-control" placeholder="पासवर्ड असल्यास टाका">
             </div>
 
             <button type="submit" id="btnProcess" class="btn-process">
@@ -249,14 +247,13 @@
                     <i class="fas fa-check-circle"></i> <span>आयुष्मान भारत PDF फाईल तपासली</span>
                 </div>
                 <div class="step-item active" id="step2">
-                    <i class="fas fa-spinner fa-spin"></i> <span>फोटो क्लिअर व अचूक आयुष्मान कार्ड क्रॉपिंग...</span>
+                    <i class="fas fa-spinner fa-spin"></i> <span>सर्व्हरवर अचूक आयुष्मान कार्ड क्रॉपिंग...</span>
                 </div>
                 <div class="step-item" id="step3">
                     <i class="far fa-circle"></i> <span>प्रिंट-रेडी HD PDF तयार होत आहे...</span>
                 </div>
             </div>
 
-            <!-- 🔒 व्यावसायिक सूचना (AI शब्द काढलेला आहे) -->
             <p id="modalTip" class="modal-tip">
                 <i class="fas fa-shield-halved" style="color: #ea580c;"></i> सुरक्षित हाय-स्पीड प्रणालीद्वारे प्रिंट-रेडी कार्ड तयार होत आहे.
             </p>
@@ -272,11 +269,13 @@
     </div>
 
     <script>
-        const BACKEND_URL = "https://quickidprint-backend.onrender.com";
+        const BACKEND_URL = (typeof CONFIG !== 'undefined' && (CONFIG.API_BASE_URL || CONFIG.BACKEND_URL)) 
+            ? (CONFIG.API_BASE_URL || CONFIG.BACKEND_URL) 
+            : "https://quickidprint-backend.onrender.com";
 
         let userData = null;
         try {
-            userData = JSON.parse(localStorage.getItem('quickid_user'));
+            userData = JSON.parse(localStorage.getItem('quickid_user') || localStorage.getItem('user'));
         } catch(e) {
             userData = null;
         }
@@ -296,7 +295,6 @@
             e.preventDefault();
             
             const fileInput = document.getElementById('pdfFile').files[0];
-            const password = document.getElementById('pdfPassword').value;
             const size = document.getElementById('printSize').value;
             
             if(!fileInput) {
@@ -308,14 +306,13 @@
 
             const formData = new FormData();
             formData.append('pdfFile', fileInput);
-            formData.append('password', password);
             formData.append('size', size);
             formData.append('cardName', 'Ayushman'); 
             formData.append('userId', userData ? userData.mobile : '');
 
             setTimeout(() => { updateProgress(55, 2); }, 800);
 
-            // 🟢 AUTO-RETRY LOGIC: नेटवर्क किंवा सर्व्हर व्यस्त असल्यास आपोआप दुसरा प्रयत्न करेल
+            // 🟢 AUTO-RETRY LOGIC: सर्व्हरवर सुरक्षित प्रोसेस
             let response = null;
             let success = false;
 
@@ -401,7 +398,7 @@
 
             if(stepNumber >= 2) {
                 step2.className = 'step-item done';
-                step2.innerHTML = '<i class="fas fa-check-circle"></i> <span>फोटो क्लिअर व अचूक आयुष्मान कार्ड क्रॉपिंग पूर्ण</span>';
+                step2.innerHTML = '<i class="fas fa-check-circle"></i> <span>अचूक आयुष्मान कार्ड क्रॉपिंग पूर्ण</span>';
                 step3.className = 'step-item active';
                 step3.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>प्रिंट-रेडी HD PDF तयार होत आहे...</span>';
             }
