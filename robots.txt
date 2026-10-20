@@ -2,8 +2,13 @@
 User-agent: *
 Allow: /
 Allow: /index.html
+Allow: /pdf_compressor.html
+Allow: /photo_resizer.html
+Allow: /image_to_pdf.html
 Allow: /login.html
 Allow: /register.html
+Allow: /about.html
+Allow: /contact.html
 Allow: /privacy.html
 Allow: /terms.html
 
