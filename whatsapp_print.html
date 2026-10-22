@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp डॉक्युमेंट प्रिंट व स्कॅनर | QuickIDPrint Pro Tool</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Fabric.js Library for Canvas Manipulation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="config.js"></script>
+
+    <style>
+        :root {
+            --primary: #123a8f;
+            --primary-hover: #0c2a68;
+            --secondary: #2563eb;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --dark: #0f172a;
+            --slate: #475569;
+            --card-border: #e2e8f0;
+            --bg-light: #f1f5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', 'Poppins', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+            min-height: 100vh; color: #1e293b; display: flex; flex-direction: column; 
+        }
+
+        /* Top Bar */
+        .top-navbar {
+            background: white; border-bottom: 1px solid var(--card-border); padding: 12px 24px;
+            display: flex; align-items: center; justify-content: space-between; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .nav-left { display: flex; align-items: center; gap: 14px; }
+        .btn-back {
+            background: #eff6ff; color: var(--secondary); border: 1px solid #bfdbfe;
+            padding: 7px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 700;
+            text-decoration: none; display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-back:hover { background: #dbeafe; transform: translateY(-1px); }
+        .nav-title { font-size: 17px; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+        .badge-pro {
+            background: #fef3c7; color: #b45309; border: 1px solid #fde68a;
+            padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;
+        }
+
+        /* App Body Layout */
+        .app-container {
+            display: flex; flex: 1; position: relative; width: 100%;
+        }
+
+        /* Left Floating Sidebar (Vertical Toolbar) */
+        .toolbar { 
+            position: fixed; left: 24px; top: 55%; transform: translateY(-50%);
+            z-index: 90; padding: 22px 18px; 
+            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px);
+            border-radius: 24px; box-shadow: 0 15px 35px rgba(18, 58, 143, 0.12); 
+            border: 1.5px solid rgba(255, 255, 255, 0.7); display: flex; flex-direction: column; 
+            gap: 12px; width: 200px;
+        }
+        .toolbar-header {
+            font-size: 12px; font-weight: 800; color: #64748b; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 2px; text-align: center;
+        }
+
+        /* Eye-Catching Pill Buttons */
+        .btn-tool { 
+            width: 100%; padding: 11px 16px; cursor: pointer; font-size: 13.5px; 
+            font-weight: 700; border: none; border-radius: 50px; 
+            transition: all 0.25s ease; display: flex; align-items: center; 
+            justify-content: flex-start; gap: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+        .btn-tool:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+        .btn-tool:active { transform: translateY(1px); }
+
+        .btn-upload { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; }
+        .btn-delete { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+        .btn-download-jpg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+        .btn-download-png { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; }
+        .btn-print { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; }
+
+        /* Main Workspace (Centered A4 Canvas) */
+        .main-workspace {
+            margin-left: 240px; flex-grow: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 30px 20px;
+        }
+        .sheet-tips {
+            background: rgba(255, 255, 255, 0.8); border: 1px dashed #cbd5e1; border-radius: 12px;
+            padding: 8px 18px; margin-bottom: 18px; font-size: 13px; color: #475569; font-weight: 600;
+        }
+        .canvas-container { 
+            box-shadow: 0 20px 45px rgba(0,0,0,0.18); background: white; 
+            border-radius: 4px; border: 1px solid #cbd5e1;
+        }
+
+        /* Smooth Animated Modals */
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 1000; 
+            justify-content: center; align-items: center; animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content { 
+            background: #ffffff; padding: 25px; border-radius: 20px; position: relative; 
+            max-width: 95%; max-height: 95vh; text-align: center; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); display: flex; flex-direction: column; 
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp { from { transform: translateY(25px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-content h3 { margin-top: 0; color: #1e293b; font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+
+        /* Crop Area */
+        #cropWrap { position: relative; display: inline-block; user-select: none; touch-action: none; background: #e2e8f0; border-radius: 12px; overflow: hidden; margin: 0 auto; }
+        #cropCanvas { display: block; max-width: 100%; max-height: 55vh; }
+        
+        /* Edit Canvas & Modern Sliders */
+        #editPreviewCanvas { max-width: 100%; max-height: 42vh; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 0 auto; }
+        
+        .controls-grid { 
+            display: grid; grid-template-columns: 1fr; gap: 14px; text-align: left; 
+            margin: 18px 0; background: #f8fafc; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0;
+        }
+        .controls-grid label { font-size: 13.5px; font-weight: 700; color: #334155; display: flex; justify-content: space-between; margin-bottom: 4px; }
+        
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #cbd5e1; border-radius: 5px; }
+        input[type="range"]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #2563eb; cursor: pointer; -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        .modal-actions { display: flex; justify-content: center; gap: 12px; margin-top: 15px; }
+        .btn-modal { padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-modal-cancel { background: #fee2e2; color: #dc2626; }
+        .btn-modal-next { background: #2563eb; color: white; }
+
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; }
+            .toolbar { position: static; transform: none; width: 92%; margin: 20px auto 0; flex-direction: row; flex-wrap: wrap; border-radius: 18px; padding: 12px; }
+            .toolbar .btn-tool { width: 48%; }
+            .main-workspace { margin-left: 0; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="homepage.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> डॅशबोर्ड
+            </a>
+            <h1 class="nav-title">
+                <i class="fab fa-whatsapp" style="color: #22c55e; font-size: 22px;"></i>
+                WhatsApp डॉक्युमेंट प्रिंट व 4-पॉइंट क्रॉप
+            </h1>
+            <span class="badge-pro"><i class="fas fa-crown text-amber-500"></i> प्रो टूल</span>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 700; color: #475569;">
+            A4 शीट: ५९५ x ८४२ px (300 DPI Ready)
+        </div>
+    </header>
+
+    <!-- App Body -->
+    <div class="app-container">
+        
+        <!-- Left Floating Sidebar -->
+        <div class="toolbar">
+            <div class="toolbar-header">कंट्रोल पॅनेल</div>
+            <input type="file" id="imageLoader" accept="image/*" style="display:none;" />
+            <button class="btn-tool btn-upload" onclick="document.getElementById('imageLoader').click()">
+                <i class="fas fa-camera"></i> अपलोड व क्रॉप
+            </button>
+            <button class="btn-tool btn-delete" onclick="deleteSelectedImage()">
+                <i class="fas fa-trash-alt"></i> सिलेक्टेड हटवा
+            </button>
+            <button class="btn-tool btn-download-jpg" onclick="downloadCanvas('jpeg')">
+                <i class="fas fa-file-image"></i> JPG डाऊनलोड
+            </button>
+            <button class="btn-tool btn-download-png" onclick="downloadCanvas('png')">
+                <i class="fas fa-image"></i> PNG डाऊनलोड
+            </button>
+            <button class="btn-tool btn-print" onclick="printCanvas()">
+                <i class="fas fa-print"></i> A4 HD प्रिंट
+            </button>
+        </div>
+
+        <!-- Centered Workspace -->
+        <div class="main-workspace">
+            <div class="sheet-tips">
+                <i class="fas fa-info-circle text-blue-600"></i> टीप: WhatsApp वर आलेले आडवे-तिडवे डॉक्युमेंट्स अपलोड करा, ४ कोपरे सिलेक्ट करून सरळ करा आणि थेट A4 वर सेट करून प्रिंट द्या.
+            </div>
+            <canvas id="a4Canvas" width="595" height="842"></canvas>
+        </div>
+
+    </div>
+
+    <!-- STEP 1: 4-Point Perspective Crop Modal -->
+    <div id="cropModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-vector-square text-blue-600"></i> स्टेप १: डॉक्युमेंट सरळ करण्यासाठी ४ कोपरे (Corners) ॲडजस्ट करा</h3>
+            <div id="cropWrap">
+                <canvas id="cropCanvas"></canvas>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="closeModals()">✕ रद्द करा</button>
+                <button class="btn-modal btn-modal-next" onclick="processCrop()">रंग व ब्राईटनेस सुधारा ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: Color Correction Modal -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-content" style="width: 500px;">
+            <h3><i class="fas fa-wand-magic-sparkles text-amber-500"></i> स्टेप २: इमेज क्लिअर करा (Enhancement)</h3>
+            <canvas id="editPreviewCanvas"></canvas>
+            
+            <div class="controls-grid">
+                <div>
+                    <label>प्रकाशन (Brightness) <span id="br-val">100%</span></label>
+                    <input type="range" id="brightness" min="50" max="200" value="100" oninput="applyFilters()">
+                </div>
+                <div>
+                    <label>कॉन्ट्रास्ट (Contrast) <span id="ct-val">100%</span></label>
+                    <input type="range" id="contrast" min="50" max="200" value="100" oninput="applyFilters()">
+                </div>
+                <div>
+                    <label>काळा आणि पांढरा (Grayscale / B&W) <span id="gs-val">0%</span></label>
+                    <input type="range" id="grayscale" min="0" max="100" value="0" oninput="applyFilters()">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="openModal('cropModal'); document.getElementById('editModal').style.display='none';">🡄 मागे जा</button>
+                <button class="btn-modal btn-modal-next" style="background:#16a34a;" onclick="addToA4()">➕ A4 शीटवर ॲड करा</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 🔒 १. सिक्युरिटी चेक (फक्त ॲक्टिव्ह पेड युझर्ससाठी - प्रो टूल)
+        const userStr = localStorage.getItem('quickid_user');
+        if (!userStr) {
+            alert("कृपया प्रथम लॉगिन करा!");
+            window.location.replace("login.html");
+        } else {
+            const u = JSON.parse(userStr);
+            const isUserAdmin = u.role === 'admin' || u.mobile === '9999999999';
+            const daysLeft = parseInt(u.remainingDays) || 0;
+            if (!isUserAdmin && daysLeft <= 0) {
+                alert("हा प्रो टूल वापरण्यासाठी तुमचा सबस्क्रिप्शन प्लॅन ॲक्टिव्ह असणे आवश्यक आहे. कृपया रिचार्ज करा!");
+                window.location.replace("recharge.html");
+            }
+        }
+
+        // --- २. Fabric.js A4 Canvas Setup ---
+        let a4Canvas;
+        window.onload = function() {
+            a4Canvas = new fabric.Canvas('a4Canvas', { backgroundColor: 'white' });
+        };
+        
+        let originalImg = null;
+        let corners = [];
+        let draggingPoint = -1;
+        let warpedBase64 = null;
+        
+        const cropCanvas = document.getElementById('cropCanvas');
+        const cropCtx = cropCanvas.getContext('2d', { willReadFrequently: true });
+
+        // --- ३. इमेज अपलोड हँडलर ---
+        document.getElementById('imageLoader').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(f) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImg = img;
+                    initCropCanvas();
+                    openModal('cropModal');
+                };
+                img.src = f.target.result;
+            };
+            reader.readAsDataURL(file);
+            e.target.value = ""; 
+        });
+
+        // --- ४. ४-पॉइंट क्रॉप UI तयार करणे ---
+        function initCropCanvas() {
+            const maxWidth = window.innerWidth * 0.7;
+            const maxHeight = window.innerHeight * 0.55;
+            let scale = Math.min(maxWidth / originalImg.width, maxHeight / originalImg.height, 1);
+            
+            cropCanvas.width = originalImg.width * scale;
+            cropCanvas.height = originalImg.height * scale;
+            
+            const w = cropCanvas.width, h = cropCanvas.height, p = Math.min(w, h) * 0.1;
+            corners = [ {x: p, y: p}, {x: w-p, y: p}, {x: w-p, y: h-p}, {x: p, y: h-p} ];
+            drawCropUI();
+        }
+
+        function drawCropUI() {
+            cropCtx.clearRect(0, 0, cropCanvas.width, cropCanvas.height);
+            cropCtx.drawImage(originalImg, 0, 0, cropCanvas.width, cropCanvas.height);
+            
+            cropCtx.beginPath();
+            cropCtx.moveTo(corners[0].x, corners[0].y);
+            for(let i=1; i<4; i++) cropCtx.lineTo(corners[i].x, corners[i].y);
+            cropCtx.closePath();
+            cropCtx.fillStyle = 'rgba(37, 99, 235, 0.25)';
+            cropCtx.fill();
+            cropCtx.strokeStyle = '#2563eb';
+            cropCtx.lineWidth = 2.5;
+            cropCtx.stroke();
+
+            cropCtx.fillStyle = '#ffffff';
+            corners.forEach((c) => {
+                cropCtx.beginPath();
+                cropCtx.arc(c.x, c.y, 12, 0, Math.PI*2);
+                cropCtx.fill();
+                cropCtx.stroke();
+                
+                cropCtx.beginPath();
+                cropCtx.arc(c.x, c.y, 5, 0, Math.PI*2);
+                cropCtx.fillStyle = '#2563eb';
+                cropCtx.fill();
+                cropCtx.fillStyle = '#ffffff'; 
+            });
+        }
+
+        // --- ५. माउस आणि टच इव्हेंट्स (Corner Dragging) ---
+        function getMousePos(evt) {
+            const rect = cropCanvas.getBoundingClientRect();
+            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function handleDown(e) {
+            const pos = getMousePos(e);
+            draggingPoint = corners.findIndex(c => Math.hypot(c.x - pos.x, c.y - pos.y) < 30);
+        }
+        function handleMove(e) {
+            if (draggingPoint > -1) {
+                e.preventDefault(); 
+                const pos = getMousePos(e);
+                corners[draggingPoint].x = Math.max(0, Math.min(pos.x, cropCanvas.width));
+                corners[draggingPoint].y = Math.max(0, Math.min(pos.y, cropCanvas.height));
+                drawCropUI();
+            }
+        }
+        function handleUp() { draggingPoint = -1; }
+
+        cropCanvas.addEventListener('mousedown', handleDown);
+        cropCanvas.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleUp);
+        
+        cropCanvas.addEventListener('touchstart', handleDown, {passive: false});
+        cropCanvas.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchend', handleUp);
+
+        // --- ६. होलोग्राफी मॅथेमॅटिक्स (Homography Perspective Transformation) ---
+        function homography(src, dst) {
+            const A = [], B = [];
+            for (let i = 0; i < 4; i++) {
+                const x = dst[i].x, y = dst[i].y, u = src[i].x, v = src[i].y;
+                A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+                A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+            }
+            for (let i = 0; i < 8; i++) {
+                let max = i;
+                for (let j = i + 1; j < 8; j++) if (Math.abs(A[j][i]) > Math.abs(A[max][i])) max = j;
+                [A[i], A[max]] = [A[max], A[i]]; [B[i], B[max]] = [B[max], B[i]];
+                let d = A[i][i]; if (Math.abs(d) < 1e-10) return null;
+                for (let k = i; k < 8; k++) A[i][k] /= d; B[i] /= d;
+                for (let j = 0; j < 8; j++) if (j !== i) {
+                    let f = A[j][i];
+                    for (let k = i; k < 8; k++) A[j][k] -= f * A[i][k];
+                    B[j] -= f * B[i];
+                }
+            }
+            return [...B, 1];
+        }
+
+        function processCrop() {
+            const btn = document.querySelector("#cropModal .btn-modal-next");
+            btn.innerHTML = "प्रोसेसिंग सुरू आहे... ⏳";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const scaleX = originalImg.width / cropCanvas.width;
+                    const scaleY = originalImg.height / cropCanvas.height;
+                    const srcPts = corners.map(c => ({ x: c.x * scaleX, y: c.y * scaleY }));
+                    const [tl, tr, br, bl] = srcPts;
+
+                    const width = Math.max(1, Math.round(Math.max(Math.hypot(tr.x - tl.x, tr.y - tl.y), Math.hypot(br.x - bl.x, br.y - bl.y))));
+                    const height = Math.max(1, Math.round(Math.max(Math.hypot(bl.x - tl.x, bl.y - tl.y), Math.hypot(br.x - tr.x, br.y - tr.y))));
+
+                    const dstPts = [{x: 0, y: 0}, {x: width - 1, y: 0}, {x: width - 1, y: height - 1}, {x: 0, y: height - 1}];
+                    const H = homography(srcPts, dstPts);
+                    
+                    if (!H) { alert("कृपया योग्य कोपरे निवडा."); return; }
+
+                    const tmpCanvas = document.createElement('canvas');
+                    tmpCanvas.width = originalImg.width; tmpCanvas.height = originalImg.height;
+                    const tmpCtx = tmpCanvas.getContext('2d', { willReadFrequently: true });
+                    tmpCtx.drawImage(originalImg, 0, 0);
+                    const srcData = tmpCtx.getImageData(0, 0, originalImg.width, originalImg.height);
+                    const s = srcData.data;
+
+                    const outCanvas = document.createElement('canvas');
+                    outCanvas.width = width; outCanvas.height = height;
+                    const outCtx = outCanvas.getContext('2d', { willReadFrequently: true });
+                    const outData = outCtx.createImageData(width, height);
+                    const d = outData.data;
+
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+                            const den = H[6] * x + H[7] * y + 1;
+                            const sx = (H[0] * x + H[1] * y + H[2]) / den;
+                            const sy = (H[3] * x + H[4] * y + H[5]) / den;
+                            const di = (y * width + x) * 4;
+
+                            if (sx < 0 || sy < 0 || sx >= originalImg.width - 1 || sy >= originalImg.height - 1) {
+                                d[di + 3] = 255; continue; 
+                            }
+
+                            const x0 = Math.floor(sx), y0 = Math.floor(sy);
+                            const fx = sx - x0, fy = sy - y0;
+                            const i = (y0 * originalImg.width + x0) * 4;
+
+                            for (let c = 0; c < 3; c++) {
+                                const a = s[i + c] * (1 - fx) + s[i + 4 + c] * fx;
+                                const b = s[i + originalImg.width * 4 + c] * (1 - fx) + s[i + originalImg.width * 4 + 4 + c] * fx;
+                                d[di + c] = a * (1 - fy) + b * fy;
+                            }
+                            d[di + 3] = 255;
+                        }
+                    }
+                    outCtx.putImageData(outData, 0, 0);
+                    warpedBase64 = outCanvas.toDataURL('image/png');
+                    
+                    document.getElementById('cropModal').style.display = 'none';
+                    document.getElementById('brightness').value = 100;
+                    document.getElementById('contrast').value = 100;
+                    document.getElementById('grayscale').value = 0;
+                    
+                    openModal('editModal');
+                    applyFilters();
+                } catch(err) {
+                    alert("क्रॉप करताना अडचण आली: " + err.message);
+                } finally {
+                    btn.innerHTML = "रंग व ब्राईटनेस सुधारा ➔";
+                    btn.disabled = false;
+                }
+            }, 50);
+        }
+
+        // --- ७. रंग व फिल्टर ॲडजस्टमेंट ---
+        function applyFilters() {
+            const br = document.getElementById('brightness').value;
+            const ct = document.getElementById('contrast').value;
+            const gs = document.getElementById('grayscale').value;
+            
+            document.getElementById('br-val').innerText = br + '%';
+            document.getElementById('ct-val').innerText = ct + '%';
+            document.getElementById('gs-val').innerText = gs + '%';
+
+            const editCanvas = document.getElementById('editPreviewCanvas');
+            const ctx = editCanvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                const scale = Math.min(500 / img.width, 300 / img.height, 1);
+                editCanvas.width = img.width * scale; 
+                editCanvas.height = img.height * scale;
+                ctx.filter = `brightness(${br}%) contrast(${ct}%) grayscale(${gs}%)`;
+                ctx.drawImage(img, 0, 0, editCanvas.width, editCanvas.height);
+            };
+            img.src = warpedBase64;
+        }
+
+        // --- ८. A4 शीटवर इमेज टाकणे ---
+        function addToA4() {
+            const br = document.getElementById('brightness').value;
+            const ct = document.getElementById('contrast').value;
+            const gs = document.getElementById('grayscale').value;
+
+            const img = new Image();
+            img.onload = function() {
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = img.width; finalCanvas.height = img.height;
+                const ctx = finalCanvas.getContext('2d');
+                ctx.filter = `brightness(${br}%) contrast(${ct}%) grayscale(${gs}%)`;
+                ctx.drawImage(img, 0, 0);
+
+                fabric.Image.fromURL(finalCanvas.toDataURL('image/png'), function(fImg) {
+                    if(fImg.width > 420) fImg.scaleToWidth(380);
+                    fImg.set({ left: 60, top: 60 });
+                    a4Canvas.add(fImg);
+                    a4Canvas.setActiveObject(fImg);
+                    a4Canvas.renderAll();
+                    closeModals();
+                });
+            };
+            img.src = warpedBase64;
+        }
+
+        // --- ९. मोडल व इमेज डिलीट कंट्रोल्स ---
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+        
+        function deleteSelectedImage() {
+            if(!a4Canvas) return;
+            const act = a4Canvas.getActiveObject();
+            if (act) { 
+                a4Canvas.remove(act); 
+                a4Canvas.discardActiveObject(); 
+                a4Canvas.renderAll(); 
+            } else {
+                alert("कृपया A4 पेजवरील हटवायची इमेज निवडा.");
+            }
+        }
+        
+        window.addEventListener('keydown', e => { 
+            if (e.target.tagName !== 'INPUT' && (e.key === 'Delete' || e.key === 'Backspace')) {
+                deleteSelectedImage();
+            }
+        });
+
+        // --- १०. JPG / PNG डाऊनलोड ---
+        function downloadCanvas(fmt) { 
+            if(!a4Canvas) return;
+            a4Canvas.discardActiveObject(); 
+            a4Canvas.renderAll(); 
+            const l = document.createElement('a'); 
+            l.download = `QuickIDPrint_WhatsAppDoc_${Date.now()}.${fmt}`; 
+            l.href = a4Canvas.toDataURL({format: fmt, multiplier: 2}); 
+            l.click(); 
+        }
+
+        // --- ११. ग्लिच-फ्री HD A4 प्रिंट फंक्शन ---
+        function printCanvas() {
+            if(!a4Canvas) return;
+            a4Canvas.discardActiveObject(); 
+            a4Canvas.renderAll();
+            
+            const dataUrl = a4Canvas.toDataURL({ format: 'png', multiplier: 2 }); 
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) { alert("कृपया प्रिंटसाठी पॉप-अप (Pop-up) सुरू करा."); return; }
+
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>WhatsApp Document Print - QuickIDPrint</title>
+                    <style>
+                        @page { size: A4 portrait; margin: 0; }
+                        body { margin: 0; padding: 0; background: white; display: flex; justify-content: center; }
+                        img { width: 210mm; height: 297mm; display: block; object-fit: contain; }
+                        @media print { body { margin: 0; -webkit-print-color-adjust: exact; } }
+                    </style>
+                </head>
+                <body>
+                    <img id="printImg" src="${dataUrl}" />
+                    <script>
+                        document.getElementById('printImg').onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                                window.close(); 
+                            }, 500); 
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+    </script>
+</body>
+</html>
