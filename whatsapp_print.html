@@ -11,8 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <!-- Fabric.js Library for Canvas Manipulation -->
+    <!-- Fabric.js Library (Canvas Engine) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    
+    <!-- jsPDF Library (High Quality A4 PDF Export) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Config File -->
     <script src="config.js"></script>
 
     <style>
@@ -60,12 +65,12 @@
 
         /* Left Floating Sidebar (Vertical Toolbar) */
         .toolbar { 
-            position: fixed; left: 24px; top: 55%; transform: translateY(-50%);
-            z-index: 90; padding: 22px 18px; 
-            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px);
+            position: fixed; left: 24px; top: 52%; transform: translateY(-50%);
+            z-index: 90; padding: 20px 16px; 
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px);
             border-radius: 24px; box-shadow: 0 15px 35px rgba(18, 58, 143, 0.12); 
-            border: 1.5px solid rgba(255, 255, 255, 0.7); display: flex; flex-direction: column; 
-            gap: 12px; width: 200px;
+            border: 1.5px solid rgba(255, 255, 255, 0.8); display: flex; flex-direction: column; 
+            gap: 10px; width: 210px;
         }
         .toolbar-header {
             font-size: 12px; font-weight: 800; color: #64748b; text-transform: uppercase;
@@ -74,7 +79,7 @@
 
         /* Eye-Catching Pill Buttons */
         .btn-tool { 
-            width: 100%; padding: 11px 16px; cursor: pointer; font-size: 13.5px; 
+            width: 100%; padding: 10px 16px; cursor: pointer; font-size: 13.5px; 
             font-weight: 700; border: none; border-radius: 50px; 
             transition: all 0.25s ease; display: flex; align-items: center; 
             justify-content: flex-start; gap: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.06);
@@ -86,21 +91,31 @@
         .btn-delete { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
         .btn-download-jpg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
         .btn-download-png { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; }
+        .btn-download-pdf { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; }
         .btn-print { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; }
 
         /* Main Workspace (Centered A4 Canvas) */
         .main-workspace {
-            margin-left: 240px; flex-grow: 1; display: flex; flex-direction: column;
+            margin-left: 250px; flex-grow: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center; padding: 30px 20px;
         }
         .sheet-tips {
-            background: rgba(255, 255, 255, 0.8); border: 1px dashed #cbd5e1; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.85); border: 1px dashed #cbd5e1; border-radius: 12px;
             padding: 8px 18px; margin-bottom: 18px; font-size: 13px; color: #475569; font-weight: 600;
         }
         .canvas-container { 
             box-shadow: 0 20px 45px rgba(0,0,0,0.18); background: white; 
             border-radius: 4px; border: 1px solid #cbd5e1;
         }
+
+        /* Toast Feedback Notification */
+        .toast-msg {
+            position: fixed; bottom: 25px; right: 25px; background: #0f172a; color: white;
+            padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700;
+            display: none; align-items: center; gap: 10px; z-index: 9999;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: toastAnim 0.3s ease;
+        }
+        @keyframes toastAnim { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* Smooth Animated Modals */
         .modal-overlay { 
@@ -190,6 +205,9 @@
             <button class="btn-tool btn-download-png" onclick="downloadCanvas('png')">
                 <i class="fas fa-image"></i> PNG डाऊनलोड
             </button>
+            <button class="btn-tool btn-download-pdf" onclick="downloadPDF()">
+                <i class="fas fa-file-pdf"></i> PDF डाऊनलोड
+            </button>
             <button class="btn-tool btn-print" onclick="printCanvas()">
                 <i class="fas fa-print"></i> A4 HD प्रिंट
             </button>
@@ -203,6 +221,12 @@
             <canvas id="a4Canvas" width="595" height="842"></canvas>
         </div>
 
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastBox" class="toast-msg">
+        <i class="fas fa-check-circle text-emerald-400 text-lg"></i>
+        <span id="toastText">यशस्वीरीत्या डाऊनलोड झाले!</span>
     </div>
 
     <!-- STEP 1: 4-Point Perspective Crop Modal -->
@@ -249,6 +273,10 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        const BACKEND_URL = (typeof CONFIG !== 'undefined' && (CONFIG.API_BASE_URL || CONFIG.BACKEND_URL)) 
+            ? (CONFIG.API_BASE_URL || CONFIG.BACKEND_URL) 
+            : "https://quickidprint-backend.onrender.com";
+
         // 🔒 १. सिक्युरिटी चेक (फक्त ॲक्टिव्ह पेड युझर्ससाठी - प्रो टूल)
         const userStr = localStorage.getItem('quickid_user');
         if (!userStr) {
@@ -370,7 +398,7 @@
         cropCanvas.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener('touchend', handleUp);
 
-        // --- ६. होलोग्राफी मॅथेमॅटिक्स (Homography Perspective Transformation) ---
+        // --- ६. Homography Perspective Transformation ---
         function homography(src, dst) {
             const A = [], B = [];
             for (let i = 0; i < 4; i++) {
@@ -540,20 +568,120 @@
             }
         });
 
-        // --- १०. JPG / PNG डाऊनलोड ---
-        function downloadCanvas(fmt) { 
-            if(!a4Canvas) return;
-            a4Canvas.discardActiveObject(); 
-            a4Canvas.renderAll(); 
-            const l = document.createElement('a'); 
-            l.download = `QuickIDPrint_WhatsAppDoc_${Date.now()}.${fmt}`; 
-            l.href = a4Canvas.toDataURL({format: fmt, multiplier: 2}); 
-            l.click(); 
+        // ================= 🟢 १०. SUPABASE SERVICE LOGGING =================
+        async function logServiceToSupabase(formatType) {
+            try {
+                const uStr = localStorage.getItem('quickid_user');
+                if (!uStr) return;
+                const u = JSON.parse(uStr);
+                const mob = u.mobile || u.username || '';
+                if (!mob) return;
+
+                let detailLabel = '';
+                if (formatType === 'jpeg' || formatType === 'jpg') {
+                    detailLabel = 'A4 JPG डाऊनलोड';
+                } else if (formatType === 'png') {
+                    detailLabel = 'A4 PNG डाऊनलोड';
+                } else if (formatType === 'pdf') {
+                    detailLabel = 'A4 PDF डाऊनलोड';
+                } else if (formatType === 'print') {
+                    detailLabel = 'A4 HD प्रिंट';
+                } else {
+                    detailLabel = `A4 ${String(formatType).toUpperCase()} डाऊनलोड`;
+                }
+
+                const formData = new FormData();
+                formData.append('mobile', mob);
+                formData.append('serviceCategory', 'WhatsApp डॉक्युमेंट प्रिंट');
+                formData.append('serviceDetails', detailLabel);
+
+                // बॅकएंडला सुरक्षित कॉल पाठवणे
+                fetch(`${BACKEND_URL}/api/log-service`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("✅ Supabase Service Logged:", data);
+                })
+                .catch(err => {
+                    console.warn("Service log notice:", err);
+                });
+
+            } catch (err) {
+                console.warn("Log function error:", err);
+            }
         }
 
-        // --- ११. ग्लिच-फ्री HD A4 प्रिंट फंक्शन ---
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            document.getElementById('toastText').innerText = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // --- ११. JPG / PNG डाऊनलोड (विथ Supabase लॉगिंग) ---
+        function downloadCanvas(fmt) { 
+            if(!a4Canvas) return;
+            const objects = a4Canvas.getObjects();
+            if(objects.length === 0) {
+                alert("कृपया डाऊनलोड करण्यापूर्वी किमान एक डॉक्युमेंट A4 शीटवर ॲड करा.");
+                return;
+            }
+
+            a4Canvas.discardActiveObject(); 
+            a4Canvas.renderAll(); 
+            const ext = fmt === 'jpeg' ? 'jpg' : fmt;
+            const l = document.createElement('a'); 
+            l.download = `QuickIDPrint_WhatsAppDoc_${Date.now()}.${ext}`; 
+            l.href = a4Canvas.toDataURL({format: fmt, multiplier: 2}); 
+            l.click(); 
+
+            // 🟢 Supabase मध्ये सुरक्षित नोंद
+            logServiceToSupabase(fmt);
+            showToast(`A4 ${ext.toUpperCase()} डाऊनलोड झाले व सर्व्हिस लॉग नोंदवला गेला!`);
+        }
+
+        // --- १२. PDF डाऊनलोड (विथ Supabase लॉगिंग) ---
+        function downloadPDF() {
+            if(!a4Canvas) return;
+            const objects = a4Canvas.getObjects();
+            if(objects.length === 0) {
+                alert("कृपया PDF डाऊनलोड करण्यापूर्वी किमान एक डॉक्युमेंट A4 शीटवर ॲड करा.");
+                return;
+            }
+
+            a4Canvas.discardActiveObject();
+            a4Canvas.renderAll();
+
+            // Canvas इमेज 2x स्केलवर जनरेट करणे
+            const imgData = a4Canvas.toDataURL({ format: 'jpeg', quality: 0.98, multiplier: 2 });
+            const { jsPDF } = window.jspdf;
+
+            // स्टँडर्ड A4 पोर्ट्रेट PDF (210 x 297 mm)
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+            pdf.save(`QuickIDPrint_WhatsAppDoc_${Date.now()}.pdf`);
+
+            // 🟢 Supabase मध्ये सुरक्षित नोंद
+            logServiceToSupabase('pdf');
+            showToast("A4 PDF डाऊनलोड झाले व सर्व्हिस लॉग नोंदवला गेला!");
+        }
+
+        // --- १३. A4 HD प्रिंट (विथ Supabase लॉगिंग) ---
         function printCanvas() {
             if(!a4Canvas) return;
+            const objects = a4Canvas.getObjects();
+            if(objects.length === 0) {
+                alert("कृपया प्रिंट देण्यापूर्वी किमान एक डॉक्युमेंट A4 शीटवर ॲड करा.");
+                return;
+            }
+
             a4Canvas.discardActiveObject(); 
             a4Canvas.renderAll();
             
@@ -587,6 +715,9 @@
                 </html>
             `);
             printWindow.document.close();
+
+            // 🟢 Supabase मध्ये सुरक्षित नोंद
+            logServiceToSupabase('print');
         }
     </script>
 </body>
